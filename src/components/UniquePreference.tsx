@@ -16,11 +16,11 @@ const UniquePreferences: React.FC = () => {
       <div className="container mx-auto px-6">
         {/* Header */}
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold text-black mb-6">
+          <h2 className="text-4xl md:text-5xl font-extrabold text-black mb-6">
             Find your home with{' '}
             <span className="text-blue-500">unique preferences</span>
           </h2>
-          <p className="text-lg text-gray-600 max-w-4xl mx-auto leading-relaxed">
+          <p className="text-lg px-5 max-w-4xl mx-auto font-bold leading-relaxed">
             Explore a curated selection of homes designed to match your unique preferences, making it 
             effortless to find the ideal property that perfectly fits your lifestyle and needs.
           </p>

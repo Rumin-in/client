@@ -1,1 +1,7 @@
 @import "tailwindcss";
+@import "@fontsource/nunito";
+
+body {
+  @apply font-sans; /* Tailwind’s default sans will now use Nunito if configured */
+  font-family: 'Nunito', ui-sans-serif, system-ui; /* force Nunito globally */
+}

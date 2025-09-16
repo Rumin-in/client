@@ -46,10 +46,10 @@ const PopularListing: React.FC = () => {
       <div className="container mx-auto px-6">
         {/* Header */}
         <div className="mb-12">
-          <h2 className="text-5xl font-bold text-black mb-4">
+          <h2 className="text-7xl font-bold text-black mb-4">
             Popular Listing
           </h2>
-          <p className="text-2xl text-gray-700 font-medium">
+          <p className="text-4xl text-gray-700 font-semi-bold">
             We help you to make<br />
             better deals
           </p>
@@ -63,7 +63,7 @@ const PopularListing: React.FC = () => {
                 {/* Property Image */}
                 <div className="relative">
                   <img
-                    src={listing.image}
+                    src={'/placeholder.png' } 
                     alt={listing.title}
                     className="w-full h-48 object-cover"
                   />

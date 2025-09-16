@@ -7,25 +7,25 @@ const ComingSoon: React.FC = () => {
     {
       id: 1,
       title: "Student Furniture",
-      image: "/api/placeholder/200/250",
+      image: "/cs1.jpg",
       bgColor: "bg-yellow-100"
     },
     {
       id: 2,
       title: "Hostel/PG",
-      image: "/api/placeholder/200/250",
+      image: "/cs2.jpg",
       bgColor: "bg-gray-100"
     },
     {
       id: 3,
       title: "Commercial house",
-      image: "/api/placeholder/200/250",
+      image: "/cs3.jpg",
       bgColor: "bg-purple-100"
     },
     {
       id: 4,
       title: "Farmhouse",
-      image: "/api/placeholder/200/250",
+      image: "/cs4.jpg",
       bgColor: "bg-blue-100"
     }
   ];
@@ -34,21 +34,16 @@ const ComingSoon: React.FC = () => {
     <section className="py-16 bg-white">
       <div className="container mx-auto px-6">
         {/* Header */}
-        <h2 className="text-4xl font-bold text-black text-center mb-12">
+        <h2 className="text-4xl font-bold text-black mb-12">
           Coming Soon!!
         </h2>
 
         {/* Categories Grid */}
-        <div className="flex flex-wrap justify-center items-end gap-6 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-6xl">
           {categories.map((category, index) => (
             <div
               key={category.id}
-              className={`relative rounded-3xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow cursor-pointer group ${
-                index === 0 ? 'w-48 h-64' : 
-                index === 1 ? 'w-52 h-72' : 
-                index === 2 ? 'w-44 h-80' : 
-                'w-48 h-68'
-              }`}
+              className="relative rounded-3xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer group h-80"
             >
               {/* Background Image */}
               <img
@@ -57,18 +52,18 @@ const ComingSoon: React.FC = () => {
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               />
               
-              {/* Overlay Gradient */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+              {/* Colored Background Overlay */}
+              <div className={`absolute inset-0 ${category.bgColor} opacity-30`}></div>
               
-              {/* Category Title */}
+              {/* Gradient Overlay for text readability */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+              
+              {/* Category Title - positioned at bottom */}
               <div className="absolute bottom-6 left-4 right-4">
-                <h3 className="text-white font-semibold text-lg text-center">
+                <h3 className="text-white font-semibold text-lg">
                   {category.title}
                 </h3>
               </div>
-
-              {/* Colored Background for variety */}
-              <div className={`absolute inset-0 ${category.bgColor} opacity-20 mix-blend-overlay`}></div>
             </div>
           ))}
         </div>
@@ -76,5 +71,7 @@ const ComingSoon: React.FC = () => {
     </section>
   );
 };
+
+
 
 export default ComingSoon;

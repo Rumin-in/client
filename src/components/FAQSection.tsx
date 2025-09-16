@@ -26,17 +26,17 @@ const FAQSection: React.FC = () => {
   const propertyImages = [
     {
       id: 1,
-      src: "/api/placeholder/150/120",
+      src: "/cs2.jpg",
       alt: "Commercial building"
     },
     {
       id: 2,
-      src: "/api/placeholder/150/120",
+      src: "/cs4.jpg",
       alt: "Modern house"
     },
     {
       id: 3,
-      src: "/api/placeholder/150/120",
+      src: "/cs3.jpg",
       alt: "Outdoor terrace"
     }
   ];
@@ -46,52 +46,52 @@ const FAQSection: React.FC = () => {
   };
 
   return (
-    <section className="py-16 bg-white">
-      <div className="container mx-auto px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-          {/* Left Column - Property Images */}
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              {/* Large image */}
-              <div className="col-span-2">
-                <img
-                  src={propertyImages[0].src}
-                  alt={propertyImages[0].alt}
-                  className="w-full h-48 object-cover rounded-2xl shadow-lg"
-                />
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              {/* Two smaller images */}
+    <section className="py-20 bg-white min-h-screen">
+      <div className="container mx-auto px-6 h-full">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 h-full min-h-[600px]">
+          {/* Left Column - Two smaller images stacked */}
+          <div className="flex flex-col gap-4 h-full">
+            <div className="flex-1">
               <img
-                src={propertyImages[1].src}
-                alt={propertyImages[1].alt}
-                className="w-full h-32 object-cover rounded-2xl shadow-lg"
+                src={propertyImages[0].src}
+                alt={propertyImages[0].alt}
+                className="w-full h-full object-cover rounded-2xl shadow-lg"
               />
+            </div>
+            <div className="flex-1">
               <img
                 src={propertyImages[2].src}
                 alt={propertyImages[2].alt}
-                className="w-full h-32 object-cover rounded-2xl shadow-lg"
+                className="w-full h-full object-cover rounded-2xl shadow-lg"
               />
             </div>
           </div>
 
+          {/* Middle Column - Full height vertical image */}
+          <div className="h-full">
+            <img
+              src={propertyImages[1].src}
+              alt={propertyImages[1].alt}
+              className="w-full h-full object-cover rounded-2xl shadow-lg"
+            />
+          </div>
+
           {/* Right Column - FAQ Content */}
-          <div>
+          <div className="flex flex-col justify-start">
             <h2 className="text-4xl font-bold text-black mb-4">
               Everything about Rumin
             </h2>
             <p className="text-gray-600 mb-8 leading-relaxed">
-              We know you're probably curious about lots of things. Here we've put together some of the most frequently asked questions to help guide you through the process.
+              We know that buying, selling in rooms can be overwhelming. Here are some frequently asked questions to help guide you through the process.
             </p>
 
             {/* FAQ Items */}
-            <div className="space-y-4">
+            <div className="space-y-3">
               {faqs.map((faq) => (
-                <div key={faq.id} className="border border-gray-200 rounded-lg">
+                <div key={faq.id} className="bg-gray-100 rounded-lg overflow-hidden">
                   <button
                     onClick={() => toggleFAQ(faq.id)}
-                    className="w-full flex items-center justify-between p-4 text-left hover:bg-gray-50 transition-colors"
+                    className="w-full flex items-center justify-between p-4 text-left hover:bg-gray-200 transition-colors"
                   >
                     <span className="font-medium text-gray-800">
                       {faq.id}. {faq.question}
@@ -112,13 +112,17 @@ const FAQSection: React.FC = () => {
                       />
                     </svg>
                   </button>
-                  {openFAQ === faq.id && (
+                  <div 
+                    className={`transition-all duration-300 ease-in-out overflow-hidden ${
+                      openFAQ === faq.id ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                    }`}
+                  >
                     <div className="px-4 pb-4">
                       <p className="text-gray-600 leading-relaxed">
                         {faq.answer}
                       </p>
                     </div>
-                  )}
+                  </div>
                 </div>
               ))}
             </div>
