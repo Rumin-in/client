@@ -40,7 +40,7 @@ const ComingSoon: React.FC = () => {
 
         {/* Categories Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-6xl">
-          {categories.map((category, index) => (
+          {categories.map((category) => (
             <div
               key={category.id}
               className="relative rounded-3xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer group h-80"

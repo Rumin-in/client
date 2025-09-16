@@ -40,7 +40,7 @@ const RoomSearchLayout = () => {
   const rooms: Room[] = [
     {
       id: 1,
-      image: "/api/placeholder/300/200",
+      image: "/placeholder.png",
       price: "₹6000/month",
       title: "Make it Charma Doon dance rental",
       location: "Fully furnished",
@@ -51,7 +51,7 @@ const RoomSearchLayout = () => {
     },
     {
       id: 2,
-      image: "/api/placeholder/300/200",
+      image: "/placeholder.png",
       price: "₹8000/month",
       title: "Make it Charma Doon dance rental",
       location: "Fully furnished",
@@ -62,7 +62,7 @@ const RoomSearchLayout = () => {
     },
     {
       id: 3,
-      image: "/api/placeholder/300/200",
+      image: "/placeholder.png",
       price: "₹7500/month",
       title: "Make it Charma Doon dance rental",
       location: "Fully furnished",
@@ -73,7 +73,7 @@ const RoomSearchLayout = () => {
     },
     {
       id: 4,
-      image: "/api/placeholder/300/200",
+      image: "/placeholder.png",
       price: "₹9000/month",
       title: "Make it Charma Doon dance rental",
       location: "Fully furnished",
@@ -84,7 +84,7 @@ const RoomSearchLayout = () => {
     },
     {
       id: 5,
-      image: "/api/placeholder/300/200",
+      image: "/placeholder.png",
       price: "₹5500/month",
       title: "Make it Charma Doon dance rental",
       location: "Fully furnished",
@@ -95,7 +95,7 @@ const RoomSearchLayout = () => {
     },
     {
       id: 6,
-      image: "/api/placeholder/300/200",
+      image: "/placeholder.png",
       price: "₹11000/month",
       title: "Make it Charma Doon dance rental",
       location: "Fully furnished",
@@ -129,7 +129,7 @@ const RoomSearchLayout = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 mb-10">
       <div className="max-w-7xl mx-auto p-4">
         <div className="flex gap-6">
           {/* Sidebar */}
@@ -259,7 +259,7 @@ const RoomSearchLayout = () => {
             {/* Clear All Filter */}
             <button
               onClick={clearAllFilters}
-              className="w-full py-2 text-blue-500 hover:text-blue-600 font-medium transition-colors"
+              className="w-full text-gray-700 py-2 border-2 border-gray-400 rounded-2xl font-medium transition-colors"
             >
               Clear All Filter
             </button>
@@ -337,31 +337,34 @@ const RoomSearchLayout = () => {
 
             {/* Pagination */}
             <div className="flex justify-center items-center space-x-2">
+              {/* Previous button */}
               <button
                 onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-                className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-300 hover:bg-gray-100 transition-colors disabled:opacity-50"
                 disabled={currentPage === 1}
               >
                 <ChevronLeft className="w-5 h-5 text-gray-600" />
               </button>
 
+              {/* Page numbers */}
               {[1, 2, 3, 4, 5].map((page) => (
                 <button
                   key={page}
                   onClick={() => setCurrentPage(page)}
-                  className={`w-10 h-10 rounded-lg transition-colors ${
+                  className={`w-10 h-10 flex items-center justify-center rounded-full border transition-colors ${
                     currentPage === page
-                      ? "bg-blue-500 text-white"
-                      : "hover:bg-gray-100 text-gray-600"
+                      ? "bg-blue-600 text-white border-blue-600"
+                      : "border-gray-300 text-gray-700 hover:bg-gray-100"
                   }`}
                 >
                   {page}
                 </button>
               ))}
 
+              {/* Next button */}
               <button
-                onClick={() => setCurrentPage(currentPage + 1)}
-                className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                onClick={() => setCurrentPage(Math.min(5, currentPage + 1))}
+                className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-300 hover:bg-gray-100 transition-colors disabled:opacity-50"
                 disabled={currentPage === 5}
               >
                 <ChevronRight className="w-5 h-5 text-gray-600" />

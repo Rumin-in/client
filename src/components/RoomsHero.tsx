@@ -23,7 +23,7 @@ const RoomsHero = () => {
         </h1>
         
         {/* Hero Subtitle */}
-        <p className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl mx-auto leading-relaxed">
+        <p className="text-lg md:text-xl text-white/90 mb-8 max-w-4xl mx-auto font-bold leading-relaxed tracking-wider">
           Browse our verified listings organized by cities and neighborhoods to find your 
           perfect accommodation.
         </p>
