@@ -3,7 +3,7 @@ import axios from "../api/axios";
 
 export const createCoupon = async (data: { code: string; discount: number; expiry: string }) => {
   try {
-    const response = await axios.post("/api/walletAndCoupan/coupon", data);
+    const response = await axios.post("/walletAndCoupan/coupon", data);
     return response.data;
   } catch (error: any) {
     console.error("Create Coupon Error:", error.response?.data || error.message);
@@ -13,7 +13,7 @@ export const createCoupon = async (data: { code: string; discount: number; expir
 
 export const getAllCoupons = async () => {
   try {
-    const response = await axios.get("/api/walletAndCoupan/coupons");
+    const response = await axios.get("/walletAndCoupan/coupons");
     return response.data;
   } catch (error: any) {
     console.error("Get Coupons Error:", error.response?.data || error.message);
@@ -23,7 +23,7 @@ export const getAllCoupons = async () => {
 
 export const deleteCoupon = async (couponId: string) => {
   try {
-    const response = await axios.delete(`/api/walletAndCoupan/coupon/${couponId}`);
+    const response = await axios.delete(`/walletAndCoupan/coupon/${couponId}`);
     return response.data;
   } catch (error: any) {
     console.error("Delete Coupon Error:", error.response?.data || error.message);
@@ -33,7 +33,7 @@ export const deleteCoupon = async (couponId: string) => {
 
 export const updateCoupon = async (couponId: string, data: Partial<{ code: string; discount: number; expiry: string }>) => {
   try {
-    const response = await axios.put(`/api/walletAndCoupan/coupon/${couponId}`, data);
+    const response = await axios.put(`/walletAndCoupan/coupon/${couponId}`, data);
     return response.data;
   } catch (error: any) {
     console.error("Update Coupon Error:", error.response?.data || error.message);
@@ -43,7 +43,7 @@ export const updateCoupon = async (couponId: string, data: Partial<{ code: strin
 
 export const applyCoupon = async (data: { code: string; rentAmount: number }) => {
   try {
-    const response = await axios.post("/api/walletAndCoupan/coupon/apply", data);
+    const response = await axios.post("/walletAndCoupan/coupon/apply", data);
     return response.data;
   } catch (error: any) {
     console.error("Apply Coupon Error:", error.response?.data || error.message);
@@ -55,7 +55,7 @@ export const applyCoupon = async (data: { code: string; rentAmount: number }) =>
 
 export const sendBalance = async (data: { userId: string; amount: number }) => {
   try {
-    const response = await axios.post("/api/walletAndCoupan/send-balance", data);
+    const response = await axios.post("/walletAndCoupan/send-balance", data);
     return response.data;
   } catch (error: any) {
     console.error("Send Balance Error:", error.response?.data || error.message);
@@ -65,7 +65,7 @@ export const sendBalance = async (data: { userId: string; amount: number }) => {
 
 export const getAllBalanceRequests = async () => {
   try {
-    const response = await axios.get("/api/walletAndCoupan/get-all-balance-request");
+    const response = await axios.get("/walletAndCoupan/get-all-balance-request");
     return response.data;
   } catch (error: any) {
     console.error("Get Balance Requests Error:", error.response?.data || error.message);
@@ -75,7 +75,7 @@ export const getAllBalanceRequests = async () => {
 
 export const createRedeemRequest = async (data: { amount: number }) => {
   try {
-    const response = await axios.post("/api/walletAndCoupan/redeem-request", data);
+    const response = await axios.post("/walletAndCoupan/redeem-request", data);
     return response.data;
   } catch (error: any) {
     console.error("Create Redeem Request Error:", error.response?.data || error.message);
@@ -85,7 +85,7 @@ export const createRedeemRequest = async (data: { amount: number }) => {
 
 export const handleRedeemRequest = async (data: { requestId: string; status: "approved" | "rejected" }) => {
   try {
-    const response = await axios.put("/api/walletAndCoupan/redeem-request/handle", data);
+    const response = await axios.put("/walletAndCoupan/redeem-request/handle", data);
     return response.data;
   } catch (error: any) {
     console.error("Handle Redeem Request Error:", error.response?.data || error.message);

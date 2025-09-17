@@ -2,7 +2,7 @@ import axios from "../api/axios";
 
 export const enquireRoom = async (roomId: string, message: string) => {
   try {
-    const response = await axios.post('/api/renter/enquire', { roomId, message });
+    const response = await axios.post('/renter/enquire', { roomId, message });
     return response.data;
   } catch (error: any) {
     console.error("Enquire Room Error:", error.response?.data || error.message);
@@ -12,7 +12,7 @@ export const enquireRoom = async (roomId: string, message: string) => {
 
 export const interestRoom = async (roomId: string) => {
   try {
-    const response = await axios.post(`/api/renter/rooms/${roomId}/interest`);
+    const response = await axios.post(`/renter/rooms/${roomId}/interest`);
     return response.data;
   } catch (error: any) {
     console.error("Interest Room Error:", error.response?.data || error.message);
@@ -22,7 +22,7 @@ export const interestRoom = async (roomId: string) => {
 
 export const bookmarkRoom = async (roomId: string) => {
   try {
-    const response = await axios.post(`/api/renter/rooms/${roomId}/bookmark`);
+    const response = await axios.post(`/renter/rooms/${roomId}/bookmark`);
     return response.data;
   } catch (error: any) {
     console.error("Bookmark Room Error:", error.response?.data || error.message);
@@ -32,7 +32,7 @@ export const bookmarkRoom = async (roomId: string) => {
 
 export const deleteBookmark = async (roomId: string) => {
   try {
-    const response = await axios.delete(`/api/renter/rooms/${roomId}/bookmark`);
+    const response = await axios.delete(`/renter/rooms/${roomId}/bookmark`);
     return response.data;
   } catch (error: any) {
     console.error("Delete Bookmark Error:", error.response?.data || error.message);
@@ -42,7 +42,7 @@ export const deleteBookmark = async (roomId: string) => {
 
 export const getBookmarks = async (userId: string) => {
   try {
-    const response = await axios.get(`/api/renter/bookmarks/${userId}`);
+    const response = await axios.get(`/renter/bookmarks/${userId}`);
     return response.data;
   } catch (error: any) {
     console.error("Get Bookmarks Error:", error.response?.data || error.message);
@@ -52,7 +52,7 @@ export const getBookmarks = async (userId: string) => {
 
 export const referRoom = async (roomId: string, email: string) => {
   try {
-    const response = await axios.post('/api/renter/rooms/refer', { roomId, email });
+    const response = await axios.post('/renter/rooms/refer', { roomId, email });
     return response.data;
   } catch (error: any) {
     console.error("Refer Room Error:", error.response?.data || error.message);
@@ -62,7 +62,7 @@ export const referRoom = async (roomId: string, email: string) => {
 
 export const getNearbyRooms = async (latitude: number, longitude: number, radius: number) => {
   try {
-    const response = await axios.get('/api/renter/rooms/getNearbyRooms', {
+    const response = await axios.get('/renter/rooms/getNearbyRooms', {
       params: { latitude, longitude, radius }
     });
     return response.data;
@@ -74,7 +74,7 @@ export const getNearbyRooms = async (latitude: number, longitude: number, radius
 
 export const sendFeedback = async (rating: number, comments: string) => {
   try {
-    const response = await axios.post('/api/renter/feedback', { rating, comments });
+    const response = await axios.post('/renter/feedback', { rating, comments });
     return response.data;
   } catch (error: any) {
     console.error("Send Feedback Error:", error.response?.data || error.message);

@@ -3,12 +3,11 @@ import axios from "../api/axios";
 export const register = async (userData: {
   name: string;
   email: string;
-  mobileNo: string;
   password: string;
   role: string;
 }) => {
   try {
-    const response = await axios.post("/api/auth/signup", userData);
+    const response = await axios.post("/auth/signup", userData);
     return response.data;
   } catch (error: any) {
     console.error("Register Error:", error.response?.data || error.message);
@@ -18,7 +17,7 @@ export const register = async (userData: {
 
 export const login = async (credentials: { email: string; password: string }) => {
   try {
-    const response = await axios.post("/api/auth/login", credentials);
+    const response = await axios.post("/auth/login", credentials);
     return response.data;
   } catch (error: any) {
     console.error("Login Error:", error.response?.data || error.message);
@@ -28,7 +27,7 @@ export const login = async (credentials: { email: string; password: string }) =>
 
 export const logout = async () => {
   try {
-    const response = await axios.post("/api/auth/logout");
+    const response = await axios.post("/auth/logout");
     return response.data;
   } catch (error: any) {
     console.error("Logout Error:", error.response?.data || error.message);
@@ -38,7 +37,7 @@ export const logout = async () => {
 
 export const refreshToken = async () => {
   try {
-    const response = await axios.post("/api/auth/refresh-token");
+    const response = await axios.post("/auth/refresh-token");
     return response.data;
   } catch (error: any) {
     console.error("Refresh Token Error:", error.response?.data || error.message);

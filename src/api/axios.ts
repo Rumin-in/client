@@ -1,7 +1,7 @@
 import axiosBase from "axios"; // rename original axios import
 
 const axios = axiosBase.create({
-  baseURL: "https://api.example.com",
+  baseURL: "http://localhost:3000/api",
   headers: {
     "Content-Type": "application/json",
   },
