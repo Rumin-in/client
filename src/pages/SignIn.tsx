@@ -20,22 +20,18 @@ const SignIn = () => {
   };
 
   const handleSignIn = async () => {
-    // Validation checks
     if (!email.trim()) {
       toast.error("Email is required");
       return;
     }
-
     if (!isValidEmail(email)) {
       toast.error("Please enter a valid email address");
       return;
     }
-
     if (!password) {
       toast.error("Password is required");
       return;
     }
-
     if (password.length < 6) {
       toast.error("Password must be at least 6 characters long");
       return;
@@ -44,42 +40,32 @@ const SignIn = () => {
     setIsLoading(true);
 
     try {
-      const response = await login({
-        email: email.trim(),
-        password,
-      });
-
+      const response = await login({ email: email.trim(), password });
       console.log("Login Response:", response);
+
       const token = response.data.accessToken;
       localStorage.setItem("token", token);
+
       toast.success("Welcome back! Login successful");
+
       const {
         name,
         email: userEmail,
         role,
         walletBalance,
       } = response.data.user;
-      console.log("User Data:", { name, userEmail, role, walletBalance });
-
-      // Store in Redux
       dispatch(setUser({ name, email: userEmail, role, walletBalance }));
 
       window.location.href = "/";
     } catch (error: any) {
       console.error("Login Error:", error);
-
-      // Handle different types of errors
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
+      if (error.response?.data?.message) {
         toast.error(error.response.data.message);
       } else if (error.message) {
         toast.error(error.message);
-      } else if (error.response && error.response.status === 401) {
+      } else if (error.response?.status === 401) {
         toast.error("Invalid email or password");
-      } else if (error.response && error.response.status === 404) {
+      } else if (error.response?.status === 404) {
         toast.error("Account not found. Please check your email or sign up.");
       } else {
         toast.error("Login failed. Please try again.");
@@ -94,78 +80,61 @@ const SignIn = () => {
       toast.info("Please enter your email address first");
       return;
     }
-
     if (!isValidEmail(email)) {
       toast.error("Please enter a valid email address");
       return;
     }
-
-    // This would typically call a forgot password API
     toast.success("Password reset link sent to your email!");
   };
 
-  // Handle Enter key press
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      handleSignIn();
-    }
+    if (e.key === "Enter") handleSignIn();
   };
 
   return (
     <>
-      <Toaster
-        position="top-right"
-        toastOptions={{
-          duration: 4000,
-          style: {
-            background: "#fff",
-            color: "#333",
-            border: "1px solid #e5e7eb",
-          },
-        }}
-      />
+      <Toaster position="top-right" toastOptions={{ duration: 4000 }} />
 
-      <div className="min-h-screen flex">
-        {/* Left Side - Blue Background with House */}
-        <div className="flex-1 bg-gradient-to-br from-blue-500 to-blue-600 flex flex-col items-center justify-center text-white p-8">
+      <div className="min-h-screen flex flex-col md:flex-row">
+        <div className="md:hidden w-full flex items-center py-4 px-4 shadow-sm bg-white">
+          <img src="/rumin-logo.png" alt="Rumin Logo" className="h-14 w-auto" />
+        </div>
+
+        {/* Left Side */}
+        <div className="hidden md:flex flex-1 bg-gradient-to-br from-blue-500 to-blue-600 flex-col items-center justify-center text-white p-8">
           <div className="text-center">
-            {/* House Image */}
             <div className="mb-8">
               <img
                 src="/house.png"
                 alt="Welcome House"
-                className="w-80 h-80 object-contain mx-auto"
+                className="w-64 md:w-80 h-auto mx-auto"
               />
             </div>
-
-            {/* Welcome Text */}
-            <div className="mb-6">
-              <h1 className="text-4xl font-bold mb-4">Welcome Back</h1>
-              <p className="text-lg opacity-90">
-                Just a couple of clicks and we start
-              </p>
-            </div>
-
-            {/* Pagination Dots */}
-            <div className="flex justify-center space-x-2">
+            <h1 className="text-3xl md:text-4xl font-bold mb-4">
+              Welcome Back
+            </h1>
+            <p className="text-base md:text-lg opacity-90">
+              Just a couple of clicks and we start
+            </p>
+            <div className="flex justify-center space-x-2 mt-6">
               <div className="w-3 h-3 bg-white rounded-full"></div>
               <div className="w-3 h-3 bg-white bg-opacity-50 rounded-full"></div>
             </div>
           </div>
         </div>
 
-        {/* Right Side - Sign In Form */}
-        <div className="flex-1 bg-gray-50 flex items-center justify-center p-8">
+        {/* Right Side */}
+        <div className="flex-1 bg-gray-50 flex items-center justify-center p-4 md:p-8">
           <div className="w-full max-w-md">
-            <div className="bg-white rounded-lg shadow-lg p-8">
-              <h2 className="text-3xl font-bold text-blue-600 mb-8 text-center">
+            <div className="bg-white rounded-lg shadow-lg p-6 md:p-8">
+              <h2 className="text-2xl md:text-3xl font-bold text-blue-600 mb-6 text-center">
                 Sign In
               </h2>
 
-              <div className="space-y-6">
-                {/* Email Field */}
+              <div className="space-y-5">
+                {/* Email */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     Email
                   </label>
                   <div className="relative">
@@ -175,24 +144,23 @@ const SignIn = () => {
                       onChange={(e) => setEmail(e.target.value)}
                       onKeyPress={handleKeyPress}
                       placeholder="johndoe@gmail.com"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors pr-12"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg pr-12 focus:ring-2 focus:ring-blue-500 outline-none"
                       disabled={isLoading}
-                      required
                     />
-                    <Mail className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                    <Mail className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                   </div>
                 </div>
 
-                {/* Password Field */}
+                {/* Password */}
                 <div>
-                  <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center justify-between mb-1">
                     <label className="block text-sm font-medium text-gray-700">
                       Password
                     </label>
                     <button
                       type="button"
                       onClick={handleForgotPassword}
-                      className="text-sm text-blue-600 hover:text-blue-700 transition-colors"
+                      className="text-sm text-blue-600 hover:text-blue-700"
                       disabled={isLoading}
                     >
                       Forgot Password?
@@ -204,15 +172,14 @@ const SignIn = () => {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       onKeyPress={handleKeyPress}
-                      placeholder="••••••••••••"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors pr-12"
+                      placeholder="•••••••••••"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg pr-12 focus:ring-2 focus:ring-blue-500 outline-none"
                       disabled={isLoading}
-                      required
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"
                       disabled={isLoading}
                     >
                       {showPassword ? (
@@ -228,14 +195,13 @@ const SignIn = () => {
                 <div className="flex items-center">
                   <input
                     id="remember-me"
-                    name="remember-me"
                     type="checkbox"
-                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    className="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
                     disabled={isLoading}
                   />
                   <label
                     htmlFor="remember-me"
-                    className="ml-2 block text-sm text-gray-700"
+                    className="ml-2 text-sm text-gray-700"
                   >
                     Remember me
                   </label>
@@ -245,7 +211,7 @@ const SignIn = () => {
                 <button
                   onClick={handleSignIn}
                   disabled={isLoading}
-                  className={`w-full font-semibold py-3 px-4 rounded-lg transition-colors focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 outline-none ${
+                  className={`w-full py-3 rounded-lg font-semibold focus:ring-2 focus:ring-blue-500 ${
                     isLoading
                       ? "bg-gray-400 cursor-not-allowed text-white"
                       : "bg-blue-500 hover:bg-blue-600 text-white"
@@ -255,51 +221,42 @@ const SignIn = () => {
                 </button>
 
                 {/* Divider */}
-                <div className="relative">
-                  <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-gray-300" />
-                  </div>
-                  <div className="relative flex justify-center text-sm">
-                    <span className="px-2 bg-white text-gray-500">
-                      or continue with
-                    </span>
-                  </div>
+                <div className="flex items-center my-4">
+                  <div className="flex-1 border-t border-gray-300"></div>
+                  <span className="px-2 text-sm text-gray-500">
+                    or continue with
+                  </span>
+                  <div className="flex-1 border-t border-gray-300"></div>
                 </div>
 
-                {/* Social Login Buttons */}
+                {/* Socials */}
                 <div className="flex justify-center space-x-4">
                   <button
-                    type="button"
-                    className="w-12 h-12 border border-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-50 transition-colors"
+                    className="w-10 h-10 border border-gray-300 rounded-lg flex items-center justify-center"
                     onClick={() => toast.info("Facebook login coming soon!")}
-                    disabled={isLoading}
                   >
-                    <span className="text-blue-600 font-bold text-lg">f</span>
+                    <span className="text-blue-600 font-bold">f</span>
                   </button>
                   <button
-                    type="button"
-                    className="w-12 h-12 border border-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-50 transition-colors"
+                    className="w-10 h-10 border border-gray-300 rounded-lg flex items-center justify-center"
                     onClick={() => toast.info("Google login coming soon!")}
-                    disabled={isLoading}
                   >
-                    <span className="text-red-500 font-bold text-lg">G+</span>
+                    <span className="text-red-500 font-bold">G+</span>
                   </button>
                   <button
-                    type="button"
-                    className="w-12 h-12 border border-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-50 transition-colors"
+                    className="w-10 h-10 border border-gray-300 rounded-lg flex items-center justify-center"
                     onClick={() => toast.info("LinkedIn login coming soon!")}
-                    disabled={isLoading}
                   >
-                    <span className="text-blue-700 font-bold text-lg">in</span>
+                    <span className="text-blue-700 font-bold">in</span>
                   </button>
                 </div>
 
                 {/* Sign Up Link */}
-                <div className="text-center">
-                  <span className="text-gray-600">Don't have an account? </span>
+                <div className="text-center text-sm">
+                  <span className="text-gray-600">Don’t have an account? </span>
                   <a
                     href="/signup"
-                    className="text-blue-600 hover:text-blue-700 font-semibold transition-colors"
+                    className="text-blue-600 hover:text-blue-700 font-semibold"
                   >
                     Sign Up
                   </a>

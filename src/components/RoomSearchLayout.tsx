@@ -12,6 +12,8 @@ import {
   Star,
   ChevronLeft,
   ChevronRight,
+  Filter,
+  X,
 } from "lucide-react";
 
 // Define types
@@ -42,6 +44,7 @@ const RoomSearchLayout = () => {
   const [showAvailability, setShowAvailability] = useState<boolean>(false);
   const [sortBy, setSortBy] = useState<string>("Recommended");
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [showMobileFilters, setShowMobileFilters] = useState<boolean>(false);
 
   // Sample room data
   const rooms: Room[] = [
@@ -354,8 +357,8 @@ const RoomSearchLayout = () => {
     const [isDraggingMin, setIsDraggingMin] = useState(false);
     const [isDraggingMax, setIsDraggingMax] = useState(false);
     
-   const minPrice = 2000;  
-const maxPrice = 20000;
+    const minPrice = 2000;  
+    const maxPrice = 20000;
     const range = maxPrice - minPrice;
     
     const minPercent = ((priceRange[0] - minPrice) / range) * 100;
@@ -442,14 +445,6 @@ const maxPrice = 20000;
     // Add event listeners
     useEffect(() => {
       if (isDraggingMin || isDraggingMax) {
-        // const handleMove = (e: MouseEvent | TouchEvent) => {
-        //   if (e instanceof MouseEvent) {
-        //     handleMouseMove(e);
-        //   } else {
-        //     handleTouchMove(e);
-        //   }
-        // };
-
         const handleEnd = () => {
           handleMouseUp();
           handleTouchEnd();
@@ -518,137 +513,173 @@ const maxPrice = 20000;
     );
   };
 
+  // Filter Sidebar Content Component
+  const FilterContent = () => (
+    <>
+      {/* Price Range */}
+      <div className="mb-6">
+        <h3 className="font-semibold text-gray-800 mb-4">Price Range</h3>
+        <PriceRangeSlider />
+      </div>
+
+      {/* Room Type */}
+      <div className="mb-6">
+        <h3 className="font-semibold text-gray-800 mb-4">Room Type</h3>
+        <div className="space-y-3">
+          {availableRoomTypes.map((type) => (
+            <label key={type} className="flex items-center">
+              <input
+                type="checkbox"
+                checked={roomTypes.includes(type)}
+                onChange={() => handleRoomTypeChange(type)}
+                className="w-4 h-4 text-blue-500 border-gray-300 rounded focus:ring-blue-500"
+              />
+              <span className="ml-3 text-gray-700">{type}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      {/* Apartment Amenities */}
+      <div className="mb-6">
+        <h3 className="font-semibold text-gray-800 mb-4">
+          Apartment Amenities
+        </h3>
+        <div className="space-y-3">
+          {availableAmenities.map((amenity) => {
+            const IconComponent = getAmenityIcon(amenity);
+            return (
+              <label key={amenity} className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={amenities.includes(amenity)}
+                  onChange={() => handleAmenityChange(amenity)}
+                  className="w-4 h-4 text-blue-500 border-gray-300 rounded focus:ring-blue-500"
+                />
+                <IconComponent className="w-4 h-4 ml-3 mr-2 text-gray-600" />
+                <span className="text-gray-700">{amenity}</span>
+              </label>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Location */}
+      <div className="mb-6">
+        <h3 className="font-semibold text-gray-800 mb-4">Location</h3>
+        <div className="relative">
+          <input
+            type="text"
+            value={location}
+            onChange={(e) => {
+              setLocation(e.target.value);
+              setCurrentPage(1);
+            }}
+            placeholder="Enter location (e.g., Minal)"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+          />
+          <MapPin className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+        </div>
+      </div>
+
+      {/* Availability */}
+      <div className="mb-6">
+        <h3 className="font-semibold text-gray-800 mb-4">Availability</h3>
+        <label className="flex items-center justify-between">
+          <span className="text-gray-700">Show only available</span>
+          <div className="relative">
+            <input
+              type="checkbox"
+              checked={showAvailability}
+              onChange={(e) => {
+                setShowAvailability(e.target.checked);
+                setCurrentPage(1);
+              }}
+              className="sr-only"
+            />
+            <div
+              onClick={() => {
+                setShowAvailability(!showAvailability);
+                setCurrentPage(1);
+              }}
+              className={`w-10 h-6 rounded-full cursor-pointer transition-colors ${
+                showAvailability ? "bg-blue-500" : "bg-gray-300"
+              }`}
+            >
+              <div
+                className={`w-4 h-4 bg-white rounded-full shadow-md transform transition-transform mt-1 ${
+                  showAvailability
+                    ? "translate-x-5 ml-1"
+                    : "translate-x-1"
+                }`}
+              ></div>
+            </div>
+          </div>
+        </label>
+      </div>
+
+      {/* Clear All Filter */}
+      <button
+        onClick={clearAllFilters}
+        className="w-full text-gray-700 py-2 border-2 border-gray-400 rounded-2xl font-medium transition-colors hover:bg-gray-50"
+      >
+        Clear All Filter
+      </button>
+    </>
+  );
+
   return (
     <div className="min-h-screen bg-gray-50 mb-10">
       <div className="max-w-7xl mx-auto p-4">
         <div className="flex gap-6">
-          {/* Sidebar */}
-          <div className="w-80 bg-white rounded-lg shadow-sm p-6 h-fit sticky top-4">
-            {/* Price Range */}
-            <div className="mb-6">
-              <h3 className="font-semibold text-gray-800 mb-4">Price Range</h3>
-              <PriceRangeSlider />
-            </div>
-
-            {/* Room Type */}
-            <div className="mb-6">
-              <h3 className="font-semibold text-gray-800 mb-4">Room Type</h3>
-              <div className="space-y-3">
-                {availableRoomTypes.map((type) => (
-                  <label key={type} className="flex items-center">
-                    <input
-                      type="checkbox"
-                      checked={roomTypes.includes(type)}
-                      onChange={() => handleRoomTypeChange(type)}
-                      className="w-4 h-4 text-blue-500 border-gray-300 rounded focus:ring-blue-500"
-                    />
-                    <span className="ml-3 text-gray-700">{type}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            {/* Apartment Amenities */}
-            <div className="mb-6">
-              <h3 className="font-semibold text-gray-800 mb-4">
-                Apartment Amenities
-              </h3>
-              <div className="space-y-3">
-                {availableAmenities.map((amenity) => {
-                  const IconComponent = getAmenityIcon(amenity);
-                  return (
-                    <label key={amenity} className="flex items-center">
-                      <input
-                        type="checkbox"
-                        checked={amenities.includes(amenity)}
-                        onChange={() => handleAmenityChange(amenity)}
-                        className="w-4 h-4 text-blue-500 border-gray-300 rounded focus:ring-blue-500"
-                      />
-                      <IconComponent className="w-4 h-4 ml-3 mr-2 text-gray-600" />
-                      <span className="text-gray-700">{amenity}</span>
-                    </label>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Location */}
-            <div className="mb-6">
-              <h3 className="font-semibold text-gray-800 mb-4">Location</h3>
-              <div className="relative">
-                <input
-                  type="text"
-                  value={location}
-                  onChange={(e) => {
-                    setLocation(e.target.value);
-                    setCurrentPage(1);
-                  }}
-                  placeholder="Enter location (e.g., Minal)"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                />
-                <MapPin className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-              </div>
-            </div>
-
-            {/* Availability */}
-            <div className="mb-6">
-              <h3 className="font-semibold text-gray-800 mb-4">Availability</h3>
-              <label className="flex items-center justify-between">
-                <span className="text-gray-700">Show only available</span>
-                <div className="relative">
-                  <input
-                    type="checkbox"
-                    checked={showAvailability}
-                    onChange={(e) => {
-                      setShowAvailability(e.target.checked);
-                      setCurrentPage(1);
-                    }}
-                    className="sr-only"
-                  />
-                  <div
-                    onClick={() => {
-                      setShowAvailability(!showAvailability);
-                      setCurrentPage(1);
-                    }}
-                    className={`w-10 h-6 rounded-full cursor-pointer transition-colors ${
-                      showAvailability ? "bg-blue-500" : "bg-gray-300"
-                    }`}
-                  >
-                    <div
-                      className={`w-4 h-4 bg-white rounded-full shadow-md transform transition-transform mt-1 ${
-                        showAvailability
-                          ? "translate-x-5 ml-1"
-                          : "translate-x-1"
-                      }`}
-                    ></div>
-                  </div>
-                </div>
-              </label>
-            </div>
-
-            {/* Clear All Filter */}
-            <button
-              onClick={clearAllFilters}
-              className="w-full text-gray-700 py-2 border-2 border-gray-400 rounded-2xl font-medium transition-colors hover:bg-gray-50"
-            >
-              Clear All Filter
-            </button>
+          {/* Desktop Sidebar */}
+          <div className="hidden lg:block w-80 bg-white rounded-lg shadow-sm p-6 h-fit sticky top-4">
+            <FilterContent />
           </div>
 
+          {/* Mobile Filter Button */}
+          <button
+            onClick={() => setShowMobileFilters(true)}
+            className="lg:hidden fixed bottom-4 right-4 z-40 bg-blue-500 text-white px-4 py-3 rounded-full shadow-lg flex items-center gap-2 hover:bg-blue-600 transition-colors"
+          >
+            <Filter className="w-5 h-5" />
+            <span className="font-medium">Filters</span>
+          </button>
+
+          {/* Mobile Filter Overlay */}
+          {showMobileFilters && (
+            <div className="lg:hidden fixed inset-0 z-50 bg-black bg-opacity-50">
+              <div className="absolute right-0 top-0 h-full w-full max-w-sm bg-white shadow-xl overflow-y-auto">
+                <div className="sticky top-0 bg-white border-b border-gray-200 p-4 flex items-center justify-between">
+                  <h2 className="text-xl font-semibold">Filters</h2>
+                  <button
+                    onClick={() => setShowMobileFilters(false)}
+                    className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+                <div className="p-6">
+                  <FilterContent />
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Main Content */}
-          <div className="flex-1">
+          <div className="flex-1 w-full min-w-0">
             {/* Header */}
-            <div className="flex justify-between items-center mb-6">
-              <h1 className="text-2xl font-bold text-gray-800">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-800">
                 {filteredRooms.length} Rooms Found
               </h1>
-              <div className="flex items-center gap-2">
-                <span className="text-gray-600">Sort by:</span>
-                <div className="relative">
+              <div className="flex items-center gap-2 w-full sm:w-auto">
+                <span className="text-gray-600 text-sm sm:text-base">Sort by:</span>
+                <div className="relative flex-1 sm:flex-initial">
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
-                    className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                    className="appearance-none bg-white border border-gray-300 rounded-lg px-3 sm:px-4 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-sm sm:text-base w-full"
                   >
                     <option>Recommended</option>
                     <option>Price: Low to High</option>
@@ -662,7 +693,7 @@ const maxPrice = 20000;
             </div>
 
             {/* Room Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-8">
               {paginatedRooms.map((room, index) => (
                 <div
                   key={`${room.landlordId}-${index}`}
@@ -674,7 +705,7 @@ const maxPrice = 20000;
                       alt={room.title}
                       className="w-full h-48 object-cover"
                     />
-                    <div className="absolute top-3 left-3 bg-blue-500 text-white px-2 py-1 rounded text-sm font-medium">
+                    <div className="absolute top-3 left-3 bg-blue-500 text-white px-2 py-1 rounded text-xs sm:text-sm font-medium">
                       ₹{room.rent.toLocaleString()}/month
                     </div>
                     <div className={`absolute top-3 right-3 px-2 py-1 rounded text-xs font-medium ${
@@ -686,12 +717,12 @@ const maxPrice = 20000;
                     </div>
                   </div>
                   <div className="p-4">
-                    <h3 className="font-semibold text-gray-800 mb-2 line-clamp-2">
+                    <h3 className="font-semibold text-gray-800 mb-2 line-clamp-2 text-sm sm:text-base">
                       {room.title}
                     </h3>
-                    <div className="flex items-center text-gray-600 text-sm mb-2">
-                      <MapPin className="w-4 h-4 mr-1" />
-                      <span>{room.location.address}, {room.location.city}</span>
+                    <div className="flex items-center text-gray-600 text-xs sm:text-sm mb-2">
+                      <MapPin className="w-3 h-3 sm:w-4 sm:h-4 mr-1 flex-shrink-0" />
+                      <span className="truncate">{room.location.address}, {room.location.city}</span>
                     </div>
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex flex-wrap gap-1">
@@ -704,8 +735,8 @@ const maxPrice = 20000;
                           </span>
                         ))}
                       </div>
-                      <div className="flex items-center gap-1 text-sm">
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                      <div className="flex items-center gap-1 text-xs sm:text-sm">
+                        <Star className="w-3 h-3 sm:w-4 sm:h-4 fill-yellow-400 text-yellow-400" />
                         <span className="font-medium">{getRandomRating(room.viewsCount)}</span>
                       </div>
                     </div>
@@ -719,25 +750,25 @@ const maxPrice = 20000;
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="flex justify-center items-center space-x-2">
+              <div className="flex justify-center items-center space-x-1 sm:space-x-2">
                 {/* Previous button */}
                 <button
                   onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-                  className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-300 hover:bg-gray-100 transition-colors disabled:opacity-50"
+                  className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full border border-gray-300 hover:bg-gray-100 transition-colors disabled:opacity-50"
                   disabled={currentPage === 1}
                 >
-                  <ChevronLeft className="w-5 h-5 text-gray-600" />
+                  <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
                 </button>
 
-                {/* Page numbers */}
-                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                  const pageNum = Math.max(1, Math.min(totalPages - 4, currentPage - 2)) + i;
+                {/* Page numbers - show fewer on mobile */}
+                {Array.from({ length: Math.min(window.innerWidth < 640 ? 3 : 5, totalPages) }, (_, i) => {
+                  const pageNum = Math.max(1, Math.min(totalPages - (window.innerWidth < 640 ? 2 : 4), currentPage - (window.innerWidth < 640 ? 1 : 2))) + i;
                   if (pageNum > totalPages) return null;
                   return (
                     <button
                       key={pageNum}
                       onClick={() => setCurrentPage(pageNum)}
-                      className={`w-10 h-10 flex items-center justify-center rounded-full border transition-colors ${
+                      className={`w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full border transition-colors text-sm sm:text-base ${
                         currentPage === pageNum
                           ? "bg-blue-600 text-white border-blue-600"
                           : "border-gray-300 text-gray-700 hover:bg-gray-100"
@@ -751,22 +782,22 @@ const maxPrice = 20000;
                 {/* Next button */}
                 <button
                   onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
-                  className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-300 hover:bg-gray-100 transition-colors disabled:opacity-50"
+                  className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full border border-gray-300 hover:bg-gray-100 transition-colors disabled:opacity-50"
                   disabled={currentPage === totalPages}
                 >
-                  <ChevronRight className="w-5 h-5 text-gray-600" />
+                  <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
                 </button>
               </div>
             )}
 
             {/* No results message */}
             {filteredRooms.length === 0 && (
-              <div className="text-center py-12">
-                <div className="text-gray-500 text-lg mb-2">No rooms found</div>
-                <div className="text-gray-400">Try adjusting your filters to see more results</div>
+              <div className="text-center py-12 px-4">
+                <div className="text-gray-500 text-base sm:text-lg mb-2">No rooms found</div>
+                <div className="text-gray-400 text-sm sm:text-base">Try adjusting your filters to see more results</div>
                 <button
                   onClick={clearAllFilters}
-                  className="mt-4 px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                  className="mt-4 px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm sm:text-base"
                 >
                   Clear All Filters
                 </button>

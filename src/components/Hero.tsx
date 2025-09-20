@@ -18,19 +18,23 @@ const Hero: React.FC = () => {
   };
 
   return (
-    <section className="relative min-h-screen bg-gradient-to-b from-[#89B4DB] to-[#0085FE] overflow-visible">
-      <header className="flex justify-between w-full absolute top-0 left-0 z-20">
+    <section className="relative min-h-screen bg-gradient-to-b from-[#89B4DB] to-[#0085FE] overflow-x-hidden">
+      {/* Header */}
+      <header className="flex justify-between items-center w-full absolute top-0 left-0 z-20 px-4 md:px-6 py-4 md:py-6">
+        {/* Logo */}
         <div className="flex items-center">
-          <img src="/rumin-logo.png" alt="logo" className="w-36 h-auto" />
+          <img src="/rumin-logo.png" alt="logo" className="w-28 md:w-36 h-auto" />
         </div>
 
-        <nav className="hidden md:flex items-center space-x-30 text-white text-lg">
+        {/* Desktop Nav */}
+        <nav className="hidden md:flex items-center space-x-8 text-white text-lg">
           <a href="/" className="hover:text-gray-200 transition-colors">Home</a>
           <a href="/rooms" className="hover:text-gray-200 transition-colors">Room</a>
           <a href="#" className="hover:text-gray-200 transition-colors">Student Furniture</a>
         </nav>
 
-        <div className="flex items-center space-x-3 bg-white pl-8">
+        {/* User / Auth Buttons — strictly same on all screens */}
+        <div className="flex items-center space-x-3  pl-8">
           {user ? (
             <div className="relative">
               <div className="flex items-center space-x-3 bg-white pl-3 pr-4 py-1 rounded-full shadow-md">
@@ -65,7 +69,7 @@ const Hero: React.FC = () => {
             <>
               <button
                 onClick={() => navigate("/signup")}
-                className="px-4 py-2 bg-white text-blue-600 rounded-full hover:bg-gray-100 transition-colors text-sm font-medium"
+                className="px-4 py-2 text-white rounded-full hover:bg-blue-700 transition-colors text-sm font-medium"
               >
                 Signup
               </button>
@@ -86,48 +90,57 @@ const Hero: React.FC = () => {
         </div>
       </header>
 
-      <div className="container mx-auto px-6 flex flex-col md:flex-row items-center justify-between h-full pt-32 md:pt-40">
-        <div className="flex-1 max-w-xl text-white">
-          <h1 className="text-3xl md:text-5xl font-bold leading-tight mb-6">
+      {/* Hero Content */}
+      <div className="container mx-auto px-4 md:px-6 flex flex-col md:flex-row items-center justify-between h-full pt-32 md:pt-40">
+        {/* Text Section */}
+        <div className="flex-1 max-w-full md:max-w-xl text-white">
+          <h1 className="text-2xl md:text-5xl font-bold leading-tight mb-4 md:mb-6">
             Find your Perfect Rental Room With Ease.
           </h1>
-          <p className="text-xl text-white/90 mb-8 w-120 leading-loose">
+          <p className="text-base md:text-xl text-white/90 mb-6 md:mb-8 leading-relaxed md:leading-loose">
             Rumin redefines renting with a seamless experience tailored to your needs, offering innovative features that set us apart from the rest.
           </p>
-          <div className="bg-white rounded-full p-2 flex items-center shadow-lg mb-12 max-w-md">
+
+          {/* Search Bar */}
+          <div className="bg-white rounded-full flex items-center shadow-lg mb-8 md:mb-12 w-full max-w-md overflow-hidden">
             <input
               type="text"
               placeholder="Ask me anything"
-              className="flex-1 px-4 py-3 text-gray-700 bg-transparent outline-none rounded-l-full"
+              className="flex-1 px-4 py-2 md:py-3 text-gray-700 bg-transparent outline-none"
             />
-            <button className="text-black px-6 py-3 rounded-full transition-colors">
+            <button className="text-black px-4 md:px-6 py-2 md:py-3 rounded-full transition-colors">
               <Search />
             </button>
           </div>
-          <div className="flex space-x-12">
+
+          {/* Stats */}
+          <div className="flex flex-wrap gap-6 md:gap-12">
             <div>
-              <div className="text-3xl font-bold">15K+</div>
-              <div className="text-sm text-white/80">Happy Customers</div>
+              <div className="text-2xl md:text-3xl font-bold">15K+</div>
+              <div className="text-sm md:text-sm text-white/80">Happy Customers</div>
             </div>
             <div>
-              <div className="text-3xl font-bold">35+</div>
-              <div className="text-sm text-white/80">Countries</div>
+              <div className="text-2xl md:text-3xl font-bold">35+</div>
+              <div className="text-sm md:text-sm text-white/80">Countries</div>
             </div>
             <div>
-              <div className="text-3xl font-bold">20K+</div>
-              <div className="text-sm text-white/80">Properties</div>
+              <div className="text-2xl md:text-3xl font-bold">20K+</div>
+              <div className="text-sm md:text-sm text-white/80">Properties</div>
             </div>
           </div>
         </div>
-        <div className="flex-1 relative mt-12 md:mt-0">
+
+        {/* Image Section */}
+        <div className="flex-1 relative mt-8 md:mt-0 w-full max-w-full md:max-w-2xl">
           <img
             src="/hero.png"
             alt="Modern house"
-            className="w-full h-auto max-w-2xl ml-auto relative z-10"
+            className="w-full h-auto relative z-10"
           />
-          <div className="absolute top-20 right-20 w-4 h-4 bg-white/20 rounded-full"></div>
-          <div className="absolute bottom-40 right-10 w-6 h-6 bg-white/15 rounded-full"></div>
-          <div className="absolute top-40 right-40 w-3 h-3 bg-white/25 rounded-full"></div>
+          {/* Floating circles */}
+          <div className="absolute top-20 right-10 md:right-20 w-4 h-4 bg-white/20 rounded-full"></div>
+          <div className="absolute bottom-32 right-5 md:bottom-40 md:right-10 w-6 h-6 bg-white/15 rounded-full"></div>
+          <div className="absolute top-36 right-32 md:top-40 md:right-40 w-3 h-3 bg-white/25 rounded-full"></div>
         </div>
       </div>
     </section>

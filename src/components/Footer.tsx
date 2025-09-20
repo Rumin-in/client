@@ -36,7 +36,7 @@ const Footer = () => {
           </div>
 
           {/* Property Section */}
-          <div className='ml-8'>
+          <div className='sm:ml-8'>
             <h3 className="text-lg font-semibold mb-4">Property</h3>
             <ul className="space-y-3">
               <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Room</a></li>
