@@ -41,7 +41,7 @@ const RoomsHero = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder="search by city, neighbourhood or area"
+            placeholder="Search by city, neighbourhood or area"
             className="flex-1 py-2 sm:py-3 px-2 text-gray-700 placeholder-gray-400 bg-transparent outline-none text-sm sm:text-base"
           />
 

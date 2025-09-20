@@ -15,6 +15,7 @@ import {
   Filter,
   X,
 } from "lucide-react";
+import {getAllRooms} from "../services/rooms.services"
 
 // Define types
 type Room = {
@@ -45,8 +46,25 @@ const RoomSearchLayout = () => {
   const [sortBy, setSortBy] = useState<string>("Recommended");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [showMobileFilters, setShowMobileFilters] = useState<boolean>(false);
+  // const [rooms, setRooms] = useState<Room[]>([]);
 
-  // Sample room data
+  //  const fetchRooms = async()=>{
+  //   try {
+  //     const response = await getAllRooms();
+  //     console.log("response:", response.data);
+  //     console.log("is array:", Array.isArray(response.data));
+  //         if (response && Array.isArray(response.data)) {
+  //     setRooms(response.data); 
+  //   }
+  //   } catch (error) {
+  //     console.error("Error fetching rooms:", error);
+  //   }
+  //  }
+  //  useEffect(()=>{
+  //   fetchRooms();
+  //  })
+
+
   const rooms: Room[] = [
     {
       "title": "1 BHK in Minal",
@@ -232,6 +250,7 @@ const RoomSearchLayout = () => {
 
   // Get unique room types from data
   const availableRoomTypes = useMemo(() => {
+    console.log("Type of rooms:", typeof rooms);
     const types = [...new Set(rooms.map(room => room.bhk))];
     return types;
   }, [rooms]);
@@ -463,7 +482,7 @@ const RoomSearchLayout = () => {
         };
       }
     }, [isDraggingMin, isDraggingMax, priceRange]);
-
+    console.log("Rooms :",rooms);
     return (
       <div className="space-y-4">
         <div className="px-2">
