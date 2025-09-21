@@ -15,7 +15,6 @@ import {
   Filter,
   X,
 } from "lucide-react";
-import {getAllRooms} from "../services/rooms.services"
 
 // Define types
 type Room = {

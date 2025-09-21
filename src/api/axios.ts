@@ -1,7 +1,7 @@
 import axiosBase from "axios"; // rename original axios import
 
 const axios = axiosBase.create({
-  baseURL: "http://localhost:3000/api",
+  baseURL: "https://server-zeta-orpin.vercel.app/api",
   headers: {
     "Content-Type": "application/json",
   },
