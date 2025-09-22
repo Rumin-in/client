@@ -6,6 +6,7 @@ import PopularAreas from "../components/PopularAreas"
 import PopularListing from "../components/PopularListings"
 import RoomsBySize from "../components/RoomBySize"
 import Testimonials from "../components/Testimonials"
+import LandlordRegistration from "../components/LandlordRegistration"
 import UniquePreferences from "../components/UniquePreference"
 import Footer from "../components/Footer"
 
@@ -21,6 +22,7 @@ function Home() {
     <ComingSoon/>
     <Testimonials/>
     <FAQSection/>
+    <LandlordRegistration/>
     <ContactForm/>
     <Footer/>
     </div>

@@ -132,7 +132,7 @@ const ContactForm: React.FC = () => {
             <div className="space-y-8">
               {/* 3D Illustration */}
               <div className="flex justify-center">
-                <img src="/contact.png" alt="contact" className="max-w-full h-auto" />
+                <img src="/contact.png" alt="contact" className="max-w-full h-auto grayscale" />
               </div>
               
               {/* Contact Information */}

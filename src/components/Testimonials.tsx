@@ -1,13 +1,13 @@
 import React from "react";
 
 const Testimonials: React.FC = () => {
-  const avatars = [
-    { id: 1, avatar: "/p1.png", position: "top-0 left-1/2 -translate-x-1/2" },
-    { id: 2, avatar: "/p2.png", position: "right-0 top-1/2 -translate-y-1/2" },
-    { id: 3, avatar: "/p3.png", position: "bottom-0 left-1/2 -translate-x-1/2" },
-    { id: 4, avatar: "/p4.png", position: "left-0 top-1/2 -translate-y-1/2" },
-    { id: 5, avatar: "/p5.png", position: "top-10 right-10" },
-  ];
+const avatars = [
+  { id: 1, avatar: "/p1.png", position: "top-10 left-1/2 -translate-x-1/2" },
+  { id: 2, avatar: "/p2.png", position: "top-1/2 right-20 -translate-y-1/2" },
+  { id: 3, avatar: "/p3.png", position: "bottom-10 left-1/2 -translate-x-1/2" },
+  { id: 4, avatar: "/p4.png", position: "top-1/2 left-20 -translate-y-1/2" },
+  { id: 5, avatar: "/p5.png", position: "bottom-16 right-20" },
+];
 
   return (
     <section className="py-20 bg-gray-50 relative">
@@ -19,8 +19,8 @@ const Testimonials: React.FC = () => {
 
         {/* Central Testimonial */}
         <div className="relative flex items-center justify-center min-h-[400px]">
-          <div className="bg-white rounded-2xl shadow-lg p-8 max-w-md text-center z-10">
-            <h4 className="font-semibold text-gray-800 text-lg mb-2">
+          <div className=" p-8 max-w-md text-center z-10">
+            <h4 className=" text-gray-800 text-2xl font-bold mb-2">
               Jane Cooper
             </h4>
             <p className="text-gray-600 text-sm leading-relaxed">
