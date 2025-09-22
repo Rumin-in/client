@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 const PopularListing: React.FC = () => {
   // Dummy data for listings
@@ -7,38 +7,38 @@ const PopularListing: React.FC = () => {
       id: 1,
       title: "1 BHK in Dwarka Dham colony Rh138",
       price: "₹7,000/mon",
-      image: "/api/placeholder/280/200"
+      image: "/api/placeholder/280/200",
     },
     {
       id: 2,
       title: "1 BHK in Dwarka Dham colony Rh138",
       price: "₹7,000/mon",
-      image: "/api/placeholder/280/200"
+      image: "/api/placeholder/280/200",
     },
     {
       id: 3,
       title: "1 BHK in Dwarka Dham colony Rh138",
       price: "₹7,000/mon",
-      image: "/api/placeholder/280/200"
+      image: "/api/placeholder/280/200",
     },
     {
       id: 4,
       title: "1 BHK in Dwarka Dham colony Rh138",
       price: "₹7,000/mon",
-      image: "/api/placeholder/280/200"
+      image: "/api/placeholder/280/200",
     },
     {
       id: 5,
       title: "1 BHK in Dwarka Dham colony Rh138",
       price: "₹7,000/mon",
-      image: "/api/placeholder/280/200"
+      image: "/api/placeholder/280/200",
     },
     {
       id: 6,
       title: "1 BHK in Dwarka Dham colony Rh138",
       price: "₹7,000/mon",
-      image: "/api/placeholder/280/200"
-    }
+      image: "/api/placeholder/280/200",
+    },
   ];
 
   return (
@@ -50,7 +50,8 @@ const PopularListing: React.FC = () => {
             Popular Listing
           </h2>
           <p className="text-4xl text-gray-700 font-semi-bold">
-            We help you to make<br />
+            We help you to make
+            <br />
             better deals
           </p>
         </div>
@@ -59,11 +60,14 @@ const PopularListing: React.FC = () => {
         <div className="bg-blue-50 rounded-3xl p-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {listings.map((listing) => (
-              <div key={listing.id} className="bg-white rounded-2xl shadow-sm overflow-hidden">
+              <div
+                key={listing.id}
+                className="bg-white rounded-2xl shadow-sm overflow-hidden"
+              >
                 {/* Property Image */}
                 <div className="relative">
                   <img
-                    src={'/placeholder.png' } 
+                    src={"/placeholder.png"}
                     alt={listing.title}
                     className="w-full h-48 object-cover"
                   />
@@ -100,7 +104,14 @@ const PopularListing: React.FC = () => {
               </div>
             ))}
           </div>
+           <div className="flex justify-center"> 
+        <button onClick={()=>{
+          window.location.href="/rooms"
+        }} className="px-8 py-3 mt-8  bg-blue-500 cursor-pointer text-white text-sm rounded-full hover:bg-blue-600 transition-colors">
+          View All{" "}
+        </button></div>
         </div>
+      
       </div>
     </section>
   );

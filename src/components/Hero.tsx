@@ -18,7 +18,7 @@ const Hero: React.FC = () => {
   };
 
   return (
-    <section className="relative min-h-screen bg-gradient-to-b from-[#89B4DB] to-[#0085FE] overflow-x-hidden">
+    <section className="relative min-h-screen bg-gradient-to-b from-[#89B4DB] to-[#0085FE] overflow-x-hidden rounded-lg">
       <header className="flex justify-between items-center w-full absolute top-0 left-0 z-20 px-4 md:px-6 py-3 md:py-6">
         <div className="flex items-center">
           <img src="/rumin-logo.png" alt="logo" className="w-32 h-auto md:w-36" />
@@ -94,13 +94,14 @@ const Hero: React.FC = () => {
           <p className="text-base md:text-xl text-white/90 mb-6 md:mb-8 leading-relaxed md:leading-loose">
             Rumin redefines renting with a seamless experience tailored to your needs, offering innovative features that set us apart from the rest.
           </p>
-          <div className="bg-white rounded-full flex items-center shadow-lg mb-8 md:mb-12 w-full max-w-md overflow-hidden">
-            <input
-              type="text"
-              placeholder="Ask me anything"
-              className="flex-1 px-4 py-2 md:py-3 text-gray-700 bg-transparent outline-none"
-            />
-            <button className="text-black px-4 md:px-6 py-2 md:py-3 rounded-full transition-colors">
+          <div className="bg-white  rounded-full flex items-center shadow-lg mb-8 md:mb-12 w-full max-w-md overflow-hidden border-5 border-[#69b8f9]">
+           <input
+  type="text"
+  placeholder="Ask me anything"
+  className="flex-1 px-4 py-2 md:py-3 text-gray-700 bg-transparent outline-none placeholder-[#108cfe]"
+/>
+
+            <button className="text-[#108cfe] px-4 md:px-6 py-2 md:py-3 rounded-full transition-colors">
               <Search />
             </button>
           </div>
