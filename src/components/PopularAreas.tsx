@@ -38,9 +38,9 @@ const PopularAreas: React.FC = () => {
   return (
     <section className="py-16 bg-white">
       <div className="container mx-auto px-6">
-        <div className="bg-blue-50 rounded-3xl p-8">
+        <div className=" bg-[#0085FE1A] rounded-3xl p-8">
           {/* Top Section - Text and Large Image */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8 ">
             {/* Left Column - Text and Button */}
             <div className="flex flex-col justify-center">
               <h2 className="text-5xl font-bold mb-8">

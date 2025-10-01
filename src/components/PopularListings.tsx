@@ -43,7 +43,7 @@ const PopularListing: React.FC = () => {
 
   return (
     <section className="py-16 bg-white">
-      <div className="container mx-auto px-6">
+      <div className="container mx-auto px-6 mt-10">
         {/* Header */}
         <div className="mb-12">
           <h2 className="text-7xl font-bold text-black mb-4">
@@ -57,8 +57,8 @@ const PopularListing: React.FC = () => {
         </div>
 
         {/* Listings Grid */}
-        <div className="bg-blue-50 rounded-3xl p-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="bg-blue-50 rounded-3xl p-8 px-0">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-10 bg-[#0085FE1A]">
             {listings.map((listing) => (
               <div
                 key={listing.id}

@@ -105,7 +105,7 @@ const SignIn = () => {
           <div className="text-center">
             <div className="mb-8">
               <img
-                src="/house.png"
+                src="/home.png"
                 alt="Welcome House"
                 className="w-64 md:w-80 h-auto mx-auto"
               />
@@ -120,6 +120,9 @@ const SignIn = () => {
               <div className="w-3 h-3 bg-white rounded-full"></div>
               <div className="w-3 h-3 bg-white bg-opacity-50 rounded-full"></div>
             </div>
+            <button className="mt-12 ml-5  bg-white rounded-[20px] px-30 py-5 flex items-center justify-center gap-2 text-gray-800 font-semibold shadow-md hover:bg-gray-100 transition-colors">
+              Sign In
+            </button>
           </div>
         </div>
 
@@ -270,4 +273,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn; 
+export default SignIn;
