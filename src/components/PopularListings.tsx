@@ -106,8 +106,8 @@ const PopularListing: React.FC = () => {
           </div>
            <div className="flex justify-center"> 
         <button onClick={()=>{
-          window.location.href="/rooms"
-        }} className="px-8 py-3 mt-8  bg-blue-500 cursor-pointer text-white text-sm rounded-full hover:bg-blue-600 transition-colors">
+          // window.location.href="/rooms"
+        }} className="px-5 py-2 sm:px-12 sm:py-5 mt-8  bg-blue-500 cursor-pointer text-white text-sm rounded-full hover:bg-blue-600 transition-colors">
           View All{" "}
         </button></div>
         </div>

@@ -3,10 +3,10 @@ import React from "react";
 const Testimonials: React.FC = () => {
 const avatars = [
   { id: 1, avatar: "/p1.png", position: "top-10 left-1/2 -translate-x-1/2" },
-  { id: 2, avatar: "/p2.png", position: "top-1/2 right-20 -translate-y-1/2" },
-  { id: 3, avatar: "/p3.png", position: "bottom-10 left-1/2 -translate-x-1/2" },
-  { id: 4, avatar: "/p4.png", position: "top-1/2 left-20 -translate-y-1/2" },
-  { id: 5, avatar: "/p5.png", position: "bottom-16 right-20" },
+  { id: 2, avatar: "/p2.png", position: "top-1/3 sm:top-1/2 right-0 sm:right-20 -translate-y-1/2" },
+  { id: 3, avatar: "/p3.png", position: "bottom-1 sm:bottom-10 left-1/2 -translate-x-1/2" },
+  { id: 4, avatar: "/p4.png", position: "top-3/4 sm:top-1/2 sm:left-20 left-10 -translate-y-1/2" },
+  { id: 5, avatar: "/p5.png", position: "bottom-16 sm:right-20 right-1" },
 ];
 
   return (
@@ -20,7 +20,7 @@ const avatars = [
         {/* Central Testimonial */}
         <div className="relative flex items-center justify-center min-h-[400px]">
           <div className=" p-8 max-w-md text-center z-10">
-            <h4 className=" text-gray-800 text-2xl font-bold mb-2">
+            <h4 className=" text-gray-800 text-4xl font-bold mb-2">
               Jane Cooper
             </h4>
             <p className="text-gray-600 text-sm leading-relaxed">
@@ -35,7 +35,7 @@ const avatars = [
               <img
                 src={avatar.avatar}
                 alt="User"
-                className="w-16 h-16 rounded-full object-cover shadow-md hover:scale-110 transition-transform cursor-pointer"
+                className="w-16 h-16 sm:w-22 sm:h-22 rounded-full object-cover shadow-md hover:scale-110 transition-transform cursor-pointer"
               />
             </div>
           ))}

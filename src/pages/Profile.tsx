@@ -25,7 +25,7 @@ const ProfileSettingsPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-200">
       {/* Header */}
       <div className="bg-white border-b border-gray-200 px-4 sm:px-8 py-4 sm:ml-[15vmax]">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between max-w-7xl gap-4">
