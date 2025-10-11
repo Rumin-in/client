@@ -5,6 +5,7 @@ import SignUp from "./pages/SignUp";
 import Rooms from "./pages/Rooms";
 import ProfileSettingsPage from "./pages/Profile";
 import RoomDetails from "./pages/RoomDetails";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
+  <Route path="/dashboard" element={<Dashboard/>} />
         <Route path="/rooms" element={<Rooms />} />
         <Route path = "/profile" element = {<ProfileSettingsPage/>}/>
         <Route path="/rooms/:id" element={<RoomDetails/>} />

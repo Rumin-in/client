@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import { Mail, Eye, EyeOff, User } from 'lucide-react';
 import { toast, Toaster } from 'sonner';
 import { register } from '../services/auth.services';
