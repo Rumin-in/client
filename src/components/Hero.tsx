@@ -18,29 +18,29 @@ const Hero: React.FC = () => {
   };
 
   return (
-    <section className="relative  bg-gradient-to-b pb-[10vmax] from-[#89B4DB] to-[#0085FE] overflow-x-hidden sm:rounded-lg">
-      <header className="flex justify-between items-center w-full absolute top-0 left-0 z-20 px-4 md:px-6 py-3 md:py-6">
+    <section className="relative  bg-gradient-to-b pb-[9vmax] from-[#89B4DB] to-[#0085FE] overflow-x-hidden sm:rounded-lg">
+      <header className="flex justify-between w-full absolute top-0 left-0 z-20 px-4 md:px-0  pr-0">
         <div className="flex items-center">
           <img
             src="/rumin-logo.png"
             alt="logo"
-            className="w-32 h-auto md:w-36 sm:scale-160"
+            className="w-32 h-auto md:w-36 sm:scale-160 sm:ml-10 sm:mt-2"
           />
         </div>
 
-        <nav className="hidden md:flex items-center space-x-8 text-white text-lg">
-          <a href="/" className="hover:text-gray-200 transition-colors">
+        <nav className="hidden md:flex items-center space-x-10  text-white ">
+          <a href="/" className="hover:text-gray-200 transition-colors hover:underline text-2xl">
             Home
           </a>
-          <a href="/rooms" className="hover:text-gray-200 transition-colors">
+          <a href="/rooms" className="hover:text-gray-200 transition-colors hover:underline text-2xl">
             Room
           </a>
-          <a href="#" className="hover:text-gray-200 transition-colors">
+          <a href="#" className="hover:text-gray-200 transition-colors hover:underline text-2xl">
             Student Furniture
           </a>
         </nav>
 
-        <div className="flex items-center space-x-2 md:space-x-3 pl-4 md:pl-8">
+        <div className="flex items-center space-x-2 sm:pt-5 sm:bg-white s md:space-x-5 pl-4 md:pl-8 sm:pr-6 ">
           {user ? (
             <div className="relative">
               <div className="flex items-center space-x-3 bg-white pl-3 pr-4 py-1 rounded-full shadow-md">
@@ -77,19 +77,19 @@ const Hero: React.FC = () => {
             <>
               <button
                 onClick={() => navigate("/signup")}
-                className="px-3 py-1 md:px-4 md:py-2 text-xs md:text-sm text-white rounded-full hover:bg-blue-700 transition-colors font-medium"
+                className="px-3 py-1 sm:text-black sm:hover:text-white md:px-4 md:py-2 text-xs md:text-xl text-white rounded-full hover:bg-blue-700 transition-colors font-medium"
               >
                 Signup
               </button>
               <button
                 onClick={() => navigate("/signin")}
-                className="px-3 py-1 md:px-4 md:py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors text-xs md:text-sm font-medium"
+                className="px-3 py-1 md:px-4 md:py-2 bg-blue-600  text-white rounded-full hover:bg-blue-700 transition-colors text-xs md:text-xl font-medium"
               >
                 Login
               </button>
               <button
                 onClick={() => navigate("/about")}
-                className="hidden sm:block px-3 py-1 md:px-4 md:py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors text-xs md:text-sm font-medium"
+                className="hidden sm:block px-3 py-1 md:px-4 md:py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors text-xs md:text-xl font-medium"
               >
                 About Us
               </button>
@@ -98,16 +98,16 @@ const Hero: React.FC = () => {
         </div>
       </header>
 
-      <div className="container mx-auto px-4 md:px-6 flex flex-col md:flex-row items-center justify-between h-full pt-32 md:pt-40">
-        <div className="flex-1 max-w-full md:max-w-xl text-white">
-          <h1 className="text-2xl md:text-5xl font-bold leading-tight mb-4 md:mb-6">
+      <div className="container mx-auto px-4 md:px-6 flex flex-col sm:mt-7 md:flex-row items-center justify-between h-full pt-32 md:pt-40">
+        <div className="flex-1 max-w-full md:max-w-5xl text-white">
+          <h1 className="text-2xl md:text-7xl font-bold leading-tight mb-4 md:mb-6">
             Find your Perfect Rental Room With Ease.
           </h1>
           <p className="text-base md:text-xl text-white/90 mb-6 md:mb-8 leading-relaxed md:leading-loose">
             Rumin redefines renting with a seamless experience tailored to your
             needs, offering innovative features that set us apart from the rest.
           </p>
-          <div className="bg-white  rounded-full flex items-center shadow-lg mb-8 md:mb-12 w-full max-w-md overflow-hidden border-5 border-[#69b8f9]">
+          <div className="bg-white  rounded-full flex items-center shadow-lg mb-8 md:mb-18 w-full max-w-md overflow-hidden border-5 border-[#69b8f9]">
             <input
               type="text"
               placeholder="Ask me anything"
@@ -118,19 +118,19 @@ const Hero: React.FC = () => {
               <Search />
             </button>
           </div>
-          <div className="flex flex-wrap gap-6 md:gap-12">
+          <div className="flex flex-wrap gap-6 md:gap-16 ">
             <div>
-              <div className="text-2xl md:text-3xl font-bold">15K+</div>
+              <div className="text-2xl md:text-4xl font-bold">15K+</div>
               <div className="text-sm md:text-sm text-white/80">
                 Happy Customers
               </div>
             </div>
             <div>
-              <div className="text-2xl md:text-3xl font-bold">35+</div>
+              <div className="text-2xl md:text-4xl font-bold">35+</div>
               <div className="text-sm md:text-sm text-white/80">Countries</div>
             </div>
             <div>
-              <div className="text-2xl md:text-3xl font-bold">20K+</div>
+              <div className="text-2xl md:text-4xl font-bold">20K+</div>
               <div className="text-sm md:text-sm text-white/80">Properties</div>
             </div>
           </div>

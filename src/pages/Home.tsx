@@ -13,6 +13,7 @@ import Footer from "../components/Footer"
 function Home() {
 
   return (
+    <>
     <div className="sm:px-18 sm:pt-5">
     <Hero/>
     <PopularListing/>
@@ -24,8 +25,9 @@ function Home() {
     <FAQSection/>
     <LandlordRegistration/>
     <ContactForm/>
-    <Footer/>
     </div>
+    <Footer/>
+    </>
   )
 }
 

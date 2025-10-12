@@ -47,7 +47,7 @@ const FAQSection: React.FC = () => {
 
   return (
     <section className="py-20 bg-white min-h-screen">
-      <div className="container mx-auto px-6 h-full">
+      <div className="container mx-auto px-6 h-full text-xl">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 h-full min-h-[600px]">
           {/* Left Column - Two smaller images stacked */}
           <div className="flex flex-col gap-4 h-full">
@@ -81,7 +81,7 @@ const FAQSection: React.FC = () => {
             <h2 className="text-4xl font-bold text-black mb-4">
               Everything about Rumin
             </h2>
-            <p className="text-gray-600 mb-8 leading-relaxed">
+            <p className="text-black mb-8 text-lg leading-relaxed">
               We know that buying, selling in rooms can be overwhelming. Here are some frequently asked questions to help guide you through the process.
             </p>
 
