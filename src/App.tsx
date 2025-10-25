@@ -6,6 +6,9 @@ import Rooms from "./pages/Rooms";
 import ProfileSettingsPage from "./pages/Profile";
 import RoomDetails from "./pages/RoomDetails";
 import Dashboard from "./pages/Dashboard";
+import LandlordRegistration from "./pages/LandlordRegistration";
+import SubmitRoom from "./pages/SubmitRoom";
+import AdminPanel from "./pages/AdminPanel";
 
 function App() {
   return (
@@ -14,7 +17,10 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
-  <Route path="/dashboard" element={<Dashboard/>} />
+        <Route path="/landlord" element={<LandlordRegistration />} />
+        <Route path="/submit-room" element={<SubmitRoom />} />
+        <Route path="/dashboard" element={<Dashboard/>} />
+        <Route path="/admin" element={<AdminPanel />} />
         <Route path="/rooms" element={<Rooms />} />
         <Route path = "/profile" element = {<ProfileSettingsPage/>}/>
         <Route path="/rooms/:id" element={<RoomDetails/>} />
