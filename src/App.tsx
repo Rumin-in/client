@@ -9,6 +9,7 @@ import Dashboard from "./pages/Dashboard";
 import LandlordRegistration from "./pages/LandlordRegistration";
 import SubmitRoom from "./pages/SubmitRoom";
 import AdminPanel from "./pages/AdminPanel";
+import Bookmarks from "./pages/Bookmarks";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/rooms" element={<Rooms />} />
         <Route path = "/profile" element = {<ProfileSettingsPage/>}/>
         <Route path="/room/:id" element={<RoomDetails/>} />
+        <Route path="/bookmarks" element={<Bookmarks/>} />
       </Routes>
     </>
   );

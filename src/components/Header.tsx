@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { ChevronDown, MoreVertical, Menu, X } from "lucide-react";
+import { ChevronDown, MoreVertical, Menu, X, Bookmark } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState, AppDispatch } from "../store/store";
@@ -118,7 +118,17 @@ const Header: React.FC = () => {
 
           {/* Auth Section */}
           {user ? (
-            <div className="relative hidden md:block">
+            <div className="relative hidden md:flex items-center gap-4">
+              {/* Bookmarks Button */}
+              <button
+                onClick={() => navigate("/bookmarks")}
+                className="flex items-center gap-2 px-4 py-2 rounded-full hover:bg-gray-100 transition-colors"
+                title="My Bookmarks"
+              >
+                <Bookmark className="w-5 h-5 text-blue-600" />
+                <span className="text-sm font-medium text-gray-700">Bookmarks</span>
+              </button>
+              
               <div className="flex items-center space-x-3 bg-white pl-3 pr-4 py-1 rounded-full shadow-md">
                 <img
                   src="https://i.pinimg.com/736x/1d/ec/e2/1dece2c8357bdd7cee3b15036344faf5.jpg"
@@ -139,10 +149,28 @@ const Header: React.FC = () => {
                 </button>
               </div>
               {isDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-32 bg-white border border-gray-200 rounded-md shadow-lg z-[100]">
+                <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-[100]">
+                  <button
+                    onClick={() => {
+                      navigate("/profile");
+                      setIsDropdownOpen(false);
+                    }}
+                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                  >
+                    Profile
+                  </button>
+                  <button
+                    onClick={() => {
+                      navigate("/dashboard");
+                      setIsDropdownOpen(false);
+                    }}
+                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                  >
+                    Dashboard
+                  </button>
                   <button
                     onClick={handleLogout}
-                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors border-t"
                   >
                     Logout
                   </button>
@@ -237,7 +265,20 @@ const Header: React.FC = () => {
 
             {/* Auth Section */}
             {user ? (
-              <div className="flex items-center gap-3 mt-4">
+              <div className="flex flex-col gap-2">
+                {/* Bookmarks Link */}
+                <button
+                  onClick={() => {
+                    navigate("/bookmarks");
+                    setMobileMenuOpen(false);
+                  }}
+                  className="flex items-center gap-2 py-2 hover:text-blue-600"
+                >
+                  <Bookmark className="w-5 h-5" />
+                  My Bookmarks
+                </button>
+                
+                <div className="flex items-center gap-3 mt-2">
                 <img
                   src="https://i.pinimg.com/736x/1d/ec/e2/1dece2c8357bdd7cee3b15036344faf5.jpg"
                   alt="profile"
@@ -254,6 +295,7 @@ const Header: React.FC = () => {
                   >
                     Logout
                   </button>
+                </div>
                 </div>
               </div>
             ) : (

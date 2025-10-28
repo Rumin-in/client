@@ -1,17 +1,24 @@
 import React from 'react';
 import { Search } from "lucide-react";
+import { useNavigate } from 'react-router-dom';
 
 const UniquePreferences: React.FC = () => {
-  // Dummy location data
+  const navigate = useNavigate();
+
+  // Actual location data
   const locations = [
-    { id: 1, name: "Location" },
-    { id: 2, name: "Location" },
-    { id: 3, name: "Location" },
-    { id: 4, name: "Location" },
-    { id: 5, name: "Location" },
-    { id: 6, name: "Location" },
+    { id: 1, name: "Minal Residency" },
+    { id: 2, name: "Lalghati" },
+    { id: 3, name: "Indrapuri" },
+    { id: 4, name: "Karond" },
+    { id: 5, name: "Anand Nagar" },
+    { id: 6, name: "Ashoka Garden" },
     { id: 7, name: "Search" }, // special case
   ];
+
+  const handleLocationClick = (locationName: string) => {
+    navigate(`/rooms?location=${encodeURIComponent(locationName)}`);
+  };
 
   return (
     <section className="py-16 bg-white">
@@ -49,6 +56,7 @@ const UniquePreferences: React.FC = () => {
                 // === Normal location pill ===
                 <div
                   key={location.id}
+                  onClick={() => handleLocationClick(location.name)}
                   className="flex items-center bg-white rounded-full px-6 py-3 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
                 >
                   <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center mr-3">

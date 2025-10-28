@@ -40,9 +40,9 @@ export const interestRoom = async (roomId: string, interestType: 'visit' | 'book
   }
 };
 
-export const bookmarkRoom = async (roomId: string) => {
+export const bookmarkRoom = async (roomId: string, userId: string) => {
   try {
-    const response = await axios.post(`/renter/rooms/${roomId}/bookmark`);
+    const response = await axios.post(`/renter/rooms/${roomId}/bookmark`, { userId });
     return response.data;
   } catch (error: any) {
     console.error("Bookmark Room Error:", error.response?.data || error.message);
@@ -50,9 +50,9 @@ export const bookmarkRoom = async (roomId: string) => {
   }
 };
 
-export const deleteBookmark = async (roomId: string) => {
+export const deleteBookmark = async (roomId: string, userId: string) => {
   try {
-    const response = await axios.delete(`/renter/rooms/${roomId}/bookmark`);
+    const response = await axios.delete(`/renter/rooms/${roomId}/bookmark`, { data: { userId } });
     return response.data;
   } catch (error: any) {
     console.error("Delete Bookmark Error:", error.response?.data || error.message);

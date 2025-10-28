@@ -20,6 +20,7 @@ import {
 import { useParams, useNavigate } from 'react-router-dom';
 import { getRoomById } from '../services/rooms.services';
 import { interestRoom } from '../services/renter.services';
+import { bookmarkRoom, deleteBookmark } from '../services/renter.services';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../store/store';
 import { toast } from 'sonner';
@@ -75,6 +76,7 @@ const RoomDetails: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [currentImage, setCurrentImage] = useState(0);
   const [isBookmarked, setIsBookmarked] = useState(false);
+  const [hasExpressedInterest, setHasExpressedInterest] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -87,11 +89,12 @@ const RoomDetails: React.FC = () => {
       setLoading(true);
       const response = await getRoomById(id!);
       console.log("Room details:", response);
-      setRoom(response.data.room || response.data);
+      const roomData = response.data.room || response.data;
+      setRoom(roomData);
       
-      // Check if user has bookmarked this room (user ID would need to be added to user type)
-      if (user && response.data.room) {
-        // setIsBookmarked(response.data.room.bookmarks?.includes(user._id) || false);
+      // Check if user has bookmarked this room
+      if (user && roomData.bookmarks) {
+        setIsBookmarked(roomData.bookmarks.includes(user.userId));
       }
     } catch (error: any) {
       console.error("Error fetching room:", error);
@@ -101,15 +104,26 @@ const RoomDetails: React.FC = () => {
     }
   };
 
-  const handleBookmark = () => {
+  const handleBookmark = async () => {
     if (!user) {
       toast.error("Please login to bookmark rooms");
       navigate("/signin");
       return;
     }
-    // TODO: Implement bookmark API call
-    setIsBookmarked(!isBookmarked);
-    toast.success(isBookmarked ? "Removed from bookmarks" : "Added to bookmarks");
+    
+    try {
+      if (isBookmarked) {
+        await deleteBookmark(id!, user.userId);
+        setIsBookmarked(false);
+        toast.success("Removed from bookmarks");
+      } else {
+        await bookmarkRoom(id!, user.userId);
+        setIsBookmarked(true);
+        toast.success("Added to bookmarks");
+      }
+    } catch (error: any) {
+      toast.error(error.message || "Failed to update bookmark");
+    }
   };
 
   const handleShare = () => {
@@ -134,9 +148,11 @@ const RoomDetails: React.FC = () => {
 
     try {
       await interestRoom(id!, 'visit', user.userId);
+      setHasExpressedInterest(true);
       toast.success("Interest recorded successfully!");
     } catch (error: any) {
       if (error.message.includes("already recorded")) {
+        setHasExpressedInterest(true);
         toast.info("You have already expressed interest in this room");
       } else {
         toast.error(error.message || "Failed to record interest");
@@ -412,15 +428,21 @@ const RoomDetails: React.FC = () => {
                   {/* Interested Button */}
                   <button
                     onClick={handleExpressInterest}
-                    disabled={room.availabilityStatus !== 'available'}
+                    disabled={room.availabilityStatus !== 'available' || hasExpressedInterest}
                     className={`w-full py-3 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2 ${
-                      room.availabilityStatus === 'available'
+                      hasExpressedInterest
+                        ? 'bg-green-600 text-white cursor-default'
+                        : room.availabilityStatus === 'available'
                         ? 'bg-gradient-to-r from-[#89B4DB] to-[#0085FE] hover:from-[#7AA3CA] hover:to-[#0074DD] text-white'
                         : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                     }`}
                   >
-                    <Heart className="w-5 h-5" />
-                    {room.availabilityStatus === 'available' ? 'Interested' : 'Not Available'}
+                    <Heart className={`w-5 h-5 ${hasExpressedInterest ? 'fill-white' : ''}`} />
+                    {hasExpressedInterest 
+                      ? 'Interest Recorded' 
+                      : room.availabilityStatus === 'available' 
+                      ? 'Interested' 
+                      : 'Not Available'}
                   </button>
                 </div>
 

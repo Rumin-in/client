@@ -35,6 +35,7 @@ const RoomSearchLayout = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get("search") || "";
+  const locationQuery = searchParams.get("location") || "";
 
   const [rooms, setRooms] = useState<Room[]>([]);
   const [loading, setLoading] = useState(true);
@@ -111,12 +112,50 @@ const RoomSearchLayout = () => {
 
     // Filter by search query (location)
     if (searchQuery) {
-      filtered = filtered.filter(
-        (room) =>
-          room.location.city.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          room.location.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          room.location.state.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+      // Normalize search query (treat "Minal" and "Minal Residency" as same)
+      const normalizedQuery = searchQuery.toLowerCase().replace(/\s*residency\s*/i, '').trim();
+      
+      filtered = filtered.filter((room) => {
+        const city = room.location.city.toLowerCase();
+        const address = room.location.address.toLowerCase();
+        const state = room.location.state.toLowerCase();
+        
+        // Normalize room location data
+        const normalizedCity = city.replace(/\s*residency\s*/i, '').trim();
+        const normalizedAddress = address.replace(/\s*residency\s*/i, '').trim();
+        
+        return (
+          city.includes(searchQuery.toLowerCase()) ||
+          address.includes(searchQuery.toLowerCase()) ||
+          state.includes(searchQuery.toLowerCase()) ||
+          normalizedCity.includes(normalizedQuery) ||
+          normalizedAddress.includes(normalizedQuery)
+        );
+      });
+    }
+
+    // Filter by specific location/area
+    if (locationQuery) {
+      // Normalize location query (treat "Minal" and "Minal Residency" as same)
+      const normalizedQuery = locationQuery.toLowerCase().replace(/\s*residency\s*/i, '').trim();
+      
+      filtered = filtered.filter((room) => {
+        const city = room.location.city.toLowerCase();
+        const address = room.location.address.toLowerCase();
+        const state = room.location.state.toLowerCase();
+        
+        // Normalize room location data
+        const normalizedCity = city.replace(/\s*residency\s*/i, '').trim();
+        const normalizedAddress = address.replace(/\s*residency\s*/i, '').trim();
+        
+        return (
+          city.includes(locationQuery.toLowerCase()) ||
+          address.includes(locationQuery.toLowerCase()) ||
+          state.includes(locationQuery.toLowerCase()) ||
+          normalizedCity.includes(normalizedQuery) ||
+          normalizedAddress.includes(normalizedQuery)
+        );
+      });
     }
 
     // Sort
@@ -131,7 +170,7 @@ const RoomSearchLayout = () => {
     }
 
     return filtered;
-  }, [rooms, showAvailability, selectedBHK, selectedAmenities, sortBy, minRent, maxRent, searchQuery]);
+  }, [rooms, showAvailability, selectedBHK, selectedAmenities, sortBy, minRent, maxRent, searchQuery, locationQuery]);
 
   // Pagination
   const itemsPerPage = 6;
@@ -196,6 +235,20 @@ const RoomSearchLayout = () => {
                 className="ml-2 text-blue-600 hover:text-blue-800 underline"
               >
                 Clear search
+              </button>
+            </p>
+          )}
+          {locationQuery && (
+            <p className="text-sm text-gray-600 mt-1">
+              Location: <span className="font-semibold">"{locationQuery}"</span>
+              <button
+                onClick={() => {
+                  navigate('/rooms');
+                  window.location.reload();
+                }}
+                className="ml-2 text-blue-600 hover:text-blue-800 underline"
+              >
+                Clear location
               </button>
             </p>
           )}
@@ -381,8 +434,13 @@ const RoomSearchLayout = () => {
               Your search for <span className="font-semibold">"{searchQuery}"</span> returned no results.
             </p>
           )}
+          {locationQuery && (
+            <p className="text-gray-600 mb-4">
+              No rooms found in <span className="font-semibold">"{locationQuery}"</span>.
+            </p>
+          )}
           <div className="flex justify-center gap-3">
-            {searchQuery && (
+            {(searchQuery || locationQuery) && (
               <button
                 onClick={() => {
                   navigate('/rooms');
@@ -400,7 +458,7 @@ const RoomSearchLayout = () => {
                 setShowAvailability(false);
                 setMinRent("");
                 setMaxRent("");
-                if (searchQuery) {
+                if (searchQuery || locationQuery) {
                   navigate('/rooms');
                   window.location.reload();
                 }
