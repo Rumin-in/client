@@ -1,7 +1,7 @@
 import axiosBase from "axios"; // rename original axios import
 
 const axios = axiosBase.create({
-  baseURL: "https://server-idjt.onrender.com/api",
+  baseURL: "http://localhost:3000/api",
   headers: {
     "Content-Type": "application/json",
   },

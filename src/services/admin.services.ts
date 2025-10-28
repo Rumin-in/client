@@ -129,3 +129,14 @@ export const getAllEnquiries = async () => {
     throw error;
   }
 };
+
+// Interests
+export const getAllInterests = async () => {
+  try {
+    const response = await axios.get("/admin/interests");
+    return response.data;
+  } catch (error: any) {
+    console.error("Get All Interests Error:", error.response?.data || error.message);
+    throw error;
+  }
+};

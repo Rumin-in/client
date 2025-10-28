@@ -9,6 +9,7 @@ import AdminAnalytics from '../components/AdminAnalytics';
 import AdminUserManagement from '../components/AdminUserManagement';
 import AdminEnquiries from '../components/AdminEnquiries';
 import AdminIssues from '../components/AdminIssues';
+import AdminInterests from '../components/AdminInterests';
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
 
 const AdminPanel = () => {
@@ -89,6 +90,8 @@ const AdminPanel = () => {
         return <AdminAnalytics />;
       case 'users':
         return <AdminUserManagement />;
+      case 'interests':
+        return <AdminInterests />;
       case 'enquiries':
         return <AdminEnquiries />;
       case 'issues':

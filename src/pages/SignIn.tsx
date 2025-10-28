@@ -49,12 +49,13 @@ const SignIn = () => {
       toast.success("Welcome back! Login successful");
 
       const {
+        _id,
         name,
         email: userEmail,
         role,
         walletBalance,
       } = response.data.user;
-      dispatch(setUser({ name, email: userEmail, role, walletBalance }));
+      dispatch(setUser({ userId: _id, name, email: userEmail, role, walletBalance }));
 
       window.location.href = "/";
     } catch (error: any) {

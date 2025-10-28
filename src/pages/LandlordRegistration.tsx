@@ -115,12 +115,13 @@ const LandlordRegistration = () => {
 
         // Update Redux state
         const {
+          _id,
           name: userName,
           email: userEmail,
           role,
           walletBalance,
         } = loginResponse.data.user;
-        dispatch(setUser({ name: userName, email: userEmail, role, walletBalance }));
+        dispatch(setUser({ userId: _id, name: userName, email: userEmail, role, walletBalance }));
 
         toast.success('Logged in successfully! Redirecting to submit room...');
 

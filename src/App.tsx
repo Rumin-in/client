@@ -23,7 +23,7 @@ function App() {
         <Route path="/admin" element={<AdminPanel />} />
         <Route path="/rooms" element={<Rooms />} />
         <Route path = "/profile" element = {<ProfileSettingsPage/>}/>
-        <Route path="/rooms/:id" element={<RoomDetails/>} />
+        <Route path="/room/:id" element={<RoomDetails/>} />
       </Routes>
     </>
   );

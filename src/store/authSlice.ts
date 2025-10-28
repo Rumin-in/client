@@ -4,6 +4,7 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 
 // Define a type for the user
 interface User {
+  userId: string;
   name: string;
   email: string;
   role: string;

@@ -26,9 +26,13 @@ export const enquireRoom = async (roomId: string, message: string) => {
   }
 };
 
-export const interestRoom = async (roomId: string) => {
+export const interestRoom = async (roomId: string, interestType: 'visit' | 'book', userId: string, notes?: string) => {
   try {
-    const response = await axios.post(`/renter/rooms/${roomId}/interest`);
+    const response = await axios.post(`/renter/rooms/${roomId}/interest`, {
+      userId,
+      interestType,
+      notes: notes || ''
+    });
     return response.data;
   } catch (error: any) {
     console.error("Interest Room Error:", error.response?.data || error.message);
