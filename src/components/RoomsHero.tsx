@@ -1,14 +1,20 @@
 import { useState } from "react";
 import { MapPin, Search } from "lucide-react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const RoomsHero = () => {
-  const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const [searchQuery, setSearchQuery] = useState(searchParams.get("search") || "");
 
   const handleSearch = () => {
-    console.log("Searching for:", searchQuery);
+    if (searchQuery.trim()) {
+      navigate(`/rooms?search=${encodeURIComponent(searchQuery.trim())}`);
+      window.location.reload(); // Reload to apply search
+    }
   };
 
-  const handleKeyPress = (e: any) => {
+  const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       handleSearch();
     }
@@ -53,7 +59,7 @@ const RoomsHero = () => {
           >
             {/* Show icon only on mobile, text on larger screens */}
             <Search className="w-5 h-5 sm:hidden" />
-            <span className="hidden sm:inline">Find Locations</span>
+            <span className="hidden sm:inline">Search Location</span>
           </button>
         </div>
       </div>

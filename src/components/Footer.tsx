@@ -109,7 +109,7 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold mb-4">Contact</h3>
             <ul className="space-y-2">
-              <li className="text-gray-300 opacity-80 hover:opacity-100">+917024441045</li>
+              <li className="text-gray-300 opacity-80 hover:opacity-100">+91 7024441045</li>
               <li>
                 <a
                   href="mailto:support@rumin.in"

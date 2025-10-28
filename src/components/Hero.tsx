@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState, AppDispatch } from "../store/store";
 import { logout as logoutAction } from "../store/authSlice";
+import { toast } from "sonner";
 
 const Hero: React.FC = () => {
   const navigate = useNavigate();
@@ -35,9 +36,11 @@ const Hero: React.FC = () => {
           <a href="/rooms" className="hover:text-gray-200 transition-colors hover:underline text-2xl">
             Room
           </a>
-          <a href="#" className="hover:text-gray-200 transition-colors hover:underline text-2xl">
+          <button onClick={()=>{
+            toast.success("This features will be coming soon")
+          }} className="hover:text-gray-200 cursor-pointer transition-colors hover:underline text-2xl">
             Student Furniture
-          </a>
+          </button>
         </nav>
 
         <div className="flex items-center space-x-2 sm:pt-5 sm:bg-white s md:space-x-5 pl-4 md:pl-8 sm:pr-6 ">

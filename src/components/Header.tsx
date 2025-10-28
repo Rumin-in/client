@@ -36,8 +36,8 @@ const Header: React.FC = () => {
           <img
             src="/rumin-logo.png"
             alt="Rumin Logo"
-            width={120}
-            height={40}
+            width={160}
+            height={50}
             className="cursor-pointer"
           />
         </button>
