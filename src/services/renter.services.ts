@@ -1,5 +1,21 @@
 import axios from "../api/axios";
 
+export const submitEnquiry = async (data: {
+  name: string;
+  email: string;
+  mobileNo: string;
+  subject?: string;
+  message: string;
+}) => {
+  try {
+    const response = await axios.post('/renter/enquire', data);
+    return response.data;
+  } catch (error: any) {
+    console.error("Submit Enquiry Error:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
 export const enquireRoom = async (roomId: string, message: string) => {
   try {
     const response = await axios.post('/renter/enquire', { roomId, message });

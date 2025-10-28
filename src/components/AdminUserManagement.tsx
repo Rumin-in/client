@@ -1,16 +1,17 @@
 import { useState } from 'react';
 import { addUserBalance } from '../services/admin.services';
-import { DollarSign, User } from 'lucide-react';
+import { DollarSign, Mail } from 'lucide-react';
 import { toast } from 'sonner';
 
 const AdminUserManagement = () => {
-  const [userId, setUserId] = useState('');
+  const [email, setEmail] = useState('');
   const [amount, setAmount] = useState('');
   const [loading, setLoading] = useState(false);
+  const [userInfo, setUserInfo] = useState<any>(null);
 
   const handleAddBalance = async () => {
-    if (!userId.trim()) {
-      toast.error('User ID is required');
+    if (!email.trim()) {
+      toast.error('Email is required');
       return;
     }
 
@@ -21,12 +22,17 @@ const AdminUserManagement = () => {
 
     try {
       setLoading(true);
-      await addUserBalance(userId.trim(), parseFloat(amount));
+      const response = await addUserBalance({ email: email.trim(), amount: parseFloat(amount) });
       toast.success('User balance updated successfully');
-      setUserId('');
+      setUserInfo(response.data);
+      setEmail('');
       setAmount('');
     } catch (error: any) {
-      toast.error('Failed to update user balance');
+      if (error.response?.status === 404) {
+        toast.error('User not found with this email');
+      } else {
+        toast.error('Failed to update user balance');
+      }
       console.error(error);
     } finally {
       setLoading(false);
@@ -47,18 +53,18 @@ const AdminUserManagement = () => {
         <div className="space-y-4 max-w-md">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              User ID
+              User Email
             </label>
             <div className="relative">
               <input
-                type="text"
-                value={userId}
-                onChange={(e) => setUserId(e.target.value)}
-                placeholder="Enter user ID"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter user email"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0085FE] focus:border-[#0085FE] outline-none transition-colors pr-10"
                 disabled={loading}
               />
-              <User className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <Mail className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             </div>
           </div>
 
@@ -92,14 +98,28 @@ const AdminUserManagement = () => {
             {loading ? 'Updating...' : 'Add Balance'}
           </button>
         </div>
+
+        {/* User Info Display */}
+        {userInfo && (
+          <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+            <h4 className="font-semibold text-green-900 mb-2">Balance Updated Successfully!</h4>
+            <div className="space-y-1 text-sm text-green-800">
+              <p><strong>User Name:</strong> {userInfo.name}</p>
+              <p><strong>Email:</strong> {userInfo.email}</p>
+              <p><strong>User ID:</strong> {userInfo.userId}</p>
+              <p><strong>New Balance:</strong> ₹{userInfo.balance?.toLocaleString()}</p>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Info Card */}
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
         <h4 className="font-semibold text-blue-900 mb-2">Note:</h4>
         <ul className="space-y-1 text-sm text-blue-800">
-          <li>• Enter the exact User ID from the database</li>
+          <li>• Enter the user's email address to add balance</li>
           <li>• Amount will be added to the user's existing wallet balance</li>
+          <li>• The system will display user information after successful update</li>
           <li>• This action cannot be undone</li>
         </ul>
       </div>

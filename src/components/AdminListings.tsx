@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { getAllListings, approveListing, rejectListing, markAsBooked } from '../services/admin.services';
-import { CheckCircle, XCircle, Lock, Eye } from 'lucide-react';
+import { getAllListings, approveListing, rejectListing, markAsBooked, unmarkAsBooked } from '../services/admin.services';
+import { CheckCircle, XCircle, Lock, Unlock, Eye } from 'lucide-react';
 import { toast } from 'sonner';
 
 const AdminListings = () => {
@@ -54,6 +54,17 @@ const AdminListings = () => {
       fetchListings();
     } catch (error: any) {
       toast.error('Failed to mark as booked');
+      console.error(error);
+    }
+  };
+
+  const handleUnmarkBooked = async (id: string) => {
+    try {
+      await unmarkAsBooked(id);
+      toast.success('Listing unmarked as booked');
+      fetchListings();
+    } catch (error: any) {
+      toast.error('Failed to unmark as booked');
       console.error(error);
     }
   };
@@ -214,10 +225,21 @@ const AdminListings = () => {
                       {listing.availabilityStatus === 'available' && (
                         <button
                           onClick={() => handleMarkBooked(listing._id)}
-                          className="p-1 text-blue-600 hover:bg-blue-50 rounded"
+                          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
                           title="Mark as Booked"
                         >
-                          <Lock className="w-5 h-5" />
+                          <Lock className="w-4 h-4" />
+                          Mark as Booked
+                        </button>
+                      )}
+                      {listing.availabilityStatus === 'booked' && (
+                        <button
+                          onClick={() => handleUnmarkBooked(listing._id)}
+                          className="flex items-center gap-2 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors text-sm font-medium"
+                          title="Unmark as Booked"
+                        >
+                          <Unlock className="w-4 h-4" />
+                          Unmark Booked
                         </button>
                       )}
                     </div>

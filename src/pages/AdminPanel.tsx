@@ -260,7 +260,7 @@ const AdminPanel = () => {
       <div className="flex min-h-screen bg-gray-50">
         <AdminSidebar activeTab={activeTab} setActiveTab={setActiveTab} onLogout={handleLogout} />
         
-        <div className="ml-64 flex-1 p-8">
+        <div className="ml-80 flex-1 p-8">
           <div className="max-w-7xl mx-auto">
             {renderContent()}
           </div>

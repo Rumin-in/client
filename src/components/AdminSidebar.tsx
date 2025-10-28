@@ -17,12 +17,12 @@ const AdminSidebar = ({ activeTab, setActiveTab, onLogout }: AdminSidebarProps) 
   ];
 
   return (
-    <div className="w-64 bg-white shadow-lg h-screen fixed left-0 top-0 flex flex-col">
+    <div className="w-80 bg-white shadow-lg h-screen fixed left-0 top-0 flex flex-col">
       <div className="p-6 border-b ">
         <img
           src="/rumin-logo.png"
           alt="Rumin Logo"
-          className="w-32 h-auto mb-2"
+          className="w-48 h-auto mb-2"
         />
         {/* <p className="text-sm text-white font-medium">Admin Panel</p> */}
       </div>

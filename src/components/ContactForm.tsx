@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { submitEnquiry } from '../services/renter.services';
+import { toast } from 'sonner';
 
 const ContactForm: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -8,6 +10,7 @@ const ContactForm: React.FC = () => {
     priceRange: '',
     message: ''
   });
+  const [loading, setLoading] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -17,9 +20,47 @@ const ContactForm: React.FC = () => {
     }));
   };
 
-  const handleSubmit = () => {
-    console.log('Form submitted:', formData);
-    // Handle form submission logic here
+  const handleSubmit = async () => {
+    // Validation
+    if (!formData.name.trim()) {
+      toast.error('Please enter your name');
+      return;
+    }
+    if (!formData.phoneNumber.trim()) {
+      toast.error('Please enter your phone number');
+      return;
+    }
+    if (!formData.message.trim()) {
+      toast.error('Please enter a message');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      await submitEnquiry({
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        mobileNo: formData.phoneNumber.trim(),
+        subject: formData.priceRange ? `Budget: ${formData.priceRange}` : '',
+        message: formData.message.trim()
+      });
+      
+      toast.success('Thank you! Your enquiry has been submitted successfully.');
+      
+      // Reset form
+      setFormData({
+        name: '',
+        email: '',
+        phoneNumber: '',
+        priceRange: '',
+        message: ''
+      });
+    } catch (error: any) {
+      console.error('Error submitting enquiry:', error);
+      toast.error('Failed to submit enquiry. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -121,9 +162,14 @@ const ContactForm: React.FC = () => {
                 <button
                   type="button"
                   onClick={handleSubmit}
-                  className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+                  disabled={loading}
+                  className={`w-full font-semibold py-3 px-6 rounded-lg transition-colors ${
+                    loading
+                      ? 'bg-gray-400 cursor-not-allowed text-white'
+                      : 'bg-blue-500 hover:bg-blue-600 text-white'
+                  }`}
                 >
-                  Submit
+                  {loading ? 'Submitting...' : 'Submit'}
                 </button>
               </div>
             </div>

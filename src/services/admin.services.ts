@@ -76,6 +76,16 @@ export const markAsBooked = async (id: string) => {
   }
 };
 
+export const unmarkAsBooked = async (id: string) => {
+  try {
+    const response = await axios.put(`/admin/listings/${id}/unbook`);
+    return response.data;
+  } catch (error: any) {
+    console.error("Unmark As Booked Error:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
 // Analytics
 export const getAdminAnalytics = async () => {
   try {
@@ -88,9 +98,9 @@ export const getAdminAnalytics = async () => {
 };
 
 // User Management
-export const addUserBalance = async (userId: string, amount: number) => {
+export const addUserBalance = async (data: { userId?: string; email?: string; amount: number }) => {
   try {
-    const response = await axios.post("/admin/user/balance", { userId, amount });
+    const response = await axios.post("/admin/user/balance", data);
     return response.data;
   } catch (error: any) {
     console.error("Add User Balance Error:", error.response?.data || error.message);
