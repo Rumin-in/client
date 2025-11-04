@@ -9,12 +9,12 @@ const LandlordRegistration: React.FC = () => {
   const user = useSelector((state: RootState) => state.auth.user);
   
   const handleClick = () => {
-    // If user is logged in and is a landlord, go to submit room
+    // If user is logged in and is a landlord, go to dashboard submit room tab
     if (user && user.role === 'landlord') {
-      navigate('/submit-room');
+      navigate('/dashboard?tab=submit-room');
     } else {
       // Otherwise, go to landlord registration page
-      navigate('/landlord-registration');
+      navigate('/landlord');
     }
   };
 

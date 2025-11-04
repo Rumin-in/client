@@ -7,7 +7,7 @@ import ProfileSettingsPage from "./pages/Profile";
 import RoomDetails from "./pages/RoomDetails";
 import Dashboard from "./pages/Dashboard";
 import LandlordRegistration from "./pages/LandlordRegistration";
-import SubmitRoom from "./pages/SubmitRoom";
+import LandlordDashboard from "./pages/LandlordDashboard";
 import AdminPanel from "./pages/AdminPanel";
 import Bookmarks from "./pages/Bookmarks";
 
@@ -19,7 +19,7 @@ function App() {
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/landlord" element={<LandlordRegistration />} />
-        <Route path="/submit-room" element={<SubmitRoom />} />
+        <Route path="/landlord-dashboard" element={<LandlordDashboard />} />
         <Route path="/dashboard" element={<Dashboard/>} />
         <Route path="/admin" element={<AdminPanel />} />
         <Route path="/rooms" element={<Rooms />} />

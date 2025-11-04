@@ -123,11 +123,11 @@ const LandlordRegistration = () => {
         } = loginResponse.data.user;
         dispatch(setUser({ userId: _id, name: userName, email: userEmail, role, walletBalance }));
 
-        toast.success('Logged in successfully! Redirecting to submit room...');
+        toast.success('Logged in successfully! Redirecting to your dashboard...');
 
-        // Redirect to submit room page
+        // Redirect to dashboard
         setTimeout(() => {
-          navigate('/submit-room');
+          navigate('/dashboard');
         }, 1500);
 
       } catch (loginError: any) {

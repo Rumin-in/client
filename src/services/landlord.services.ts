@@ -18,6 +18,16 @@ export const registerAsLandlord = async (landlordData: {
   }
 };
 
+export const getLandlordRooms = async () => {
+  try {
+    const response = await axios.get("/landlord/my-rooms");
+    return response.data;
+  } catch (error: any) {
+    console.error("Get Landlord Rooms Error:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
 export const submitRoom = async (roomData: FormData) => {
   try {
     const response = await axios.post("/landlord/submit-room", roomData, {

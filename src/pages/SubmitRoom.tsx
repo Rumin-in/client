@@ -185,9 +185,9 @@ const SubmitRoom = () => {
       setImages([]);
       setImagePreviews([]);
 
-      // Redirect to dashboard or rooms page
+      // Redirect to landlord dashboard
       setTimeout(() => {
-        navigate('/rooms');
+        navigate('/landlord-dashboard');
       }, 2000);
 
     } catch (error: any) {

@@ -15,7 +15,11 @@ const AdminEnquiries = () => {
     try {
       setLoading(true);
       const response = await getAllEnquiries();
-      setEnquiries(response.data.enquiries || []);
+      // Sort enquiries by createdAt in descending order (latest first)
+      const sortedEnquiries = (response.data.enquiries || []).sort((a: any, b: any) => {
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      });
+      setEnquiries(sortedEnquiries);
     } catch (error: any) {
       toast.error('Failed to fetch enquiries');
       console.error(error);

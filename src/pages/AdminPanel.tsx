@@ -29,6 +29,20 @@ const AdminPanel = () => {
     if (token) {
       setIsAuthenticated(true);
     }
+
+    // Listen for token expiration event
+    const handleTokenExpired = () => {
+      setIsAuthenticated(false);
+      setEmail('');
+      setPasskey('');
+      toast.error('Your session has expired. Please login again.');
+    };
+
+    window.addEventListener('authTokenExpired', handleTokenExpired);
+
+    return () => {
+      window.removeEventListener('authTokenExpired', handleTokenExpired);
+    };
   }, []);
 
   const handleLogin = async () => {

@@ -1,14 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Plus, Home } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { toast, Toaster } from 'sonner';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { getLandlordRooms } from '../services/landlord.services';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../store/store';
-import Sidebar from "../components/Sidebar";
-import ProfileHeader from "../components/ProfileHeader";
-import DashboardMain from "../components/DashboardMain";
-import SubmitRoomForm from "../components/SubmitRoomForm";
-import { getLandlordRooms } from '../services/landlord.services';
+import { Plus, Home, MapPin, DollarSign, Calendar, LogOut, Loader } from 'lucide-react';
 
 interface Room {
   _id: string;
@@ -28,28 +24,24 @@ interface Room {
   createdAt: string;
 }
 
-export default function Dashboard() {
+const LandlordDashboard = () => {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
   const user = useSelector((state: RootState) => state.auth.user);
-  
-  // Get tab from URL query param, default to 'my-rooms'
-  const tabParam = searchParams.get('tab');
-  const [activeTab, setActiveTab] = useState<'my-rooms' | 'submit-room'>(
-    (tabParam as 'my-rooms' | 'submit-room') || 'my-rooms'
-  );
-  
   const [rooms, setRooms] = useState<Room[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<'my-rooms' | 'submit-room'>('my-rooms');
 
-  // Fetch landlord rooms if user is landlord
+  // Check if user is landlord
   useEffect(() => {
-    if (user?.role === 'landlord') {
-      fetchRooms();
-    } else {
-      // For renters - show original dashboard
+    const token = localStorage.getItem('token');
+    if (!token || user?.role !== 'landlord') {
+      toast.error('Unauthorized access. Please login as landlord.');
+      navigate('/signin');
+      return;
     }
-  }, [user?.role]);
+
+    fetchRooms();
+  }, [navigate, user?.role]);
 
   const fetchRooms = async () => {
     try {
@@ -58,17 +50,17 @@ export default function Dashboard() {
       setRooms(response.data.rooms || []);
     } catch (error: any) {
       console.error('Error fetching rooms:', error);
-      if (error.response?.status !== 404) {
-        toast.error('Failed to load rooms');
-      }
+      toast.error('Failed to load rooms');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleRoomSubmitSuccess = () => {
-    fetchRooms();
-    setActiveTab('my-rooms');
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('adminToken');
+    navigate('/');
+    toast.success('Logged out successfully');
   };
 
   const getStatusColor = (status: string) => {
@@ -84,20 +76,6 @@ export default function Dashboard() {
     }
   };
 
-  // For renter users - show original dashboard
-  if (user?.role !== 'landlord') {
-    return (
-      <div className="flex bg-gray-50 min-h-screen">
-        <Sidebar />
-        <div className="flex-1 flex flex-col">
-          <ProfileHeader />
-          <DashboardMain />
-        </div>
-      </div>
-    );
-  }
-
-  // For landlord users - show only my rooms and submit room
   return (
     <>
       <Toaster
@@ -113,9 +91,37 @@ export default function Dashboard() {
       />
 
       <div className="min-h-screen bg-gray-50">
-        <ProfileHeader />
-        
-        {/* Landlord Dashboard Tabs */}
+        {/* Header with Rumin Logo */}
+        <div className="bg-gradient-to-r from-[#89B4DB] to-[#0085FE] text-white shadow-lg">
+          <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <img
+                src="/rumin-logo.png"
+                alt="Rumin Logo"
+                className="h-10 w-auto"
+              />
+              <div>
+                <h1 className="text-2xl font-bold">Landlord Dashboard</h1>
+                <p className="text-blue-100 text-sm">Manage your room listings</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="text-right">
+                <p className="font-semibold">{user?.name || 'Landlord'}</p>
+                <p className="text-blue-100 text-sm">{user?.email}</p>
+              </div>
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-2 bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition-colors"
+              >
+                <LogOut className="w-4 h-4" />
+                Logout
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Navigation Tabs */}
         <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
           <div className="max-w-7xl mx-auto px-6">
             <div className="flex gap-8">
@@ -123,7 +129,7 @@ export default function Dashboard() {
                 onClick={() => setActiveTab('my-rooms')}
                 className={`py-4 px-2 font-semibold border-b-2 transition-colors ${
                   activeTab === 'my-rooms'
-                    ? 'border-blue-500 text-blue-600'
+                    ? 'border-[#0085FE] text-[#0085FE]'
                     : 'border-transparent text-gray-600 hover:text-gray-900'
                 }`}
               >
@@ -136,7 +142,7 @@ export default function Dashboard() {
                 onClick={() => setActiveTab('submit-room')}
                 className={`py-4 px-2 font-semibold border-b-2 transition-colors ${
                   activeTab === 'submit-room'
-                    ? 'border-blue-500 text-blue-600'
+                    ? 'border-[#0085FE] text-[#0085FE]'
                     : 'border-transparent text-gray-600 hover:text-gray-900'
                 }`}
               >
@@ -149,10 +155,10 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Tab Content */}
-        <main className="p-6 flex-1 bg-gray-50 overflow-auto">
-          {activeTab === 'my-rooms' && (
-            <div className="max-w-6xl mx-auto">
+        {/* Content Area */}
+        <div className="max-w-7xl mx-auto px-6 py-8">
+          {activeTab === 'my-rooms' ? (
+            <div>
               <div className="mb-6">
                 <h2 className="text-2xl font-bold text-gray-900 mb-2">Your Rooms</h2>
                 <p className="text-gray-600">
@@ -162,8 +168,8 @@ export default function Dashboard() {
 
               {loading ? (
                 <div className="flex justify-center items-center h-64">
-                  <div className="text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                  <div className="flex flex-col items-center gap-4">
+                    <Loader className="w-12 h-12 text-[#0085FE] animate-spin" />
                     <p className="text-gray-600">Loading your rooms...</p>
                   </div>
                 </div>
@@ -178,7 +184,7 @@ export default function Dashboard() {
                   </p>
                   <button
                     onClick={() => setActiveTab('submit-room')}
-                    className="inline-flex items-center gap-2 bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors font-semibold"
+                    className="inline-flex items-center gap-2 bg-gradient-to-r from-[#89B4DB] to-[#0085FE] text-white px-6 py-3 rounded-lg hover:from-[#7AA3CA] hover:to-[#0074DD] transition-colors font-semibold"
                   >
                     <Plus className="w-5 h-5" />
                     Submit Your First Room
@@ -222,19 +228,39 @@ export default function Dashboard() {
                           {room.title}
                         </h3>
 
-                        <div className="space-y-2 mb-4 text-sm text-gray-600">
-                          <p className="line-clamp-1">
-                            📍 {room.location.city}, {room.location.state}
-                          </p>
-                          <p className="font-semibold text-green-600">
-                            ₹{room.rent.toLocaleString()}/month
-                          </p>
-                          <p>🏠 {room.bhk || 'N/A'}</p>
-                          <p>📅 {new Date(room.createdAt).toLocaleDateString()}</p>
+                        <div className="space-y-2 mb-4">
+                          <div className="flex items-center gap-2 text-sm text-gray-600">
+                            <MapPin className="w-4 h-4 text-[#0085FE]" />
+                            <span className="line-clamp-1">
+                              {room.location.city}, {room.location.state}
+                            </span>
+                          </div>
+
+                          <div className="flex items-center gap-2 text-sm">
+                            <DollarSign className="w-4 h-4 text-green-600" />
+                            <span className="font-semibold text-gray-900">
+                              ₹{room.rent.toLocaleString()}/month
+                            </span>
+                          </div>
+
+                          <div className="flex items-center gap-2 text-sm text-gray-600">
+                            <Home className="w-4 h-4 text-[#0085FE]" />
+                            <span>{room.bhk || 'N/A'}</span>
+                          </div>
+
+                          <div className="flex items-center gap-2 text-sm text-gray-600">
+                            <Calendar className="w-4 h-4 text-[#0085FE]" />
+                            <span>
+                              {new Date(room.createdAt).toLocaleDateString()}
+                            </span>
+                          </div>
                         </div>
 
                         {room.amenities && room.amenities.length > 0 && (
                           <div className="mb-4">
+                            <p className="text-xs font-semibold text-gray-700 mb-2">
+                              Amenities:
+                            </p>
                             <div className="flex flex-wrap gap-2">
                               {room.amenities.slice(0, 3).map((amenity, idx) => (
                                 <span
@@ -255,7 +281,7 @@ export default function Dashboard() {
 
                         <button
                           onClick={() => navigate(`/room/${room._id}`)}
-                          className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-colors font-semibold"
+                          className="w-full bg-gradient-to-r from-[#89B4DB] to-[#0085FE] text-white py-2 rounded-lg hover:from-[#7AA3CA] hover:to-[#0074DD] transition-colors font-semibold"
                         >
                           View Details
                         </button>
@@ -265,24 +291,40 @@ export default function Dashboard() {
                 </div>
               )}
             </div>
-          )}
-
-          {activeTab === 'submit-room' && (
-            <div className="w-full">
-              <div className="mb-6 max-w-6xl mx-auto">
+          ) : (
+            <div>
+              <div className="mb-6">
                 <h2 className="text-2xl font-bold text-gray-900 mb-2">Submit New Room</h2>
                 <p className="text-gray-600">
                   Add a new property to your listings
                 </p>
               </div>
 
-              <div className="bg-white rounded-lg shadow-lg p-8 max-w-6xl mx-auto">
-                <SubmitRoomForm onSuccess={handleRoomSubmitSuccess} />
+              {/* Iframe or redirect to submit room form */}
+              <div className="bg-white rounded-lg shadow-lg p-8">
+                <div className="text-center py-12">
+                  <Home className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                    Submit a New Room
+                  </h3>
+                  <p className="text-gray-600 mb-6 max-w-md mx-auto">
+                    Click the button below to fill out the room submission form with all details and images.
+                  </p>
+                  <button
+                    onClick={() => navigate('/submit-room')}
+                    className="inline-flex items-center gap-2 bg-gradient-to-r from-[#89B4DB] to-[#0085FE] text-white px-8 py-3 rounded-lg hover:from-[#7AA3CA] hover:to-[#0074DD] transition-colors font-semibold"
+                  >
+                    <Plus className="w-5 h-5" />
+                    Go to Submit Room Form
+                  </button>
+                </div>
               </div>
             </div>
           )}
-        </main>
+        </div>
       </div>
     </>
   );
-}
+};
+
+export default LandlordDashboard;

@@ -138,7 +138,9 @@ const AdminInterests: React.FC = () => {
         </div>
       ) : (
         <div className="space-y-4">
-          {filteredInterests.map((interest) => {
+          {filteredInterests
+            .filter(interest => interest.userId && interest.roomId)
+            .map((interest) => {
             return (
               <div
                 key={interest._id}

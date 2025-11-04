@@ -1,9 +1,15 @@
 import  { useState } from 'react';
 import { Mail, Eye, EyeOff, User } from 'lucide-react';
 import { toast, Toaster } from 'sonner';
-import { register } from '../services/auth.services';
+import { register, login } from '../services/auth.services';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../store/authSlice';
+import type { AppDispatch } from '../store/store';
 
 const SignUp = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -80,10 +86,47 @@ const SignUp = () => {
 
       console.log("Registration Response:", response);
 
-      toast.success('Account created successfully! Welcome aboard!');
+      toast.success('Account created successfully!');
 
-      // Optional: Redirect or clear form
-      window.location.href = '/signin';
+      // Automatically log in the user after registration
+      try {
+        const loginResponse = await login({
+          email: email.trim(),
+          password
+        });
+
+        console.log("Auto Login Response:", loginResponse);
+
+        // Store the token
+        const token = loginResponse.data.accessToken;
+        localStorage.setItem("token", token);
+
+        // Update Redux state
+        const {
+          _id,
+          name: userName,
+          email: userEmail,
+          role,
+          walletBalance,
+        } = loginResponse.data.user;
+        dispatch(setUser({ userId: _id, name: userName, email: userEmail, role, walletBalance }));
+
+        toast.success('Logged in successfully! Redirecting to home...');
+
+        // Redirect to home
+        setTimeout(() => {
+          navigate('/');
+        }, 1500);
+
+      } catch (loginError: any) {
+        console.error("Auto Login Error:", loginError);
+        toast.info('Account created! Please sign in to continue.');
+        
+        // Redirect to sign in page if auto-login fails
+        setTimeout(() => {
+          navigate('/signin');
+        }, 2000);
+      }
 
     } catch (error:any) {
       console.error("Registration Error:", error);
