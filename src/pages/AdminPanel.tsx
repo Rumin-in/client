@@ -10,6 +10,7 @@ import AdminUserManagement from '../components/AdminUserManagement';
 import AdminEnquiries from '../components/AdminEnquiries';
 import AdminIssues from '../components/AdminIssues';
 import AdminInterests from '../components/AdminInterests';
+import AdminCoupons from '../components/AdminCoupons';
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
 
 const AdminPanel = () => {
@@ -110,6 +111,8 @@ const AdminPanel = () => {
         return <AdminEnquiries />;
       case 'issues':
         return <AdminIssues />;
+      case 'coupons':
+        return <AdminCoupons />;
       default:
         return <AdminDashboard />;
     }

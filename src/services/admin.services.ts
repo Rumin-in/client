@@ -98,6 +98,16 @@ export const getAdminAnalytics = async () => {
 };
 
 // User Management
+export const getAllUsers = async () => {
+  try {
+    const response = await axios.get("/admin/users");
+    return response.data;
+  } catch (error: any) {
+    console.error("Get All Users Error:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
 export const addUserBalance = async (data: { userId?: string; email?: string; amount: number }) => {
   try {
     const response = await axios.post("/admin/user/balance", data);

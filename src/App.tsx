@@ -10,10 +10,12 @@ import LandlordRegistration from "./pages/LandlordRegistration";
 import LandlordDashboard from "./pages/LandlordDashboard";
 import AdminPanel from "./pages/AdminPanel";
 import Bookmarks from "./pages/Bookmarks";
+import { ScrollToTopOnNavigation } from "./components/ScrollToTopOnNavigation";
 
 function App() {
   return (
     <>
+      <ScrollToTopOnNavigation />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/signin" element={<SignIn />} />

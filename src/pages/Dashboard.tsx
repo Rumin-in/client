@@ -9,6 +9,7 @@ import ProfileHeader from "../components/ProfileHeader";
 import DashboardMain from "../components/DashboardMain";
 import SubmitRoomForm from "../components/SubmitRoomForm";
 import { getLandlordRooms } from '../services/landlord.services';
+import { scrollToTop } from '../utils/scrollToTop';
 
 interface Room {
   _id: string;
@@ -133,7 +134,10 @@ export default function Dashboard() {
                 </div>
               </button>
               <button
-                onClick={() => setActiveTab('submit-room')}
+                onClick={() => {
+                  setActiveTab('submit-room');
+                  scrollToTop();
+                }}
                 className={`py-4 px-2 font-semibold border-b-2 transition-colors ${
                   activeTab === 'submit-room'
                     ? 'border-blue-500 text-blue-600'
@@ -177,7 +181,10 @@ export default function Dashboard() {
                     Start by submitting your first room listing
                   </p>
                   <button
-                    onClick={() => setActiveTab('submit-room')}
+                    onClick={() => {
+                      setActiveTab('submit-room');
+                      scrollToTop();
+                    }}
                     className="inline-flex items-center gap-2 bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors font-semibold"
                   >
                     <Plus className="w-5 h-5" />
@@ -253,12 +260,23 @@ export default function Dashboard() {
                           </div>
                         )}
 
-                        <button
-                          onClick={() => navigate(`/room/${room._id}`)}
-                          className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-colors font-semibold"
-                        >
-                          View Details
-                        </button>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => navigate(`/room/${room._id}`)}
+                            className="flex-1 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-colors font-semibold"
+                          >
+                            View Details
+                          </button>
+                          <button
+                            onClick={() => {
+                              // TODO: Open edit modal
+                              toast.error('Edit feature coming soon');
+                            }}
+                            className="flex-1 bg-gray-500 text-white py-2 rounded-lg hover:bg-gray-600 transition-colors font-semibold"
+                          >
+                            Edit
+                          </button>
+                        </div>
                       </div>
                     </div>
                   ))}

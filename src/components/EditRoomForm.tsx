@@ -1,25 +1,39 @@
 import { useState } from 'react';
 import { Home, MapPin, DollarSign, Calendar, Upload, X } from 'lucide-react';
 import { toast } from 'sonner';
-import { submitRoom } from '../services/landlord.services';
+import { submitRoom, updateRoom } from '../services/landlord.services';
 
-interface SubmitRoomFormProps {
+interface EditRoomFormProps {
+  roomId?: string;
+  initialData?: {
+    title: string;
+    description: string;
+    address: string;
+    city: string;
+    state: string;
+    rent: number;
+    bhk: string;
+    availabiltyDate: string;
+    amenities: string[];
+    images: string[];
+  };
   onSuccess?: () => void;
+  isEditing?: boolean;
 }
 
-const SubmitRoomForm = ({ onSuccess }: SubmitRoomFormProps) => {
+const EditRoomForm = ({ roomId, initialData, onSuccess, isEditing = false }: EditRoomFormProps) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [address, setAddress] = useState('');
-  const [city, setCity] = useState('Bhopal');
-  const [state, setState] = useState('');
-  const [rent, setRent] = useState('');
-  const [bhk, setBhk] = useState('');
-  const [availabiltyDate, setAvailabiltyDate] = useState('');
-  const [amenities, setAmenities] = useState<string[]>([]);
+  const [title, setTitle] = useState(initialData?.title || '');
+  const [description, setDescription] = useState(initialData?.description || '');
+  const [address, setAddress] = useState(initialData?.address || '');
+  const [city, setCity] = useState(initialData?.city || 'Bhopal');
+  const [state, setState] = useState(initialData?.state || '');
+  const [rent, setRent] = useState(initialData?.rent?.toString() || '');
+  const [bhk, setBhk] = useState(initialData?.bhk || '');
+  const [availabiltyDate, setAvailabiltyDate] = useState(initialData?.availabiltyDate || '');
+  const [amenities, setAmenities] = useState<string[]>(initialData?.amenities || []);
   const [images, setImages] = useState<File[]>([]);
-  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>(initialData?.images || []);
 
   const availableAmenities = [
     'WiFi',
@@ -48,8 +62,8 @@ const SubmitRoomForm = ({ onSuccess }: SubmitRoomFormProps) => {
 
     const fileArray = Array.from(files);
     
-    if (images.length + fileArray.length > 5) {
-      toast.error('You can upload a maximum of 5 images');
+    if (images.length + imagePreviews.length + fileArray.length > 5) {
+      toast.error('You can upload a maximum of 5 images total');
       return;
     }
 
@@ -73,10 +87,12 @@ const SubmitRoomForm = ({ onSuccess }: SubmitRoomFormProps) => {
   };
 
   const handleRemoveImage = (index: number) => {
-    const newImages = images.filter((_, i) => i !== index);
     const newPreviews = imagePreviews.filter((_, i) => i !== index);
-    URL.revokeObjectURL(imagePreviews[index]);
-    setImages(newImages);
+    if (imagePreviews[index].startsWith('blob:')) {
+      URL.revokeObjectURL(imagePreviews[index]);
+      const newImages = images.filter((_, i) => i !== index);
+      setImages(newImages);
+    }
     setImagePreviews(newPreviews);
   };
 
@@ -101,7 +117,7 @@ const SubmitRoomForm = ({ onSuccess }: SubmitRoomFormProps) => {
       toast.error('Valid rent amount is required');
       return;
     }
-    if (images.length === 0) {
+    if (!isEditing && imagePreviews.length === 0) {
       toast.error('At least one image is required');
       return;
     }
@@ -115,7 +131,6 @@ const SubmitRoomForm = ({ onSuccess }: SubmitRoomFormProps) => {
       formData.append('address', address.trim());
       formData.append('city', 'Bhopal');
       formData.append('state', state.trim());
-      // Default coordinates for Bhopal city center
       formData.append('latitude', '23.1815');
       formData.append('longitude', '79.9864');
       formData.append('rent', rent.trim());
@@ -127,23 +142,16 @@ const SubmitRoomForm = ({ onSuccess }: SubmitRoomFormProps) => {
         formData.append('images', image);
       });
 
-      const response = await submitRoom(formData);
-      console.log("Submit Room Response:", response);
+      let response;
+      if (isEditing && roomId) {
+        response = await updateRoom(roomId, formData);
+        toast.success('Room updated successfully!');
+      } else {
+        response = await submitRoom(formData);
+        toast.success('Room submitted successfully! It will be reviewed by admin.');
+      }
 
-      toast.success('Room submitted successfully! It will be reviewed by admin.');
-
-      // Reset form
-      setTitle('');
-      setDescription('');
-      setAddress('');
-      setCity('Bhopal');
-      setState('');
-      setRent('');
-      setBhk('');
-      setAvailabiltyDate('');
-      setAmenities([]);
-      setImages([]);
-      setImagePreviews([]);
+      console.log("Response:", response);
 
       // Call callback if provided
       if (onSuccess) {
@@ -151,13 +159,13 @@ const SubmitRoomForm = ({ onSuccess }: SubmitRoomFormProps) => {
       }
 
     } catch (error: any) {
-      console.error("Submit Room Error:", error);
+      console.error("Error:", error);
       if (error.response && error.response.data && error.response.data.message) {
         toast.error(error.response.data.message);
       } else if (error.message) {
         toast.error(error.message);
       } else {
-        toast.error('Failed to submit room. Please try again.');
+        toast.error('Failed to save room. Please try again.');
       }
     } finally {
       setIsLoading(false);
@@ -363,50 +371,43 @@ const SubmitRoomForm = ({ onSuccess }: SubmitRoomFormProps) => {
           </div>
         )}
 
-        {images.length < 5 && (
-          <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
-            <div className="flex flex-col items-center justify-center pt-5 pb-6">
-              <Upload className="w-8 h-8 text-gray-400 mb-2" />
-              <p className="text-sm text-gray-500">
-                <span className="font-semibold">Click to upload</span> or drag and drop
-              </p>
-              <p className="text-xs text-gray-400">PNG, JPG, JPEG, WEBP (MAX. 5MB)</p>
-            </div>
-            <input
-              type="file"
-              className="hidden"
-              multiple
-              accept="image/jpeg,image/jpg,image/png,image/webp"
-              onChange={handleImageChange}
-              disabled={isLoading}
-            />
-          </label>
-        )}
+        <label
+          className={`flex items-center justify-center w-full px-4 py-8 border-2 border-dashed rounded-lg cursor-pointer transition-colors ${
+            imagePreviews.length >= 5
+              ? 'border-gray-300 bg-gray-50 cursor-not-allowed opacity-50'
+              : 'border-blue-300 bg-blue-50 hover:bg-blue-100'
+          }`}
+        >
+          <input
+            type="file"
+            multiple
+            accept="image/*"
+            onChange={handleImageChange}
+            className="hidden"
+            disabled={isLoading || imagePreviews.length >= 5}
+          />
+          <div className="text-center">
+            <Upload className="w-8 h-8 text-blue-500 mx-auto mb-2" />
+            <p className="text-sm font-medium text-gray-700">
+              Drag and drop images here or click to browse
+            </p>
+            <p className="text-xs text-gray-500 mt-1">
+              ({imagePreviews.length}/5) - PNG, JPG, JPEG or WEBP up to 5MB each
+            </p>
+          </div>
+        </label>
       </div>
 
       {/* Submit Button */}
       <button
-        type="button"
         onClick={handleSubmit}
         disabled={isLoading}
-        className={`w-full font-semibold py-3 px-4 rounded-lg transition-colors focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 outline-none ${
-          isLoading
-            ? 'bg-gray-400 cursor-not-allowed text-white'
-            : 'bg-blue-500 hover:bg-blue-600 text-white'
-        }`}
+        className="w-full bg-blue-500 text-white py-3 rounded-lg font-semibold hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
       >
-        {isLoading ? 'Submitting Room...' : 'Submit Room for Review'}
+        {isLoading ? 'Saving...' : isEditing ? 'Update Room' : 'Submit Room'}
       </button>
-
-      {/* Info Note */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <p className="text-sm text-blue-800">
-          <strong>Note:</strong> Your room listing will be reviewed by our admin team before being published. 
-          You will be notified once it's approved.
-        </p>
-      </div>
     </div>
   );
 };
 
-export default SubmitRoomForm;
+export default EditRoomForm;

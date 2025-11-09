@@ -41,3 +41,17 @@ export const submitRoom = async (roomData: FormData) => {
     throw error;
   }
 };
+
+export const updateRoom = async (roomId: string, roomData: FormData) => {
+  try {
+    const response = await axios.put(`/landlord/update-room/${roomId}`, roomData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    console.error("Update Room Error:", error.response?.data || error.message);
+    throw error;
+  }
+};
