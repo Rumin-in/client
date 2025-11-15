@@ -193,9 +193,7 @@ const LandlordRegistration = () => {
         <div className="hidden md:flex flex-1 bg-gradient-to-br from-blue-500 to-blue-600 flex-col items-center justify-center text-white p-8">
           <div className="text-center">
             <div className="mb-8">
-              <div className="w-64 h-64 mx-auto bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
-                <span className="text-6xl">🏠</span>
-              </div>
+             <img src="/landlord.svg" alt="landlord" />
             </div>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Become a Landlord

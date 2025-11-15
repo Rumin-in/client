@@ -37,27 +37,26 @@ const ComingSoon = () => {
         </div>
 
         {/* Mobile view - stacked full images */}
-        <div className="sm:hidden flex flex-col gap-4">
-          {categories.map((category) => (
-            <div
-              key={category.id}
-              className="relative rounded-3xl overflow-hidden shadow-lg"
-            >
-              <img
-                src={category.image}
-                alt={category.title}
-                className="w-full h-64 sm:h-80 object-cover"
-              />
-              <div className={`absolute inset-0 ${category.bgColor} opacity-30`}></div>
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
-              <div className="absolute bottom-4 left-4 right-4">
-                <h3 className="text-white font-semibold text-lg drop-shadow-lg">
-                  {category.title}
-                </h3>
-              </div>
-            </div>
-          ))}
-        </div>
+        {/* Mobile view - show ONLY first item */}
+<div className="sm:hidden">
+  {categories.length > 0 && (
+    <div className="relative rounded-3xl overflow-hidden shadow-lg">
+      <img
+        src={categories[1].image}
+        alt={categories[1].title}
+        className="w-full h-64 object-cover"
+      />
+      <div className={`absolute inset-0 ${categories[1].bgColor} opacity-30`}></div>
+      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+      <div className="absolute bottom-4 left-4 right-4">
+        <h3 className="text-white font-semibold text-lg drop-shadow-lg">
+          {categories[1].title}
+        </h3>
+      </div>
+    </div>
+  )}
+</div>
+
       </div>
     </section>
   );

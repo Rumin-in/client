@@ -1,14 +1,23 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const RoomsBySize: React.FC = () => {
+  const navigate = useNavigate();
+
+  // Room type data
   const roomTypes = [
     { id: 1, type: "1 RK", color: "text-blue-500" },
     { id: 2, type: "1 BHK", color: "text-blue-500" },
     { id: 3, type: "Single Room", color: "text-blue-500" },
-    { id: 4, type: "1 BHK", color: "text-blue-500" },
-    { id: 5, type: "1 RK", color: "text-gray-600" },
-    { id: 6, type: "1 RK", color: "text-gray-600" },
+    { id: 4, type: "2 BHK", color: "text-blue-500" },
+    { id: 5, type: "3 BHK", color: "text-blue-500" },
+    { id: 6, type: "Shared Room", color: "text-blue-500" },
   ];
+
+  const handleRoomTypeClick = (type: string) => {
+    // Navigate to /rooms with query param
+    navigate(`/rooms?type=${encodeURIComponent(type)}`);
+  };
 
   return (
     <section className="py-16 bg-gray-900">
@@ -21,6 +30,7 @@ const RoomsBySize: React.FC = () => {
           {roomTypes.map((room) => (
             <div
               key={room.id}
+              onClick={() => handleRoomTypeClick(room.type)}
               className="bg-white rounded-2xl p-6 flex items-center justify-between hover:shadow-lg transition-shadow cursor-pointer group"
             >
               <div className="flex items-center space-x-4">

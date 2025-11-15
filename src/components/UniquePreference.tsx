@@ -1,5 +1,4 @@
 import React from 'react';
-import { Search } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 
 const UniquePreferences: React.FC = () => {
@@ -13,7 +12,6 @@ const UniquePreferences: React.FC = () => {
     { id: 4, name: "Karond" },
     { id: 5, name: "Anand Nagar" },
     { id: 6, name: "Ashoka Garden" },
-    { id: 7, name: "Search" }, // special case
   ];
 
   const handleLocationClick = (locationName: string) => {
@@ -36,23 +34,10 @@ const UniquePreferences: React.FC = () => {
         </div>
 
         {/* Location Pills */}
-        <div className="bg-blue-100 rounded-full p-6">
+        <div className="bg-blue-100 rounded-[10px] sm:rounded-full p-6">
           <div className="flex flex-wrap items-center justify-center gap-4">
             {locations.map((location) =>
-              location.id === 7 ? (
-                // === Search pill ===
-                <div
-                  key={location.id}
-                  className="flex items-center bg-white rounded-full px-6 py-3 shadow-sm hover:shadow-md transition-shadow cursor-text w-64"
-                >
-                  <Search className="w-10 h-10 text-blue-500 mr-3" />
-                  <input
-                    type="text"
-                    placeholder="Search"
-                    className="bg-transparent outline-none flex-1 text-gray-700 placeholder-blue-400"
-                  />
-                </div>
-              ) : (
+
                 // === Normal location pill ===
                 <div
                   key={location.id}
@@ -76,7 +61,7 @@ const UniquePreferences: React.FC = () => {
                     {location.name}
                   </span>
                 </div>
-              )
+              
             )}
           </div>
         </div>
