@@ -6,12 +6,13 @@ const RoomsBySize: React.FC = () => {
 
   // Room type data
   const roomTypes = [
-    { id: 1, type: "1 RK", color: "text-blue-500" },
-    { id: 2, type: "1 BHK", color: "text-blue-500" },
-    { id: 3, type: "Single Room", color: "text-blue-500" },
+    { id: 1, type: "Single Room", color: "text-blue-500" },
+    { id: 2, type: "1 RK", color: "text-blue-500" },
+    { id: 3, type: "1 BHK", color: "text-blue-500" },
     { id: 4, type: "2 BHK", color: "text-blue-500" },
     { id: 5, type: "3 BHK", color: "text-blue-500" },
-    { id: 6, type: "Shared Room", color: "text-blue-500" },
+    { id: 6, type: "Studio Room", color: "text-blue-500" },
+    { id: 7, type: "Duplex", color: "text-blue-500" },
   ];
 
   const handleRoomTypeClick = (type: string) => {

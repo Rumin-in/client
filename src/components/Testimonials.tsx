@@ -9,36 +9,39 @@ interface Testimonial {
 }
 
 const RotatingTestimonials: React.FC = () => {
+  // Default avatar for users without profile picture
+  const defaultAvatar = "https://ui-avatars.com/api/?background=e0e7ff&color=4f46e5&bold=true&size=128";
+
   const testimonials: Testimonial[] = [
     {
       id: 1,
-      name: "Jane Cooper",
-      review: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      avatar: "/p1.png"
+      name: "Rahul Sharma",
+      review: "Found a great room through Rumin within just 3 days! The whole process was super easy and transparent. Direct contact with the landlord, no brokerage fees. Best platform for room hunting in Bhopal!",
+      avatar: `${defaultAvatar}&name=Rahul+Sharma`
     },
     {
       id: 2,
-      name: "Robert Fox",
-      review: "Exceptional service and outstanding results. The attention to detail exceeded all my expectations. Highly recommended!",
-      avatar: "/p2.png"
+      name: "Priya Verma",
+      review: "I was new to Bhopal and finding a safe room felt impossible. Rumin helped me find a clean and secure 1BHK near my college in just 2 days. The filters for location and budget were really helpful!",
+      avatar: `${defaultAvatar}&name=Priya+Verma`
     },
     {
       id: 3,
-      name: "Emily Watson",
-      review: "A truly transformative experience. Professional, efficient, and remarkably effective. I couldn't be happier with the outcome.",
-      avatar: "/p3.png"
+      name: "Amit Patel",
+      review: "As a student, finding an affordable room is always tough. Rumin's budget filter helped me find the perfect room within my range. Genuine listings with real photos. Highly recommended for students!",
+      avatar: `${defaultAvatar}&name=Amit+Patel`
     },
     {
       id: 4,
-      name: "Michael Chen",
-      review: "Outstanding quality and incredible support throughout the entire process. This is exactly what I was looking for!",
-      avatar: "/p4.png"
+      name: "Neha Gupta",
+      review: "What I loved about Rumin is that all the information is accurate and updated. The photos matched the actual room I visited. No fake promises, no hidden charges. Finally a trustworthy platform!",
+      avatar: `${defaultAvatar}&name=Neha+Gupta`
     },
     {
       id: 5,
-      name: "Sarah Johnson",
-      review: "Innovative solutions with a personal touch. The team went above and beyond to ensure complete satisfaction.",
-      avatar: "/p5.png"
+      name: "Vikas Yadav",
+      review: "Needed a room close to my office in MP Nagar. Used Rumin's location search and shifted within a week. The team is very helpful and responsive. Will definitely recommend to my friends!",
+      avatar: `${defaultAvatar}&name=Vikas+Yadav`
     }
   ];
 

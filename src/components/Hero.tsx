@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState, AppDispatch } from "../store/store";
 import { logout as logoutAction } from "../store/authSlice";
-import { toast } from "sonner";
 
 // COUNTER HOOK
 const useCounter = (target: number, duration = 700) => {
@@ -36,6 +35,7 @@ const Hero: React.FC = () => {
   const user = useSelector((state: RootState) => state.auth.user);
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const happyCustomers = useCounter(15000);
   const countries = useCounter(35);
@@ -46,6 +46,20 @@ const Hero: React.FC = () => {
     localStorage.removeItem("token");
     setIsDropdownOpen(false);
     navigate("/signin");
+  };
+
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      navigate(`/rooms?search=${encodeURIComponent(searchQuery.trim())}`);
+    } else {
+      navigate("/rooms");
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
   };
 
   return (
@@ -171,10 +185,16 @@ const Hero: React.FC = () => {
           <div className="bg-white rounded-full flex items-center shadow-lg mb-8 md:mb-18 w-full max-w-md overflow-hidden border-5 border-[#69b8f9]">
             <input
               type="text"
-              placeholder="Search your rooms"
+              placeholder="Search by location, city..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={handleKeyPress}
               className="flex-1 px-4 py-2 md:py-3 text-gray-700 bg-transparent outline-none placeholder-[#108cfe]"
             />
-            <button className="text-[#108cfe] px-4 md:px-6 py-2 md:py-3 rounded-full transition-colors">
+            <button
+              onClick={handleSearch}
+              className="text-[#108cfe] px-4 md:px-6 py-2 md:py-3 rounded-full transition-colors hover:bg-blue-50"
+            >
               <Search />
             </button>
           </div>
