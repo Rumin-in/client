@@ -9,7 +9,7 @@ import { logout as logoutAction } from "../store/authSlice";
 const Header: React.FC = () => {
   const [roomOpen, setRoomOpen] = useState(false);
   const [locationOpen, setLocationOpen] = useState(false);
-  const [langOpen, setLangOpen] = useState(false);
+  const [_langOpen, _setLangOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
