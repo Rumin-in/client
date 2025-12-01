@@ -63,9 +63,9 @@ const Hero: React.FC = () => {
   };
 
   return (
-    <section className="relative bg-gradient-to-b pb-10 from-[#89B4DB] to-[#0085FE] overflow-x-hidden sm:rounded-lg">
+    <section className="relative pb-10 overflow-x-hidden sm:rounded-lg" style={{ backgroundImage: "url('/hero-frame.png')", backgroundSize: "cover", backgroundPosition: "center" }}>
       {/* === HEADER BAR === */}
-      <header className="flex justify-between w-full absolute top-0 left-0 z-20 px-4 md:px-0 pr-0">
+      <header className="flex justify-between items-stretch w-full absolute top-0 left-0 z-20 px-4 md:px-0 pr-0">
         
         {/* LOGO */}
         <div className="flex items-center">
@@ -99,12 +99,12 @@ const Hero: React.FC = () => {
         </nav>
 
         {/* USER / AUTH */}
-        <div className="flex items-center space-x-2 sm:pt-5 sm:bg-white md:space-x-5 pl-4 md:pl-8 sm:pr-6">
+        <div className="flex items-center justify-center space-x-2 md:space-x-5 h-full py-4 px-6 2xl:py-0 2xl:px-0">
 
           {user ? (
-            <div className="relative">
-              <div className="flex items-center space-x-3 bg-white pl-3 pr-4 py-1 rounded-full shadow-md">
-                
+            <div className="relative flex items-center">
+              <div className="flex items-center space-x-3 md:bg-white p-1 md:pl-3 md:pr-4 md:py-2 md:rounded-full md:shadow-md">
+
                 {/* PROFILE */}
                 <div
                   onClick={() => navigate("/profile")}
@@ -115,7 +115,7 @@ const Hero: React.FC = () => {
                     alt="profile"
                     className="w-10 h-10 rounded-full object-cover border-2 border-blue-500"
                   />
-                  <div className="flex flex-col">
+                  <div className="hidden md:flex flex-col">
                     <span className="text-blue-600 font-semibold">{user.name}</span>
                     <span className="text-gray-600 text-sm">{user.email}</span>
                   </div>
@@ -124,7 +124,7 @@ const Hero: React.FC = () => {
                 {/* DROPDOWN TOGGLE */}
                 <button
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  className="ml-2 p-1 rounded-full hover:bg-gray-100 transition-colors"
+                  className="hidden md:block ml-2 p-1 rounded-full hover:bg-gray-100 transition-colors"
                 >
                   <MoreVertical className="w-5 h-5 text-gray-500" />
                 </button>
