@@ -7,9 +7,7 @@ import type { RootState, AppDispatch } from "../store/store";
 import { logout as logoutAction } from "../store/authSlice";
 
 const Header: React.FC = () => {
-  const [roomOpen, setRoomOpen] = useState(false);
-  const [locationOpen, setLocationOpen] = useState(false);
-  const [_langOpen, _setLangOpen] = useState(false);
+  const [upcomingOpen, setUpcomingOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -23,12 +21,6 @@ const Header: React.FC = () => {
     localStorage.removeItem("token");
     setIsDropdownOpen(false);
     navigate("/signin");
-  };
-
-  // ✅ Handle location click
-  const handleLocationClick = (location: string) => {
-    setLocationOpen(false);
-    navigate(`/rooms?location=${encodeURIComponent(location)}`);
   };
 
   return (
@@ -50,51 +42,27 @@ const Header: React.FC = () => {
           <a href="/" className="hover:text-blue-600 transition-colors">
             HOME
           </a>
-          <a href="#" className="hover:text-blue-600 transition-colors">
-            FURNITURE
+          <a href="/about" className="hover:text-blue-600 transition-colors">
+            ABOUT US
           </a>
 
-          {/* === Room Dropdown === */}
+          {/* === Upcoming Dropdown === */}
           <div className="relative">
             <button
-              onClick={() => setRoomOpen(!roomOpen)}
+              onClick={() => setUpcomingOpen(!upcomingOpen)}
               className="flex items-center gap-1 hover:text-blue-600 transition-colors"
             >
-              ROOM <ChevronDown size={16} />
+              UPCOMING <ChevronDown size={16} />
             </button>
-            {roomOpen && (
-              <div className="absolute mt-2 bg-white shadow-lg rounded-md py-2 w-40 z-50">
-                {["Bedroom", "Living Room", "Kitchen"].map((item) => (
-                  <a
-                    key={item}
-                    href="#"
-                    className="block px-4 py-2 hover:bg-gray-100 text-gray-700"
-                  >
-                    {item}
-                  </a>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* === Room by Location === */}
-          <div className="relative">
-            <button
-              onClick={() => setLocationOpen(!locationOpen)}
-              className="flex items-center gap-1 hover:text-blue-600 transition-colors"
-            >
-              ROOM BY LOCATION <ChevronDown size={16} />
-            </button>
-            {locationOpen && (
+            {upcomingOpen && (
               <div className="absolute mt-2 bg-white shadow-lg rounded-md py-2 w-48 z-50">
-                {["Minal", "Lalghati", "Kolar", "Arera Colony", "MP Nagar"].map((loc) => (
-                  <button
-                    key={loc}
-                    onClick={() => handleLocationClick(loc)}
-                    className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700"
+                {["Student Furniture", "Hostel", "PG", "Co-living Spaces"].map((item) => (
+                  <span
+                    key={item}
+                    className="block px-4 py-2 hover:bg-gray-100 text-gray-700 cursor-default"
                   >
-                    {loc}
-                  </button>
+                    {item} <span className="text-xs text-blue-500">(Coming Soon)</span>
+                  </span>
                 ))}
               </div>
             )}
@@ -187,50 +155,24 @@ const Header: React.FC = () => {
             <a href="/" className="hover:text-blue-600">
               HOME
             </a>
-            <a href="#" className="hover:text-blue-600">
-              FURNITURE
+            <a href="/about" className="hover:text-blue-600">
+              ABOUT US
             </a>
 
-            {/* Room Dropdown */}
+            {/* Upcoming Dropdown */}
             <button
-              onClick={() => setRoomOpen(!roomOpen)}
+              onClick={() => setUpcomingOpen(!upcomingOpen)}
               className="flex items-center justify-between py-2"
             >
-              ROOM <ChevronDown size={16} />
+              UPCOMING <ChevronDown size={16} />
             </button>
-            {roomOpen && (
+            {upcomingOpen && (
               <div className="pl-4 flex flex-col gap-2 text-gray-600">
-                {["Bedroom", "Living Room", "Kitchen"].map((item) => (
-                  <a key={item} href="#" className="hover:text-blue-600">
-                    {item}
-                  </a>
+                {["Student Furniture", "Hostel", "PG", "Co-living Spaces"].map((item) => (
+                  <span key={item} className="text-gray-500">
+                    {item} <span className="text-xs text-blue-500">(Coming Soon)</span>
+                  </span>
                 ))}
-              </div>
-            )}
-
-            {/* Room by Location */}
-            <button
-              onClick={() => setLocationOpen(!locationOpen)}
-              className="flex items-center justify-between py-2"
-            >
-              ROOM BY LOCATION <ChevronDown size={16} />
-            </button>
-            {locationOpen && (
-              <div className="pl-4 flex flex-col gap-2 text-gray-600">
-                {["Minal", "Lalghati", "Kolar", "Arera Colony", "MP Nagar"].map(
-                  (loc) => (
-                    <button
-                      key={loc}
-                      onClick={() => {
-                        handleLocationClick(loc);
-                        setMobileMenuOpen(false);
-                      }}
-                      className="text-left hover:text-blue-600"
-                    >
-                      {loc}
-                    </button>
-                  )
-                )}
               </div>
             )}
 

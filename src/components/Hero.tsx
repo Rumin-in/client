@@ -5,28 +5,80 @@ import { useSelector, useDispatch } from "react-redux";
 import type { RootState, AppDispatch } from "../store/store";
 import { logout as logoutAction } from "../store/authSlice";
 
-// COUNTER HOOK
-const useCounter = (target: number, duration = 700) => {
+// COUNTER HOOK with looping animation
+const useCounter = (target: number, duration = 1500, delay = 0, pauseAfterComplete = 3000) => {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    let start = 0;
-    const increment = target / (duration / 16);
+    let delayTimer: ReturnType<typeof setTimeout>;
+    let animationTimer: ReturnType<typeof setInterval>;
+    let resetTimer: ReturnType<typeof setTimeout>;
 
-    const timer = setInterval(() => {
-      start += increment;
-      if (start >= target) {
-        clearInterval(timer);
-        setCount(target);
-      } else {
-        setCount(Math.floor(start));
-      }
-    }, 16);
+    const startAnimation = () => {
+      delayTimer = setTimeout(() => {
+        let start = 0;
+        const increment = target / (duration / 16);
 
-    return () => clearInterval(timer);
-  }, [target, duration]);
+        animationTimer = setInterval(() => {
+          start += increment;
+          if (start >= target) {
+            clearInterval(animationTimer);
+            setCount(target);
+
+            // After pause, reset and start again
+            resetTimer = setTimeout(() => {
+              setCount(0);
+              startAnimation();
+            }, pauseAfterComplete);
+          } else {
+            setCount(Math.floor(start));
+          }
+        }, 16);
+      }, delay);
+    };
+
+    startAnimation();
+
+    return () => {
+      clearTimeout(delayTimer);
+      clearInterval(animationTimer);
+      clearTimeout(resetTimer);
+    };
+  }, [target, duration, delay, pauseAfterComplete]);
 
   return count;
+};
+
+// TYPING ANIMATION HOOK
+const useTypingAnimation = (texts: string[], typingSpeed = 100, deletingSpeed = 50, pauseTime = 2000) => {
+  const [displayText, setDisplayText] = useState("");
+  const [textIndex, setTextIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    const currentText = texts[textIndex];
+
+    const timeout = setTimeout(() => {
+      if (!isDeleting) {
+        if (displayText.length < currentText.length) {
+          setDisplayText(currentText.slice(0, displayText.length + 1));
+        } else {
+          setTimeout(() => setIsDeleting(true), pauseTime);
+        }
+      } else {
+        if (displayText.length > 0) {
+          setDisplayText(displayText.slice(0, -1));
+        } else {
+          setIsDeleting(false);
+          setTextIndex((prev) => (prev + 1) % texts.length);
+        }
+      }
+    }, isDeleting ? deletingSpeed : typingSpeed);
+
+    return () => clearTimeout(timeout);
+  }, [displayText, isDeleting, textIndex, texts, typingSpeed, deletingSpeed, pauseTime]);
+
+  return displayText;
 };
 
 const Hero: React.FC = () => {
@@ -37,9 +89,14 @@ const Hero: React.FC = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const happyCustomers = useCounter(15000);
-  const countries = useCounter(35);
-  const properties = useCounter(20000);
+  // Typing animation for placeholder
+  const placeholderTexts = ["Search by location...", "Search by city...", "Search by area...", "Search by neighbourhood..."];
+  const typingPlaceholder = useTypingAnimation(placeholderTexts, 80, 40, 1500);
+
+  // Counters with staggered delays and looping animation
+  const happyCustomers = useCounter(15000, 1500, 0, 4000);
+  const countries = useCounter(35, 1500, 300, 4000);
+  const properties = useCounter(20000, 1500, 600, 4000);
 
   const handleLogout = () => {
     dispatch(logoutAction());
@@ -63,10 +120,10 @@ const Hero: React.FC = () => {
   };
 
   return (
-    <section className="relative pb-10 overflow-x-hidden sm:rounded-lg" style={{ backgroundImage: "url('/hero-frame.png')", backgroundSize: "cover", backgroundPosition: "center" }}>
+    <section className="relative overflow-hidden sm:rounded-lg" style={{ backgroundImage: "url('/hero-frame.png')", backgroundSize: "100% 100%", backgroundPosition: "center", backgroundRepeat: "no-repeat" }}>
       {/* === HEADER BAR === */}
       <header className="flex justify-between items-stretch w-full absolute top-0 left-0 z-20 px-4 md:px-0 pr-0">
-        
+
         {/* LOGO */}
         <div className="flex items-center">
           <img
@@ -99,23 +156,23 @@ const Hero: React.FC = () => {
         </nav>
 
         {/* USER / AUTH */}
-        <div className="flex items-center justify-center space-x-2 md:space-x-5 h-full py-4 px-6 2xl:py-0 2xl:px-0">
+        <div className="flex items-center justify-center space-x-2 md:space-x-5 h-full py-4 px-6 lg:px-0 lg:py-0 ">
 
           {user ? (
             <div className="relative flex items-center">
-              <div className="flex items-center space-x-3 md:bg-white p-1 md:pl-3 md:pr-4 md:py-2 md:rounded-full md:shadow-md">
+              <div className="flex items-center xl:space-x-3 md:bg-white p-1 md:pl-3 md:pr-4 md:py-2 md:rounded-full md:shadow-md">
 
                 {/* PROFILE */}
                 <div
                   onClick={() => navigate("/profile")}
-                  className="flex items-center space-x-3 cursor-pointer hover:opacity-90 transition"
+                  className="flex items-center xl:space-x-3 cursor-pointer hover:opacity-90 transition"
                 >
                   <img
                     src="https://i.pinimg.com/736x/1d/ec/e2/1dece2c8357bdd7cee3b15036344faf5.jpg"
                     alt="profile"
                     className="w-10 h-10 rounded-full object-cover border-2 border-blue-500"
                   />
-                  <div className="hidden md:flex flex-col">
+                  <div className="hidden xl:flex flex-col">
                     <span className="text-blue-600 font-semibold">{user.name}</span>
                     <span className="text-gray-600 text-sm">{user.email}</span>
                   </div>
@@ -169,7 +226,7 @@ const Hero: React.FC = () => {
 
       {/* === HERO SECTION CONTENT === */}
       <div className="container mx-auto px-4 md:px-6 flex flex-col sm:mt-7 md:flex-row items-center justify-between h-full pt-32 md:pt-40">
-        
+
         {/* TEXT COLUMN */}
         <div className="flex-1 max-w-full md:max-w-5xl text-white">
           <h1 className="text-2xl md:text-7xl font-bold leading-tight mb-4 md:mb-6">
@@ -185,7 +242,7 @@ const Hero: React.FC = () => {
           <div className="bg-white rounded-full flex items-center shadow-lg mb-8 md:mb-18 w-full max-w-md overflow-hidden border-5 border-[#69b8f9]">
             <input
               type="text"
-              placeholder="Search by location, city..."
+              placeholder={typingPlaceholder || "Search..."}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyDown={handleKeyPress}
@@ -202,29 +259,32 @@ const Hero: React.FC = () => {
           {/* STATS WITH COUNTER */}
           <div className="flex flex-wrap gap-6 md:gap-16">
             <div>
-              <div className="text-2xl md:text-4xl font-bold">{happyCustomers}+ </div>
+              <div className="text-2xl md:text-4xl font-bold">{happyCustomers}+</div>
               <div className="text-sm text-white/80">Happy Customers</div>
             </div>
 
             <div>
-              <div className="text-2xl md:text-4xl font-bold">{countries}+ </div>
+              <div className="text-2xl md:text-4xl font-bold">{countries}+</div>
               <div className="text-sm text-white/80">Countries</div>
             </div>
 
             <div>
-              <div className="text-2xl md:text-4xl font-bold">{properties}+ </div>
+              <div className="text-2xl md:text-4xl font-bold">{properties}+</div>
               <div className="text-sm text-white/80">Properties</div>
             </div>
           </div>
         </div>
 
         {/* IMAGE COLUMN */}
-        <div className="flex-1 relative mt-4 md:mt-0 w-full max-w-full md:max-w-2xl overflow-hidden">
+        <div className="flex-1 relative mt-8 md:mt-0 w-full max-w-full md:max-w-2xl">
           <img
             src="/hero.png"
             alt="Modern house"
-            className="w-full h-auto relative z-10 md:scale-110 sm:scale-105 scale-100"
+            className="w-full h-auto relative z-10 scale-120"
           />
+          <div className="absolute top-20 right-10 md:right-20 w-4 h-4 bg-white/20 rounded-full"></div>
+          <div className="absolute bottom-32 right-5 md:bottom-40 md:right-10 w-6 h-6 bg-white/15 rounded-full"></div>
+          <div className="absolute top-36 right-32 md:top-40 md:right-40 w-3 h-3 bg-white/25 rounded-full"></div>
         </div>
       </div>
     </section>

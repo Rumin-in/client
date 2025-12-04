@@ -1,10 +1,8 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import {
   ChevronDown,
   MapPin,
   Star,
-  ChevronLeft,
-  ChevronRight,
 } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { getAllRooms } from "../services/rooms.services";
@@ -43,9 +41,12 @@ const RoomSearchLayout = () => {
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
   const [showAvailability, setShowAvailability] = useState<boolean>(false);
   const [sortBy, setSortBy] = useState<string>("Recommended");
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [visibleCount, setVisibleCount] = useState<number>(6);
   const [minRent, setMinRent] = useState<string>("");
   const [maxRent, setMaxRent] = useState<string>("");
+  const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
+  const observerRef = useRef<IntersectionObserver | null>(null);
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     fetchRooms();
@@ -172,14 +173,51 @@ const RoomSearchLayout = () => {
     return filtered;
   }, [rooms, showAvailability, selectedBHK, selectedAmenities, sortBy, minRent, maxRent, searchQuery, locationQuery]);
 
-  // Pagination
-  const itemsPerPage = 6;
-  const totalPages = Math.ceil(filteredRooms.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedRooms = filteredRooms.slice(
-    startIndex,
-    startIndex + itemsPerPage
-  );
+  // Infinite scroll - visible rooms
+  const visibleRooms = filteredRooms.slice(0, visibleCount);
+  const hasMore = visibleCount < filteredRooms.length;
+
+  // Reset visible count when filters change
+  useEffect(() => {
+    setVisibleCount(6);
+  }, [selectedBHK, selectedAmenities, showAvailability, sortBy, minRent, maxRent, searchQuery, locationQuery]);
+
+  // Load more function
+  const loadMore = useCallback(() => {
+    if (hasMore && !isLoadingMore) {
+      setIsLoadingMore(true);
+      setTimeout(() => {
+        setVisibleCount((prev) => Math.min(prev + 6, filteredRooms.length));
+        setIsLoadingMore(false);
+      }, 300);
+    }
+  }, [hasMore, isLoadingMore, filteredRooms.length]);
+
+  // Intersection Observer for infinite scroll
+  useEffect(() => {
+    if (observerRef.current) {
+      observerRef.current.disconnect();
+    }
+
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore && !isLoadingMore) {
+          loadMore();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (loadMoreRef.current) {
+      observerRef.current.observe(loadMoreRef.current);
+    }
+
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+      }
+    };
+  }, [hasMore, isLoadingMore, loadMore]);
 
   const getRandomRating = (viewsCount: number) => {
     return (4.0 + (viewsCount % 10) / 10).toFixed(1);
@@ -357,7 +395,7 @@ const RoomSearchLayout = () => {
 
       {/* Room Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 my-20">
-        {paginatedRooms.map((room) => (
+        {visibleRooms.map((room) => (
           <div
             key={room._id}
             onClick={() => handleRoomClick(room._id)}
@@ -369,8 +407,9 @@ const RoomSearchLayout = () => {
                 alt={room.title}
                 className="w-full h-48 object-cover"
               />
-              <div className="absolute top-3 left-3 bg-blue-500 text-white px-2 py-1 rounded text-xs font-medium">
-                ₹{room.rent.toLocaleString()}/month
+              <div className="absolute top-3 left-3 bg-yellow-500 text-white px-2 py-1 rounded text-xs font-medium flex items-center gap-1">
+                <Star className="w-3 h-3 fill-white text-white" />
+                {getRandomRating(room.viewsCount)}
               </div>
               <div
                 className={`absolute top-3 right-3 px-2 py-1 rounded text-xs font-medium ${
@@ -392,13 +431,12 @@ const RoomSearchLayout = () => {
                 <MapPin className="w-4 h-4 mr-1" />
                 {room.location.address}, {room.location.city}
               </div>
-              <div className="flex items-center justify-between mb-2">
+              <div className="mb-2">
                 <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">
                   {room.bhk}
                 </span>
-                <div className="flex items-center gap-1 text-xs sm:text-sm">
-                  <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                  {getRandomRating(room.viewsCount)}
+                <div className="mt-2 text-blue-600 font-semibold text-sm">
+                  ₹{room.rent.toLocaleString()}/month
                 </div>
               </div>
               <div className="flex flex-wrap gap-1 mb-2">
@@ -471,38 +509,18 @@ const RoomSearchLayout = () => {
         </div>
       )}
 
-      {/* Pagination */}
-        <div className="flex justify-center items-center space-x-2 mt-8">
-          <button
-            onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-            disabled={currentPage === 1}
-            className="p-2 rounded-full border border-gray-300 hover:bg-gray-100 disabled:opacity-50"
-          >
-            <ChevronLeft className="w-5 h-5 text-gray-600" />
-          </button>
-
-          {Array.from({ length: totalPages }, (_, i) => (
-            <button
-              key={i}
-              onClick={() => setCurrentPage(i + 1)}
-              className={`w-8 h-8 rounded-full flex items-center justify-center border ${
-                currentPage === i + 1
-                  ? "bg-blue-600 text-white border-blue-600"
-                  : "border-gray-300 text-gray-700 hover:bg-gray-100"
-              }`}
-            >
-              {i + 1}
-            </button>
-          ))}
-
-          <button
-            onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
-            disabled={currentPage === totalPages}
-            className="p-2 rounded-full border border-gray-300 hover:bg-gray-100 disabled:opacity-50"
-          >
-            <ChevronRight className="w-5 h-5 text-gray-600" />
-          </button>
-        </div>
+      {/* Infinite Scroll Loader */}
+      <div ref={loadMoreRef} className="flex justify-center items-center py-8">
+        {isLoadingMore && (
+          <div className="flex items-center gap-3">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+            <span className="text-gray-600">Loading more rooms...</span>
+          </div>
+        )}
+        {!hasMore && filteredRooms.length > 0 && (
+          <p className="text-gray-500">You've seen all {filteredRooms.length} rooms</p>
+        )}
+      </div>
     </div>
   );
 };

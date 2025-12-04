@@ -10,6 +10,7 @@ import LandlordRegistration from "./pages/LandlordRegistration";
 import LandlordDashboard from "./pages/LandlordDashboard";
 import AdminPanel from "./pages/AdminPanel";
 import Bookmarks from "./pages/Bookmarks";
+import About from "./pages/About";
 import { ScrollToTopOnNavigation } from "./components/ScrollToTopOnNavigation";
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
         <Route path = "/profile" element = {<ProfileSettingsPage/>}/>
         <Route path="/room/:id" element={<RoomDetails/>} />
         <Route path="/bookmarks" element={<Bookmarks/>} />
+        <Route path="/about" element={<About/>} />
       </Routes>
     </>
   );
