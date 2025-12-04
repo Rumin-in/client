@@ -1,4 +1,4 @@
-import { Search, MoreVertical } from "lucide-react";
+import { Search, MoreVertical, Menu, X } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -87,6 +87,7 @@ const Hero: React.FC = () => {
   const user = useSelector((state: RootState) => state.auth.user);
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
   // Typing animation for placeholder
@@ -135,17 +136,17 @@ const Hero: React.FC = () => {
         </div>
 
         {/* NAVIGATION */}
-        <nav className="hidden md:flex items-center space-x-10 text-white">
-          <a href="/" className="hover:text-gray-200 transition-colors hover:underline text-2xl">
+        <nav className="hidden lg:flex items-center space-x-4 xl:space-x-8 2xl:space-x-10 text-white">
+          <a href="/" className="hover:text-gray-200 transition-colors hover:underline text-base xl:text-xl 2xl:text-2xl">
             Home
           </a>
-          <a href="/rooms" className="hover:text-gray-200 transition-colors hover:underline text-2xl">
+          <a href="/rooms" className="hover:text-gray-200 transition-colors hover:underline text-base xl:text-xl 2xl:text-2xl">
             Room
           </a>
 
           {/* UPCOMING DROPDOWN */}
           <div className="relative group cursor-pointer">
-            <span className="text-2xl hover:text-gray-200 transition-colors">Upcoming</span>
+            <span className="text-base xl:text-xl 2xl:text-2xl hover:text-gray-200 transition-colors">Upcoming</span>
 
             <div className="absolute hidden group-hover:block bg-white text-black rounded-md shadow-lg mt-2 min-w-[160px]">
               <p className="px-4 py-2 hover:bg-gray-100">Student Furniture</p>
@@ -201,24 +202,70 @@ const Hero: React.FC = () => {
             </div>
           ) : (
             <>
-              <button
-                onClick={() => navigate("/signup")}
-                className="px-3 py-1 sm:text-black sm:hover:text-white md:px-4 md:py-2 text-xs md:text-xl text-white rounded-full hover:bg-blue-700 transition-colors font-medium"
-              >
-                Signup
-              </button>
-              <button
-                onClick={() => navigate("/signin")}
-                className="px-3 py-1 md:px-4 md:py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors text-xs md:text-xl font-medium"
-              >
-                Login
-              </button>
-              <button
-                onClick={() => navigate("/about")}
-                className="hidden sm:block px-3 py-1 md:px-4 md:py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors text-xs md:text-xl font-medium"
-              >
-                About Us
-              </button>
+              {/* Desktop buttons - hidden below lg (1024px) */}
+              <div className="hidden lg:flex items-center space-x-2 xl:space-x-3 2xl:space-x-4">
+                <button
+                  onClick={() => navigate("/signup")}
+                  className="px-3 py-1.5 xl:px-4 xl:py-2 2xl:px-5 2xl:py-2.5 text-sm xl:text-base 2xl:text-lg text-black hover:text-white rounded-full hover:bg-blue-700 transition-colors font-medium whitespace-nowrap"
+                >
+                  Signup
+                </button>
+                <button
+                  onClick={() => navigate("/signin")}
+                  className="px-3 py-1.5 xl:px-4 xl:py-2 2xl:px-5 2xl:py-2.5 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors text-sm xl:text-base 2xl:text-lg font-medium whitespace-nowrap"
+                >
+                  Login
+                </button>
+                <button
+                  onClick={() => navigate("/about")}
+                  className="px-3 py-1.5 xl:px-4 xl:py-2 2xl:px-5 2xl:py-2.5 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors text-sm xl:text-base 2xl:text-lg font-medium whitespace-nowrap"
+                >
+                  About
+                </button>
+              </div>
+
+              {/* Hamburger menu - visible below lg (1024px) */}
+              <div className="lg:hidden relative flex items-center">
+                <button
+                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                  className="p-2 text-black"
+                >
+                  {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                </button>
+
+                {/* Mobile dropdown menu */}
+                {isMobileMenuOpen && (
+                  <div className="absolute right-0 top-12 bg-white rounded-lg shadow-lg py-2 min-w-[140px] z-50">
+                    <button
+                      onClick={() => {
+                        navigate("/signup");
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
+                    >
+                      Signup
+                    </button>
+                    <button
+                      onClick={() => {
+                        navigate("/signin");
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
+                    >
+                      Login
+                    </button>
+                    <button
+                      onClick={() => {
+                        navigate("/about");
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
+                    >
+                      About Us
+                    </button>
+                  </div>
+                )}
+              </div>
             </>
           )}
         </div>
