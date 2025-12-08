@@ -1,9 +1,10 @@
-import { Search, MoreVertical, Menu, X } from "lucide-react";
+import { Search, Menu, X } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import type { RootState, AppDispatch } from "../store/store";
-import { logout as logoutAction } from "../store/authSlice";
+import { useSelector } from "react-redux";
+import type { RootState } from "../store/store";
+
+const DEFAULT_AVATAR = "https://i.pinimg.com/736x/1d/ec/e2/1dece2c8357bdd7cee3b15036344faf5.jpg";
 
 // COUNTER HOOK with synchronized looping animation
 const useCounter = (target: number, duration = 1500, pauseAfterComplete = 3000) => {
@@ -79,10 +80,8 @@ const useTypingAnimation = (texts: string[], typingSpeed = 100, deletingSpeed = 
 
 const Hero: React.FC = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch<AppDispatch>();
   const user = useSelector((state: RootState) => state.auth.user);
 
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -94,13 +93,6 @@ const Hero: React.FC = () => {
   const happyCustomers = useCounter(200, 1500, 4000);
   const landlordsServed = useCounter(100, 1500, 4000);
   const properties = useCounter(300, 1500, 4000);
-
-  const handleLogout = () => {
-    dispatch(logoutAction());
-    localStorage.removeItem("token");
-    setIsDropdownOpen(false);
-    navigate("/signin");
-  };
 
   const handleSearch = () => {
     if (searchQuery.trim()) {
@@ -180,44 +172,20 @@ const Hero: React.FC = () => {
 
           {user ? (
             <div className="relative flex items-center">
-              <div className="flex items-center xl:space-x-3 md:bg-white p-1 md:pl-3 md:pr-4 md:py-2 md:rounded-full md:shadow-md">
-
-                {/* PROFILE */}
-                <div
-                  onClick={() => navigate("/profile")}
-                  className="flex items-center xl:space-x-3 cursor-pointer hover:opacity-90 transition"
-                >
-                  <img
-                    src="https://i.pinimg.com/736x/1d/ec/e2/1dece2c8357bdd7cee3b15036344faf5.jpg"
-                    alt="profile"
-                    className="w-10 h-10 rounded-full object-cover border-2 border-blue-500"
-                  />
-                  <div className="hidden xl:flex flex-col">
-                    <span className="text-blue-600 font-semibold">{user.name}</span>
-                    <span className="text-gray-600 text-sm">{user.email}</span>
-                  </div>
+              <div
+                onClick={() => navigate("/profile")}
+                className="flex items-center xl:space-x-3 md:bg-white p-1 md:pl-3 md:pr-4 md:py-2 md:rounded-full md:shadow-md cursor-pointer hover:opacity-90 transition"
+              >
+                <img
+                  src={user.profilePicture || DEFAULT_AVATAR}
+                  alt="profile"
+                  className="w-10 h-10 rounded-full object-cover border-2 border-blue-500"
+                />
+                <div className="hidden xl:flex flex-col">
+                  <span className="text-blue-600 font-semibold">{user.name}</span>
+                  <span className="text-gray-600 text-sm">{user.email}</span>
                 </div>
-
-                {/* DROPDOWN TOGGLE */}
-                <button
-                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  className="hidden md:block ml-2 p-1 rounded-full hover:bg-gray-100 transition-colors"
-                >
-                  <MoreVertical className="w-5 h-5 text-gray-500" />
-                </button>
               </div>
-
-              {/* LOGOUT DROPDOWN */}
-              {isDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-32 bg-white border border-gray-200 rounded-md shadow-lg z-[100]">
-                  <button
-                    onClick={handleLogout}
-                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
-                  >
-                    Logout
-                  </button>
-                </div>
-              )}
             </div>
           ) : (
             <>

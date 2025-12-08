@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAllRooms } from "../services/rooms.services";
-import { MapPin } from "lucide-react";
+import { MapPin, Star } from "lucide-react";
 
 type Room = {
   _id: string;
@@ -16,6 +16,8 @@ type Room = {
   amenities: string[];
   images: string[];
   availabilityStatus: string;
+  viewsCount: number;
+  availabiltyDate: string;
 };
 
 // Skeleton Card Component
@@ -70,6 +72,10 @@ const PopularListing: React.FC = () => {
     navigate("/rooms");
   };
 
+  const getRandomRating = (viewsCount: number) => {
+    return (4.0 + (viewsCount % 10) / 10).toFixed(1);
+  };
+
   return (
     <section className="py-16 bg-white">
       <div className="container mx-auto px-6 mt-10">
@@ -99,22 +105,26 @@ const PopularListing: React.FC = () => {
               rooms.map((room) => (
                 <div
                   key={room._id}
-                  className="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-lg transition-shadow"
+                  onClick={() => handleViewDetails(room._id)}
+                  className="bg-white rounded-lg shadow-sm overflow-hidden border-2 border-gray-300 hover:shadow-xl hover:scale-105 transition-all duration-300 cursor-pointer"
                 >
                   {/* Property Image */}
                   <div className="relative">
                     <img
-                      src={room.images[0] || "/placeholder.png"}
+                      src={room.images[0] || "https://via.placeholder.com/400x300?text=No+Image"}
                       alt={room.title}
                       className="w-full h-48 object-cover"
                     />
-                    <div className="absolute top-3 left-3 bg-blue-500 text-white px-2 py-1 rounded text-xs font-medium">
-                      {room.bhk}
+                    <div className="absolute top-3 left-3 bg-yellow-500 text-white px-2 py-1 rounded text-xs font-medium flex items-center gap-1">
+                      <Star className="w-3 h-3 fill-white text-white" />
+                      {getRandomRating(room.viewsCount || 0)}
                     </div>
                     <div
                       className={`absolute top-3 right-3 px-2 py-1 rounded text-xs font-medium ${
                         room.availabilityStatus === "available"
                           ? "bg-green-500 text-white"
+                          : room.availabilityStatus === "pending"
+                          ? "bg-yellow-500 text-white"
                           : "bg-red-500 text-white"
                       }`}
                     >
@@ -124,20 +134,28 @@ const PopularListing: React.FC = () => {
 
                   {/* Property Details */}
                   <div className="p-4">
-                    <h3 className="text-sm font-medium text-gray-800 mb-3 line-clamp-1">
+                    <h3 className="font-semibold text-gray-800 mb-2 text-sm sm:text-base">
                       {room.title}
                     </h3>
 
                     {/* Location Row */}
-                    <div className="flex items-center text-gray-600 text-xs mb-3">
+                    <div className="flex items-center text-gray-600 text-xs sm:text-sm mb-2">
                       <MapPin className="w-4 h-4 mr-1" />
-                      <span className="line-clamp-1">
-                        {room.location.address}, {room.location.city}
+                      {room.location.address}, {room.location.city}
+                    </div>
+
+                    {/* BHK Badge and Price */}
+                    <div className="mb-2">
+                      <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">
+                        {room.bhk}
                       </span>
+                      <div className="mt-2 text-blue-600 font-semibold text-sm">
+                        ₹{room.rent.toLocaleString()}/month
+                      </div>
                     </div>
 
                     {/* Amenities */}
-                    <div className="flex flex-wrap gap-1 mb-3">
+                    <div className="flex flex-wrap gap-1 mb-2">
                       {room.amenities.slice(0, 3).map((amenity, idx) => (
                         <span
                           key={idx}
@@ -148,22 +166,15 @@ const PopularListing: React.FC = () => {
                       ))}
                       {room.amenities.length > 3 && (
                         <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
-                          +{room.amenities.length - 3}
+                          +{room.amenities.length - 3} more
                         </span>
                       )}
                     </div>
 
-                    {/* Price and Button */}
-                    <div className="flex items-center justify-between">
-                      <span className="text-lg font-semibold text-gray-800">
-                        ₹{room.rent.toLocaleString()}/mon
-                      </span>
-                      <button
-                        onClick={() => handleViewDetails(room._id)}
-                        className="px-4 py-2 bg-blue-500 text-white text-sm rounded-full hover:bg-blue-600 transition-colors"
-                      >
-                        View Details
-                      </button>
+                    {/* Views and Availability Date */}
+                    <div className="text-xs text-gray-500">
+                      {room.viewsCount || 0} views • Available from{" "}
+                      {room.availabiltyDate ? new Date(room.availabiltyDate).toLocaleDateString() : "Now"}
                     </div>
                   </div>
                 </div>

@@ -108,8 +108,9 @@ const SignUp = () => {
           email: userEmail,
           role,
           walletBalance,
+          profilePicture,
         } = loginResponse.data.user;
-        dispatch(setUser({ userId: _id, name: userName, email: userEmail, role, walletBalance }));
+        dispatch(setUser({ userId: _id, name: userName, email: userEmail, role, walletBalance, profilePicture }));
 
         toast.success('Logged in successfully! Redirecting to home...');
 
@@ -198,33 +199,6 @@ const SignUp = () => {
           <div className="w-full max-w-md">
             <div className="bg-white rounded-lg shadow-lg p-8">
               <h2 className="text-3xl font-bold text-gray-800 mb-2 text-center">Create Account</h2>
-
-              {/* Social Login Buttons */}
-              <div className="flex justify-center space-x-4 mb-4">
-                <button
-                  type="button"
-                  className="w-10 h-10 border border-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-50 transition-colors"
-                  onClick={() => toast.info('Facebook login coming soon!')}
-                >
-                  <span className="text-blue-600 font-bold text-lg">f</span>
-                </button>
-                <button
-                  type="button"
-                  className="w-10 h-10 border border-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-50 transition-colors"
-                  onClick={() => toast.info('Google login coming soon!')}
-                >
-                  <span className="text-red-500 font-bold text-lg">G+</span>
-                </button>
-                <button
-                  type="button"
-                  className="w-10 h-10 border border-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-50 transition-colors"
-                  onClick={() => toast.info('LinkedIn login coming soon!')}
-                >
-                  <span className="text-blue-700 font-bold text-lg">in</span>
-                </button>
-              </div>
-
-              <p className="text-center text-gray-500 text-sm mb-6">or use your email for registration</p>
 
               <div className="space-y-4">
                 {/* Name Fields Row */}

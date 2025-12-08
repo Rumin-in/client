@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Wifi, 
-  ChevronLeft, 
-  MapPin, 
+import {
+  Wifi,
+  ChevronLeft,
+  MapPin,
   Calendar,
   Eye,
   Share2,
@@ -15,7 +15,9 @@ import {
   Package,
   Building,
   ChevronRight,
-  Heart
+  Heart,
+  X,
+  CheckCircle
 } from 'lucide-react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getRoomById } from '../services/rooms.services';
@@ -77,6 +79,7 @@ const RoomDetails: React.FC = () => {
   const [currentImage, setCurrentImage] = useState(0);
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [hasExpressedInterest, setHasExpressedInterest] = useState(false);
+  const [showInterestPopup, setShowInterestPopup] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -149,7 +152,7 @@ const RoomDetails: React.FC = () => {
     try {
       await interestRoom(id!, 'visit', user.userId);
       setHasExpressedInterest(true);
-      toast.success("Interest recorded successfully!");
+      setShowInterestPopup(true);
     } catch (error: any) {
       if (error.message.includes("already recorded")) {
         setHasExpressedInterest(true);
@@ -486,6 +489,44 @@ const RoomDetails: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Interest Recorded Popup */}
+      {showInterestPopup && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 relative animate-in fade-in zoom-in duration-200">
+            <button
+              onClick={() => setShowInterestPopup(false)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="text-center">
+              <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                <CheckCircle className="w-10 h-10 text-green-500" />
+              </div>
+
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Interest Recorded!</h3>
+
+              <p className="text-gray-600 mb-4">
+                Your interest has been recorded for <span className="font-semibold text-gray-800">{room?.title}</span>.
+              </p>
+
+              <p className="text-gray-500 text-sm mb-6">
+                Our team will contact you soon with more details about this property.
+              </p>
+
+              <button
+                onClick={() => setShowInterestPopup(false)}
+                className="w-full py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg transition-colors"
+              >
+                Got it!
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <Footer />
     </>
   );

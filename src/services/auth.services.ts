@@ -44,3 +44,23 @@ export const refreshToken = async () => {
     throw new Error(error.response?.data?.message || "Token refresh failed");
   }
 };
+
+export const updateProfile = async (profileData: { name?: string; email?: string; mobileNo?: string; profilePicture?: File }) => {
+  try {
+    const formData = new FormData();
+    if (profileData.name) formData.append("name", profileData.name);
+    if (profileData.email) formData.append("email", profileData.email);
+    if (profileData.mobileNo) formData.append("mobileNo", profileData.mobileNo);
+    if (profileData.profilePicture) formData.append("profilePicture", profileData.profilePicture);
+
+    const response = await axios.put("/auth/profile", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    console.error("Update Profile Error:", error.response?.data || error.message);
+    throw new Error(error.response?.data?.message || "Profile update failed");
+  }
+};

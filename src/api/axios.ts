@@ -1,7 +1,7 @@
 import axiosBase from "axios"; 
 
 const axios = axiosBase.create({
-  // baseURL: "http://rumin.ap-south-1.elasticbeanstalk.com/api",
+  // baseURL: "http://localhost:3000/api",
   // baseURL: "https://server-idjt.onrender.com/api",
   baseURL: "https://api.rumin.in/api",
   headers: {

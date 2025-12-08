@@ -9,6 +9,7 @@ interface User {
   email: string;
   role: string;
   walletBalance: number;
+  profilePicture?: string | null;
 }
 
 // Define the slice state type

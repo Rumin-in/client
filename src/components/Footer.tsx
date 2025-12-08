@@ -126,7 +126,7 @@ const Footer = () => {
         {/* Bottom Border and Copyright */}
         <div className="border-t border-gray-600 mt-12 pt-6">
           <p className="text-center text-gray-400 text-sm">
-            © 2024 | All Rights Reserved By RentBro.
+            © 2024 | All Rights Reserved By Rumin.
           </p>
         </div>
       </div>

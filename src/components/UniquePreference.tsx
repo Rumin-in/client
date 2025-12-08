@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, ChevronDown } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 
 const UniquePreferences: React.FC = () => {
   const navigate = useNavigate();
@@ -11,7 +11,6 @@ const UniquePreferences: React.FC = () => {
   const [selectedFurnishing, setSelectedFurnishing] = useState('');
   const [selectedGender, setSelectedGender] = useState('');
   const [selectedRoomType, setSelectedRoomType] = useState('');
-  const [searchQuery, setSearchQuery] = useState('');
 
   // Filter options
   const locations = [
@@ -33,9 +32,6 @@ const UniquePreferences: React.FC = () => {
   const handleSearch = () => {
     const params = new URLSearchParams();
 
-    if (searchQuery.trim()) {
-      params.append('search', searchQuery.trim());
-    }
     if (selectedLocation) {
       params.append('location', selectedLocation);
     }
@@ -58,12 +54,6 @@ const UniquePreferences: React.FC = () => {
 
     const queryString = params.toString();
     navigate(`/rooms${queryString ? `?${queryString}` : ''}`);
-  };
-
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      handleSearch();
-    }
   };
 
   return (
@@ -159,23 +149,13 @@ const UniquePreferences: React.FC = () => {
               <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-blue-500 pointer-events-none" />
             </div>
 
-            {/* Search Bar */}
-            <div className="bg-white rounded-full flex items-center shadow-sm hover:shadow-md transition-shadow overflow-hidden border-2 border-[#69b8f9] w-full sm:w-auto sm:min-w-[200px]">
-              <input
-                type="text"
-                placeholder="Search..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyDown={handleKeyPress}
-                className="flex-1 px-4 py-2 sm:py-2.5 text-gray-700 bg-transparent outline-none placeholder-[#108cfe] text-sm sm:text-base"
-              />
-              <button
-                onClick={handleSearch}
-                className="text-[#108cfe] px-3 sm:px-4 py-2 sm:py-2.5 rounded-full transition-colors hover:bg-blue-50"
-              >
-                <Search className="w-4 h-4 sm:w-5 sm:h-5" />
-              </button>
-            </div>
+            {/* Search Button */}
+            <button
+              onClick={handleSearch}
+              className="bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-full px-6 sm:px-8 py-2 sm:py-3 shadow-sm hover:shadow-md transition-all text-sm sm:text-base"
+            >
+              Search
+            </button>
           </div>
         </div>
       </div>

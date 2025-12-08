@@ -1,27 +1,18 @@
 "use client";
 import React, { useState } from "react";
-import { ChevronDown, MoreVertical, Menu, X, Bookmark } from "lucide-react";
+import { ChevronDown, Menu, X, Bookmark } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import type { RootState, AppDispatch } from "../store/store";
-import { logout as logoutAction } from "../store/authSlice";
+import { useSelector } from "react-redux";
+import type { RootState } from "../store/store";
+
+const DEFAULT_AVATAR = "https://i.pinimg.com/736x/1d/ec/e2/1dece2c8357bdd7cee3b15036344faf5.jpg";
 
 const Header: React.FC = () => {
   const [upcomingOpen, setUpcomingOpen] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navigate = useNavigate();
-  const dispatch = useDispatch<AppDispatch>();
   const user = useSelector((state: RootState) => state.auth.user);
-
-  // ✅ Logout logic
-  const handleLogout = () => {
-    dispatch(logoutAction());
-    localStorage.removeItem("token");
-    setIsDropdownOpen(false);
-    navigate("/signin");
-  };
 
   return (
     <header className="w-full bg-white shadow-sm border-b sticky top-0 z-50">
@@ -85,48 +76,23 @@ const Header: React.FC = () => {
 
           {/* User / Auth */}
      {user ? (
-  <div className="relative">
-    <div className="flex items-center space-x-3 bg-white px-3 py-1 rounded-full shadow-md">
-      {/* ✅ Profile click area */}
-      <div
-        onClick={() => navigate("/profile")}
-        className="flex items-center space-x-3 cursor-pointer hover:opacity-90 transition"
-      >
-        <img
-          src="https://i.pinimg.com/736x/1d/ec/e2/1dece2c8357bdd7cee3b15036344faf5.jpg"
-          alt="profile"
-          className="w-9 h-9 rounded-full object-cover border-2 border-blue-500"
-        />
-        <div className="flex flex-col text-left">
-          <span className="text-blue-600 font-semibold text-sm leading-none">
-            {user.name}
-          </span>
-          <span className="text-gray-600 text-xs leading-none">
-            {user.email}
-          </span>
-        </div>
-      </div>
-
-      {/* 3-dot dropdown trigger */}
-      <button
-        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-        className="p-1 rounded-full hover:bg-gray-100 transition"
-      >
-        <MoreVertical className="w-4 h-4 text-gray-500" />
-      </button>
+  <div
+    onClick={() => navigate("/profile")}
+    className="flex items-center space-x-3 bg-white px-3 py-2 rounded-full shadow-md cursor-pointer hover:opacity-90 transition"
+  >
+    <img
+      src={user.profilePicture || DEFAULT_AVATAR}
+      alt="profile"
+      className="w-9 h-9 rounded-full object-cover border-2 border-blue-500"
+    />
+    <div className="flex flex-col text-left">
+      <span className="text-blue-600 font-semibold text-sm leading-none">
+        {user.name}
+      </span>
+      <span className="text-gray-600 text-xs leading-none">
+        {user.email}
+      </span>
     </div>
-
-    {/* Dropdown */}
-    {isDropdownOpen && (
-      <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-50">
-        <button
-          onClick={handleLogout}
-          className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition"
-        >
-          Logout
-        </button>
-      </div>
-    )}
   </div>
 ) : (
   <button
@@ -192,9 +158,15 @@ const Header: React.FC = () => {
                 </button>
 
                 {/* User Info */}
-                <div className="flex items-center gap-3 mt-2">
+                <div
+                  onClick={() => {
+                    navigate("/profile");
+                    setMobileMenuOpen(false);
+                  }}
+                  className="flex items-center gap-3 mt-2 cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition"
+                >
                   <img
-                    src="https://i.pinimg.com/736x/1d/ec/e2/1dece2c8357bdd7cee3b15036344faf5.jpg"
+                    src={user.profilePicture || DEFAULT_AVATAR}
                     alt="profile"
                     className="w-9 h-9 rounded-full object-cover border-2 border-blue-500"
                   />
@@ -203,12 +175,6 @@ const Header: React.FC = () => {
                       {user.name}
                     </span>
                     <span className="text-gray-600 text-xs">{user.email}</span>
-                    <button
-                      onClick={handleLogout}
-                      className="mt-2 text-left text-red-500 hover:underline text-xs"
-                    >
-                      Logout
-                    </button>
                   </div>
                 </div>
               </div>

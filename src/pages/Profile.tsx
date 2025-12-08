@@ -1,35 +1,55 @@
-import React, { useEffect, useState } from "react";
-import { ChevronDown, Mail } from "lucide-react";
-import { useSelector } from "react-redux";
-import type { RootState } from "../store/store";
+import React, { useEffect, useState, useRef } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import type { RootState, AppDispatch } from "../store/store";
+import { setUser, logout as logoutAction } from "../store/authSlice";
 import Header from "../components/Header";
+import { updateProfile } from "../services/auth.services";
+import { toast, Toaster } from "sonner";
+import { Camera, LogOut } from "lucide-react";
 
 interface ProfileData {
-  fullName: string;
-  nickName: string;
+  firstName: string;
+  lastName: string;
+  city: string;
   country: string;
-  language: string;
   email: string;
 }
 
+const DEFAULT_AVATAR = "https://i.pinimg.com/736x/1d/ec/e2/1dece2c8357bdd7cee3b15036344faf5.jpg";
+
 const ProfileSettingsPage: React.FC = () => {
   const user = useSelector((state: RootState) => state.auth.user);
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [profilePicture, setProfilePicture] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [profile, setProfile] = useState<ProfileData>({
-    fullName: "",
-    nickName: "",
+    firstName: "",
+    lastName: "",
+    city: "Bhopal",
     country: "India",
-    language: "English",
     email: "",
   });
 
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!user) {
+      navigate("/signin");
+    }
+  }, [user, navigate]);
+
   useEffect(() => {
     if (user) {
+      const nameParts = user.name?.split(" ") || [];
       setProfile({
-        fullName: user.name || "",
-        nickName: user.name?.split(" ")[0] || "",
+        firstName: nameParts[0] || "",
+        lastName: nameParts.slice(1).join(" ") || "",
+        city: "Bhopal",
         country: "India",
-        language: "English",
         email: user.email || "",
       });
     }
@@ -39,12 +59,83 @@ const ProfileSettingsPage: React.FC = () => {
     setProfile((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleSave = () => {
-    console.log("Updated Profile:", profile);
-    // Later: Add API call to update user profile
+  const handleImageClick = () => {
+    fileInputRef.current?.click();
   };
 
+  const handleLogout = () => {
+    dispatch(logoutAction());
+    localStorage.removeItem("token");
+    navigate("/signin");
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error("Image size should be less than 5MB");
+        return;
+      }
+      if (!["image/jpeg", "image/png", "image/jpg"].includes(file.type)) {
+        toast.error("Only JPG, JPEG, and PNG images are allowed");
+        return;
+      }
+      setProfilePicture(file);
+      setPreviewUrl(URL.createObjectURL(file));
+    }
+  };
+
+  const handleSave = async () => {
+    if (!profile.firstName.trim()) {
+      toast.error("First name is required");
+      return;
+    }
+
+    const fullName = `${profile.firstName.trim()} ${profile.lastName.trim()}`.trim();
+
+    setIsLoading(true);
+    try {
+      const response = await updateProfile({
+        name: fullName,
+        email: profile.email.trim(),
+        profilePicture: profilePicture || undefined,
+      });
+
+      // Update Redux state with new user data
+      if (response.data) {
+        dispatch(setUser({
+          userId: response.data._id,
+          name: response.data.name,
+          email: response.data.email,
+          role: response.data.role,
+          walletBalance: response.data.walletBalance,
+          profilePicture: response.data.profilePicture,
+        }));
+      }
+
+      // Clear local file state after successful upload
+      setProfilePicture(null);
+
+      toast.success("Profile updated successfully!");
+    } catch (error: any) {
+      console.error("Profile update error:", error);
+      toast.error(error.message || "Failed to update profile");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Get the current profile picture URL
+  const currentProfilePicture = previewUrl || user?.profilePicture || DEFAULT_AVATAR;
+
+  // Don't render if not authenticated
+  if (!user) {
+    return null;
+  }
+
   return (
+    <>
+      <Toaster position="top-right" toastOptions={{ duration: 4000 }} />
     <div className="min-h-screen bg-gray-100">
       {/* Global Header */}
       <Header />
@@ -62,56 +153,102 @@ const ProfileSettingsPage: React.FC = () => {
           {/* Header */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
             <div className="flex items-center gap-4">
-              <img
-                src={
-                  
-                  "https://i.pinimg.com/736x/1d/ec/e2/1dece2c8357bdd7cee3b15036344faf5.jpg"
-                }
-                alt={user?.name}
-                className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-4 border-white shadow-md"
-              />
+              <div className="relative">
+                <img
+                  src={currentProfilePicture}
+                  alt={user?.name}
+                  className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-4 border-white shadow-md"
+                />
+                <button
+                  type="button"
+                  onClick={handleImageClick}
+                  className="absolute bottom-0 right-0 bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full shadow-lg transition-colors"
+                  title="Change profile picture"
+                >
+                  <Camera className="w-4 h-4" />
+                </button>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/jpg"
+                  onChange={handleImageChange}
+                  className="hidden"
+                />
+              </div>
               <div>
                 <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
-                  {profile.fullName || "User Name"}
+                  {`${profile.firstName} ${profile.lastName}`.trim() || "User Name"}
                 </h2>
                 <p className="text-sm text-gray-500">{profile.email}</p>
               </div>
             </div>
             <button
               onClick={handleSave}
-              className="px-5 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition text-sm font-semibold"
+              disabled={isLoading}
+              className={`px-5 py-2 rounded-lg transition text-sm font-semibold ${
+                isLoading
+                  ? "bg-gray-400 cursor-not-allowed text-white"
+                  : "bg-blue-500 hover:bg-blue-600 text-white"
+              }`}
             >
-              Save Changes
+              {isLoading ? "Saving..." : "Save Changes"}
             </button>
           </div>
 
           {/* Form Fields */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {/* Full Name */}
+            {/* First Name */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Full Name
+                First Name
               </label>
               <input
                 type="text"
-                value={profile.fullName}
-                onChange={(e) => handleInputChange("fullName", e.target.value)}
+                value={profile.firstName}
+                onChange={(e) => handleInputChange("firstName", e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter your full name"
+                placeholder="Enter your first name"
               />
             </div>
 
-            {/* Nickname */}
+            {/* Last Name */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Nick Name
+                Last Name
               </label>
               <input
                 type="text"
-                value={profile.nickName}
-                onChange={(e) => handleInputChange("nickName", e.target.value)}
+                value={profile.lastName}
+                onChange={(e) => handleInputChange("lastName", e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Your nickname"
+                placeholder="Enter your last name"
+              />
+            </div>
+
+            {/* Email */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Email
+              </label>
+              <input
+                type="email"
+                value={profile.email}
+                onChange={(e) => handleInputChange("email", e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter your email"
+              />
+            </div>
+
+            {/* City (Locked to Bhopal) */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                City
+              </label>
+              <input
+                type="text"
+                value="Bhopal"
+                disabled
+                className="w-full px-4 py-3 bg-gray-100 border border-gray-300 rounded-lg text-sm text-gray-500 cursor-not-allowed"
               />
             </div>
 
@@ -128,51 +265,22 @@ const ProfileSettingsPage: React.FC = () => {
               />
             </div>
 
-            {/* Language */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Language
-              </label>
-              <div className="relative">
-                <select
-                  value={profile.language}
-                  onChange={(e) =>
-                    handleInputChange("language", e.target.value)
-                  }
-                  className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 text-gray-600"
-                >
-                  <option value="">Select Language</option>
-                  <option value="en">English</option>
-                  <option value="hi">Hindi</option>
-                  <option value="es">Spanish</option>
-                  <option value="fr">French</option>
-                  <option value="de">German</option>
-                </select>
-                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-              </div>
-            </div>
           </div>
 
-          {/* Email Section */}
-          <div className="mt-10">
-            <h3 className="text-sm font-semibold text-gray-900 mb-4">
-              My Email Address
-            </h3>
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-4">
-              <div className="p-2 bg-blue-50 rounded-lg">
-                <Mail className="w-5 h-5 text-blue-500" />
-              </div>
-              <div className="flex-1">
-                <p className="text-sm font-medium text-gray-900">
-                  {profile.email || "example@email.com"}
-                </p>
-                <p className="text-xs text-gray-400">Verified</p>
-              </div>
-            </div>
+          {/* Logout Button */}
+          <div className="mt-8 pt-6 border-t border-gray-200">
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-2 px-5 py-2.5 bg-red-500 hover:bg-red-600 text-white rounded-lg transition text-sm font-semibold"
+            >
+              <LogOut className="w-4 h-4" />
+              Logout
+            </button>
           </div>
         </div>
       </div>
     </div>
+    </>
   );
 };
 

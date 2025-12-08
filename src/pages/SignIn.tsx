@@ -54,8 +54,9 @@ const SignIn = () => {
         email: userEmail,
         role,
         walletBalance,
+        profilePicture,
       } = response.data.user;
-      dispatch(setUser({ userId: _id, name, email: userEmail, role, walletBalance }));
+      dispatch(setUser({ userId: _id, name, email: userEmail, role, walletBalance, profilePicture }));
 
       window.location.href = "/";
     } catch (error: any) {
@@ -223,37 +224,6 @@ const SignIn = () => {
                 >
                   {isLoading ? "Signing In..." : "Sign In"}
                 </button>
-
-                {/* Divider */}
-                <div className="flex items-center my-4">
-                  <div className="flex-1 border-t border-gray-300"></div>
-                  <span className="px-2 text-sm text-gray-500">
-                    or continue with
-                  </span>
-                  <div className="flex-1 border-t border-gray-300"></div>
-                </div>
-
-                {/* Socials */}
-                <div className="flex justify-center space-x-4">
-                  <button
-                    className="w-10 h-10 border border-gray-300 rounded-lg flex items-center justify-center"
-                    onClick={() => toast.info("Facebook login coming soon!")}
-                  >
-                    <span className="text-blue-600 font-bold">f</span>
-                  </button>
-                  <button
-                    className="w-10 h-10 border border-gray-300 rounded-lg flex items-center justify-center"
-                    onClick={() => toast.info("Google login coming soon!")}
-                  >
-                    <span className="text-red-500 font-bold">G+</span>
-                  </button>
-                  <button
-                    className="w-10 h-10 border border-gray-300 rounded-lg flex items-center justify-center"
-                    onClick={() => toast.info("LinkedIn login coming soon!")}
-                  >
-                    <span className="text-blue-700 font-bold">in</span>
-                  </button>
-                </div>
 
                 {/* Sign Up Link */}
                 <div className="text-center text-sm">
