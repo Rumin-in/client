@@ -3,6 +3,18 @@ import {
   ChevronDown,
   MapPin,
   Star,
+  Wifi,
+  Zap,
+  Droplets,
+  Shield,
+  Car,
+  Dumbbell,
+  Building,
+  Waves,
+  Shirt,
+  Sofa,
+  Trees,
+  Home,
 } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { getAllRooms } from "../services/rooms.services";
@@ -27,6 +39,7 @@ type Room = {
   viewsCount: number;
   availabiltyDate: string;
   createdAt: string;
+  showReviews?: boolean;
 };
 
 const RoomSearchLayout = () => {
@@ -245,6 +258,22 @@ const RoomSearchLayout = () => {
     );
   };
 
+  const getAmenityIcon = (amenity: string) => {
+    const lower = amenity.toLowerCase();
+    if (lower.includes('wifi') || lower.includes('wi-fi')) return Wifi;
+    if (lower.includes('power') || lower.includes('backup') || lower.includes('electricity')) return Zap;
+    if (lower.includes('water')) return Droplets;
+    if (lower.includes('security') || lower.includes('cctv') || lower.includes('guard')) return Shield;
+    if (lower.includes('parking') || lower.includes('car')) return Car;
+    if (lower.includes('gym') || lower.includes('fitness')) return Dumbbell;
+    if (lower.includes('lift') || lower.includes('elevator')) return Building;
+    if (lower.includes('pool') || lower.includes('swimming')) return Waves;
+    if (lower.includes('laundry') || lower.includes('washing')) return Shirt;
+    if (lower.includes('furnished') || lower.includes('sofa') || lower.includes('furniture')) return Sofa;
+    if (lower.includes('garden') || lower.includes('balcony')) return Trees;
+    return Home;
+  };
+
   const availableAmenities = [
     "Wifi",
     "Parking",
@@ -415,12 +444,14 @@ const RoomSearchLayout = () => {
               <img
                 src={room.images[0] || "https://via.placeholder.com/400x300?text=No+Image"}
                 alt={room.title}
-                className="w-full h-48 object-cover"
+                className="w-full h-48 object-cover rounded-xl"
               />
-              <div className="absolute top-3 left-3 bg-yellow-500 text-white px-2 py-1 rounded text-xs font-medium flex items-center gap-1">
-                <Star className="w-3 h-3 fill-white text-white" />
-                {getRandomRating(room.viewsCount)}
-              </div>
+              {room.showReviews !== false && (
+                <div className="absolute top-3 left-3 bg-yellow-500 text-white px-2 py-1 rounded text-xs font-medium flex items-center gap-1">
+                  <Star className="w-3 h-3 fill-white text-white" />
+                  {getRandomRating(room.viewsCount)}
+                </div>
+              )}
               <div
                 className={`absolute top-3 right-3 px-2 py-1 rounded text-xs font-medium ${
                   room.availabilityStatus === "available"
@@ -449,19 +480,23 @@ const RoomSearchLayout = () => {
                   ₹{room.rent.toLocaleString()}/month
                 </div>
               </div>
-              <div className="flex flex-wrap gap-1 mb-2">
-                {room.amenities.slice(0, 3).map((amenity, idx) => (
-                  <span
-                    key={idx}
-                    className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded"
-                  >
-                    {amenity}
-                  </span>
-                ))}
-                {room.amenities.length > 3 && (
-                  <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
-                    +{room.amenities.length - 3} more
-                  </span>
+              <div className="flex flex-wrap gap-2 mb-2">
+                {room.amenities.slice(0, 4).map((amenity, idx) => {
+                  const Icon = getAmenityIcon(amenity);
+                  return (
+                    <div
+                      key={idx}
+                      className="flex items-center justify-center w-8 h-8 bg-gray-100 rounded-full"
+                      title={amenity}
+                    >
+                      <Icon className="w-4 h-4 text-black" />
+                    </div>
+                  );
+                })}
+                {room.amenities.length > 4 && (
+                  <div className="flex items-center justify-center w-8 h-8 bg-gray-100 rounded-full text-xs text-black font-medium">
+                    +{room.amenities.length - 4}
+                  </div>
                 )}
               </div>
               <div className="text-xs text-gray-500">

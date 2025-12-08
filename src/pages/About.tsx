@@ -37,19 +37,19 @@ const About = () => {
             <div className="bg-blue-100 rounded-2xl p-8">
               <div className="grid grid-cols-2 gap-6">
                 <div className="text-center">
-                  <div className="text-4xl font-bold text-blue-600 mb-2">15000+</div>
+                  <div className="text-4xl font-bold text-blue-600 mb-2">200+</div>
                   <div className="text-gray-600">Happy Customers</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-4xl font-bold text-blue-600 mb-2">35+</div>
+                  <div className="text-4xl font-bold text-blue-600 mb-2">1+</div>
                   <div className="text-gray-600">Cities</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-4xl font-bold text-blue-600 mb-2">20000+</div>
+                  <div className="text-4xl font-bold text-blue-600 mb-2">300+</div>
                   <div className="text-gray-600">Properties</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-4xl font-bold text-blue-600 mb-2">500+</div>
+                  <div className="text-4xl font-bold text-blue-600 mb-2">100+</div>
                   <div className="text-gray-600">Verified Landlords</div>
                 </div>
               </div>

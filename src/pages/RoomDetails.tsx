@@ -67,6 +67,7 @@ interface Room {
   }>;
   createdAt: string;
   updatedAt: string;
+  showReviews?: boolean;
 }
 
 const RoomDetails: React.FC = () => {
@@ -351,7 +352,7 @@ const RoomDetails: React.FC = () => {
               </div>
 
               {/* Ratings & Reviews */}
-              {room.feedbacks && room.feedbacks.length > 0 && (
+              {room.showReviews !== false && room.feedbacks && room.feedbacks.length > 0 && (
                 <div className="bg-white rounded-xl shadow-sm p-6">
                   <div className="flex items-center justify-between mb-4">
                     <h2 className="text-xl font-bold text-gray-900">Ratings & Reviews</h2>

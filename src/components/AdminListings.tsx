@@ -10,7 +10,7 @@ import {
   createRoom,
   deleteListing
 } from '../services/admin.services';
-import { CheckCircle, XCircle, Lock, Unlock, Eye, Plus, Edit2, Trash2, X, Upload, MapPin } from 'lucide-react';
+import { CheckCircle, XCircle, Lock, Unlock, Eye, EyeOff, Plus, Edit2, Trash2, X, Upload, MapPin } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface Room {
@@ -38,6 +38,7 @@ interface Room {
   };
   viewsCount: number;
   availabiltyDate?: string;
+  showReviews?: boolean;
 }
 
 const AMENITIES_OPTIONS = [
@@ -358,6 +359,17 @@ const AdminListings = () => {
     }
   };
 
+  const handleToggleReviews = async (id: string, currentStatus: boolean) => {
+    try {
+      await updateListing(id, { showReviews: !currentStatus });
+      toast.success(currentStatus ? 'Reviews hidden' : 'Reviews visible');
+      fetchListings();
+    } catch (error: any) {
+      toast.error('Failed to update review visibility');
+      console.error(error);
+    }
+  };
+
   const filteredListings = listings.filter((listing) => {
     if (filter === 'all') return true;
     return listing.availabilityStatus === filter;
@@ -518,6 +530,25 @@ const AdminListings = () => {
                         title="Delete"
                       >
                         <Trash2 className="w-5 h-5" />
+                      </button>
+
+                      {/* Toggle Reviews button */}
+                      <button
+                        onClick={() => handleToggleReviews(listing._id, listing.showReviews !== false)}
+                        className={`p-1 rounded flex items-center gap-1 text-xs font-medium ${listing.showReviews !== false ? 'text-green-600 hover:bg-green-50' : 'text-red-500 hover:bg-red-50'}`}
+                        title={listing.showReviews !== false ? 'Click to Hide Rating' : 'Click to Show Rating'}
+                      >
+                        {listing.showReviews !== false ? (
+                          <>
+                            <Eye className="w-4 h-4" />
+                            <span>Rating</span>
+                          </>
+                        ) : (
+                          <>
+                            <EyeOff className="w-4 h-4" />
+                            <span>Rating</span>
+                          </>
+                        )}
                       </button>
 
                       {listing.availabilityStatus === 'pending' && (
