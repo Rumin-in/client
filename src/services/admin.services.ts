@@ -150,3 +150,29 @@ export const getAllInterests = async () => {
     throw error;
   }
 };
+
+// Create Room
+export const createRoom = async (formData: FormData) => {
+  try {
+    const response = await axios.post("/admin/listings", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    console.error("Create Room Error:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
+// Delete Listing
+export const deleteListing = async (id: string) => {
+  try {
+    const response = await axios.delete(`/admin/listings/${id}`);
+    return response.data;
+  } catch (error: any) {
+    console.error("Delete Listing Error:", error.response?.data || error.message);
+    throw error;
+  }
+};

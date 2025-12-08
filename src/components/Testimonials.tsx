@@ -46,11 +46,11 @@ const RotatingTestimonials: React.FC = () => {
   ];
 
   const positions = [
-    "top-10 left-1/2 -translate-x-1/2",
-    "top-1/3 sm:top-1/2 right-4 sm:right-20 -translate-y-1/2",
-    "bottom-10 right-10 sm:right-32",
-    "bottom-10 left-10 sm:left-32",
-    "top-1/3 sm:top-1/2 left-4 sm:left-20 -translate-y-1/2"
+    "top-4 sm:top-10 left-1/2 -translate-x-1/2",
+    "top-1/4 sm:top-1/2 right-2 sm:right-20 -translate-y-1/2",
+    "bottom-16 sm:bottom-10 right-4 sm:right-32",
+    "bottom-16 sm:bottom-10 left-4 sm:left-32",
+    "top-1/4 sm:top-1/2 left-2 sm:left-20 -translate-y-1/2"
   ];
 
   const [activeIndex, setActiveIndex] = useState(0);
@@ -140,7 +140,7 @@ const RotatingTestimonials: React.FC = () => {
             >
               <motion.div
                 animate={{
-                  scale: index === 0 ? 1.25 : 1,
+                  scale: index === 0 ? 1.15 : 1,
                   opacity: index === 0 ? 1 : 0.8
                 }}
                 transition={{ duration: 0.3 }}
@@ -150,10 +150,10 @@ const RotatingTestimonials: React.FC = () => {
                 <img
                   src={testimonial.avatar}
                   alt={testimonial.name}
-                  className={`w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover shadow-lg transition-all duration-300 ${
-                    index === 0 
-                      ? 'ring-4 ring-blue-500 ring-offset-2' 
-                      : 'ring-2 ring-gray-300 hover:ring-gray-400'
+                  className={`w-10 h-10 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full object-cover shadow-lg transition-all duration-300 ${
+                    index === 0
+                      ? 'ring-2 sm:ring-4 ring-blue-500 ring-offset-1 sm:ring-offset-2'
+                      : 'ring-1 sm:ring-2 ring-gray-300 hover:ring-gray-400'
                   }`}
                 />
                 {index === 0 && (

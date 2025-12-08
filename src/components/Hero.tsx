@@ -5,46 +5,42 @@ import { useSelector, useDispatch } from "react-redux";
 import type { RootState, AppDispatch } from "../store/store";
 import { logout as logoutAction } from "../store/authSlice";
 
-// COUNTER HOOK with looping animation
-const useCounter = (target: number, duration = 1500, delay = 0, pauseAfterComplete = 3000) => {
+// COUNTER HOOK with synchronized looping animation
+const useCounter = (target: number, duration = 1500, pauseAfterComplete = 3000) => {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    let delayTimer: ReturnType<typeof setTimeout>;
     let animationTimer: ReturnType<typeof setInterval>;
     let resetTimer: ReturnType<typeof setTimeout>;
 
     const startAnimation = () => {
-      delayTimer = setTimeout(() => {
-        let start = 0;
-        const increment = target / (duration / 16);
+      let start = 0;
+      const increment = target / (duration / 16);
 
-        animationTimer = setInterval(() => {
-          start += increment;
-          if (start >= target) {
-            clearInterval(animationTimer);
-            setCount(target);
+      animationTimer = setInterval(() => {
+        start += increment;
+        if (start >= target) {
+          clearInterval(animationTimer);
+          setCount(target);
 
-            // After pause, reset and start again
-            resetTimer = setTimeout(() => {
-              setCount(0);
-              startAnimation();
-            }, pauseAfterComplete);
-          } else {
-            setCount(Math.floor(start));
-          }
-        }, 16);
-      }, delay);
+          // After pause, reset and start again
+          resetTimer = setTimeout(() => {
+            setCount(0);
+            startAnimation();
+          }, pauseAfterComplete);
+        } else {
+          setCount(Math.floor(start));
+        }
+      }, 16);
     };
 
     startAnimation();
 
     return () => {
-      clearTimeout(delayTimer);
       clearInterval(animationTimer);
       clearTimeout(resetTimer);
     };
-  }, [target, duration, delay, pauseAfterComplete]);
+  }, [target, duration, pauseAfterComplete]);
 
   return count;
 };
@@ -94,10 +90,10 @@ const Hero: React.FC = () => {
   const placeholderTexts = ["Search by location...", "Search by city...", "Search by area...", "Search by neighbourhood..."];
   const typingPlaceholder = useTypingAnimation(placeholderTexts, 80, 40, 1500);
 
-  // Counters with staggered delays and looping animation
-  const happyCustomers = useCounter(15000, 1500, 0, 4000);
-  const countries = useCounter(35, 1500, 300, 4000);
-  const properties = useCounter(20000, 1500, 600, 4000);
+  // Counters with synchronized animation (all start together)
+  const happyCustomers = useCounter(200, 1500, 4000);
+  const landlordsServed = useCounter(100, 1500, 4000);
+  const properties = useCounter(300, 1500, 4000);
 
   const handleLogout = () => {
     dispatch(logoutAction());
@@ -121,7 +117,7 @@ const Hero: React.FC = () => {
   };
 
   return (
-    <section className="relative overflow-hidden sm:rounded-lg" style={{ backgroundImage: "url('/hero-frame.png')", backgroundSize: "100% 100%", backgroundPosition: "center", backgroundRepeat: "no-repeat" }}>
+    <section className="relative overflow-hidden sm:rounded-lg bg-no-repeat bg-center bg-cover sm:bg-[length:100%_100%]" style={{ backgroundImage: "url('/hero-frame.png')" }}>
       {/* === HEADER BAR === */}
       <header className="flex justify-between items-stretch w-full absolute top-0 left-0 z-20 px-4 md:px-0 pr-0">
 
@@ -130,7 +126,7 @@ const Hero: React.FC = () => {
           <img
             src="/rumin-logo.png"
             alt="logo"
-            className="w-32 h-auto md:w-36 sm:scale-160 sm:ml-10 sm:mt-2 cursor-pointer"
+            className="w-24 h-auto md:w-28 sm:scale-125 sm:ml-6 sm:mt-1 cursor-pointer"
             onClick={() => navigate("/")}
           />
         </div>
@@ -206,7 +202,7 @@ const Hero: React.FC = () => {
               <div className="hidden lg:flex items-center space-x-2 xl:space-x-3 2xl:space-x-4">
                 <button
                   onClick={() => navigate("/signup")}
-                  className="px-3 py-1.5 xl:px-4 xl:py-2 2xl:px-5 2xl:py-2.5 text-sm xl:text-base 2xl:text-lg text-black hover:text-white rounded-full hover:bg-blue-700 transition-colors font-medium whitespace-nowrap"
+                  className="px-3 py-1.5 xl:px-4 xl:py-2 2xl:px-5 2xl:py-2.5 text-sm xl:text-base 2xl:text-lg text-black hover:text-white rounded-full hover:bg-blue-700 transition-colors font-medium whitespace-nowrap shadow-md hover:shadow-lg"
                 >
                   Signup
                 </button>
@@ -228,7 +224,7 @@ const Hero: React.FC = () => {
               <div className="lg:hidden relative flex items-center">
                 <button
                   onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                  className="p-2 text-black"
+                  className="p-2 text-white"
                 >
                   {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
                 </button>
@@ -241,7 +237,7 @@ const Hero: React.FC = () => {
                         navigate("/signup");
                         setIsMobileMenuOpen(false);
                       }}
-                      className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
+                      className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors shadow-sm"
                     >
                       Signup
                     </button>
@@ -272,7 +268,7 @@ const Hero: React.FC = () => {
       </header>
 
       {/* === HERO SECTION CONTENT === */}
-      <div className="container mx-auto px-4 md:px-6 flex flex-col sm:mt-7 md:flex-row items-center justify-between h-full pt-32 md:pt-40">
+      <div className="container mx-auto px-2 sm:px-4 md:px-6 flex flex-col sm:mt-7 md:flex-row items-center justify-between h-full pt-32 md:pt-40">
 
         {/* TEXT COLUMN */}
         <div className="flex-1 max-w-full md:max-w-5xl text-white">
@@ -304,15 +300,15 @@ const Hero: React.FC = () => {
           </div>
 
           {/* STATS WITH COUNTER */}
-          <div className="flex flex-wrap gap-6 md:gap-16">
+          <div className="flex flex-wrap gap-6 md:gap-16 pb-12 md:pb-20">
             <div>
               <div className="text-2xl md:text-4xl font-bold">{happyCustomers}+</div>
               <div className="text-sm text-white/80">Happy Customers</div>
             </div>
 
             <div>
-              <div className="text-2xl md:text-4xl font-bold">{countries}+</div>
-              <div className="text-sm text-white/80">Countries</div>
+              <div className="text-2xl md:text-4xl font-bold">{landlordsServed}+</div>
+              <div className="text-sm text-white/80">Landlords Served</div>
             </div>
 
             <div>

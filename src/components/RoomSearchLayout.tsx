@@ -34,16 +34,19 @@ const RoomSearchLayout = () => {
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get("search") || "";
   const locationQuery = searchParams.get("location") || "";
+  const typeQuery = searchParams.get("type") || "";
+  const minRentQuery = searchParams.get("minRent") || "";
+  const maxRentQuery = searchParams.get("maxRent") || "";
 
   const [rooms, setRooms] = useState<Room[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedBHK, setSelectedBHK] = useState<string>("");
+  const [selectedBHK, setSelectedBHK] = useState<string>(typeQuery);
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
   const [showAvailability, setShowAvailability] = useState<boolean>(false);
   const [sortBy, setSortBy] = useState<string>("Recommended");
   const [visibleCount, setVisibleCount] = useState<number>(6);
-  const [minRent, setMinRent] = useState<string>("");
-  const [maxRent, setMaxRent] = useState<string>("");
+  const [minRent, setMinRent] = useState<string>(minRentQuery);
+  const [maxRent, setMaxRent] = useState<string>(maxRentQuery);
   const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
   const observerRef = useRef<IntersectionObserver | null>(null);
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
@@ -51,6 +54,13 @@ const RoomSearchLayout = () => {
   useEffect(() => {
     fetchRooms();
   }, []);
+
+  // Sync URL params with state
+  useEffect(() => {
+    if (typeQuery) setSelectedBHK(typeQuery);
+    if (minRentQuery) setMinRent(minRentQuery);
+    if (maxRentQuery) setMaxRent(maxRentQuery);
+  }, [typeQuery, minRentQuery, maxRentQuery]);
 
   const fetchRooms = async () => {
     try {
