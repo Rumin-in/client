@@ -14,7 +14,7 @@ function Home() {
 
   return (
     <>
-    <div className="sm:px-18 sm:pt-5">
+    <div className="sm:px-7 sm:pt-5">
     <Hero/>
     <PopularListing/>
     <UniquePreferences/>

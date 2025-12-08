@@ -117,7 +117,30 @@ const Hero: React.FC = () => {
   };
 
   return (
-    <section className="relative overflow-hidden sm:rounded-lg bg-no-repeat bg-center bg-cover sm:bg-[length:100%_100%]" style={{ backgroundImage: "url('/hero-frame.png')" }}>
+    <>
+      {/* Custom styles for 0-1000px range */}
+      <style>{`
+        @media (max-width: 1000px) {
+          .hero-section {
+            border-radius: 0 !important;
+            background-size: cover !important;
+          }
+        }
+        @media (min-width: 700px) and (max-width: 1000px) {
+          .hero-content {
+            flex-direction: column !important;
+          }
+          .hero-text {
+            max-width: 100% !important;
+            align-self: center !important;
+          }
+          .hero-image {
+            margin-top: 2rem !important;
+            max-width: 100% !important;
+          }
+        }
+      `}</style>
+      <section className="hero-section relative overflow-hidden bg-no-repeat bg-center bg-cover lg:rounded-lg lg:bg-[length:100%_100%]" style={{ backgroundImage: "url('/hero-frame.png')" }}>
       {/* === HEADER BAR === */}
       <header className="flex justify-between items-stretch w-full absolute top-0 left-0 z-20 px-4 md:px-0 pr-0">
 
@@ -126,7 +149,7 @@ const Hero: React.FC = () => {
           <img
             src="/rumin-logo.png"
             alt="logo"
-            className="w-24 h-auto md:w-28 sm:scale-125 sm:ml-6 sm:mt-1 cursor-pointer"
+            className="w-24 h-auto md:w-28 sm:scale-125 sm:ml-10 sm:mt-5 cursor-pointer"
             onClick={() => navigate("/")}
           />
         </div>
@@ -221,57 +244,61 @@ const Hero: React.FC = () => {
               </div>
 
               {/* Hamburger menu - visible below lg (1024px) */}
-              <div className="lg:hidden relative flex items-center">
+              <div className="lg:hidden flex items-center">
                 <button
                   onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                  className="p-2 text-white"
+                  className="p-2 text-white rounded-md hover:bg-white/10"
                 >
                   {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
                 </button>
-
-                {/* Mobile dropdown menu */}
-                {isMobileMenuOpen && (
-                  <div className="absolute right-0 top-12 bg-white rounded-lg shadow-lg py-2 min-w-[140px] z-50">
-                    <button
-                      onClick={() => {
-                        navigate("/signup");
-                        setIsMobileMenuOpen(false);
-                      }}
-                      className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors shadow-sm"
-                    >
-                      Signup
-                    </button>
-                    <button
-                      onClick={() => {
-                        navigate("/signin");
-                        setIsMobileMenuOpen(false);
-                      }}
-                      className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
-                    >
-                      Login
-                    </button>
-                    <button
-                      onClick={() => {
-                        navigate("/about");
-                        setIsMobileMenuOpen(false);
-                      }}
-                      className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
-                    >
-                      About Us
-                    </button>
-                  </div>
-                )}
               </div>
             </>
           )}
         </div>
       </header>
 
+      {/* === Mobile Menu (Full Width Dropdown) === */}
+      {isMobileMenuOpen && !user && (
+        <div className="lg:hidden absolute top-16 left-0 right-0 bg-white/95 backdrop-blur-sm shadow-lg z-40">
+          <nav className="flex flex-col gap-2 p-4 text-gray-800 text-sm font-medium">
+            <a href="/" className="py-2 hover:text-blue-600 transition-colors border-b border-gray-100">
+              HOME
+            </a>
+            <a href="/rooms" className="py-2 hover:text-blue-600 transition-colors border-b border-gray-100">
+              ROOMS
+            </a>
+            <a href="/about" className="py-2 hover:text-blue-600 transition-colors border-b border-gray-100">
+              ABOUT US
+            </a>
+            <div className="flex flex-col gap-2 mt-3">
+              <button
+                onClick={() => {
+                  navigate("/signin");
+                  setIsMobileMenuOpen(false);
+                }}
+                className="w-full py-2.5 border-2 border-blue-500 text-blue-500 rounded-full hover:bg-blue-500 hover:text-white transition-colors font-medium"
+              >
+                LOGIN
+              </button>
+              <button
+                onClick={() => {
+                  navigate("/signup");
+                  setIsMobileMenuOpen(false);
+                }}
+                className="w-full py-2.5 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors font-medium"
+              >
+                SIGNUP
+              </button>
+            </div>
+          </nav>
+        </div>
+      )}
+
       {/* === HERO SECTION CONTENT === */}
-      <div className="container mx-auto px-2 sm:px-4 md:px-6 flex flex-col sm:mt-7 md:flex-row items-center justify-between h-full pt-32 md:pt-40">
+      <div className="hero-content container mx-auto px-2 sm:px-4 md:px-6 flex flex-col sm:mt-7 md:flex-row items-end justify-between h-full pt-32 md:pt-40">
 
         {/* TEXT COLUMN */}
-        <div className="flex-1 max-w-full md:max-w-5xl text-white">
+        <div className="hero-text flex-1 max-w-full md:max-w-5xl text-white self-center">
           <h1 className="text-2xl md:text-7xl font-bold leading-tight mb-4 md:mb-6">
             Find your Perfect Rental Room With Ease.
           </h1>
@@ -319,11 +346,11 @@ const Hero: React.FC = () => {
         </div>
 
         {/* IMAGE COLUMN */}
-        <div className="flex-1 relative mt-8 md:mt-0 w-full max-w-full md:max-w-2xl">
+        <div className="hero-image flex-1 relative mt-8 md:mt-0 w-full max-w-full md:max-w-2xl self-end">
           <img
             src="/hero.png"
             alt="Modern house"
-            className="w-full h-auto relative z-10 scale-120"
+            className="w-full h-auto relative z-10 scale-120 scale-y-125"
           />
           <div className="absolute top-20 right-10 md:right-20 w-4 h-4 bg-white/20 rounded-full"></div>
           <div className="absolute bottom-32 right-5 md:bottom-40 md:right-10 w-6 h-6 bg-white/15 rounded-full"></div>
@@ -331,6 +358,7 @@ const Hero: React.FC = () => {
         </div>
       </div>
     </section>
+    </>
   );
 };
 
