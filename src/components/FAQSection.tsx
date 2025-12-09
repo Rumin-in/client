@@ -49,8 +49,8 @@ const FAQSection: React.FC = () => {
     <section className="py-20 bg-white min-h-screen">
       <div className="container mx-auto px-6 h-full text-xl">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 h-full min-h-[600px]">
-          {/* Left Column - Two smaller images stacked */}
-          <div className="flex flex-col gap-4 h-full">
+          {/* Left Column - Two smaller images stacked (hidden on mobile) */}
+          <div className="hidden lg:flex flex-col gap-4 h-full">
             <div className="flex-1">
               <img
                 src={propertyImages[0].src}

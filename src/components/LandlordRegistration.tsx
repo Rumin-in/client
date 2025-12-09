@@ -25,7 +25,7 @@ const LandlordRegistration: React.FC = () => {
       {/* Left Side Image */}
       <div className="w-full md:w-1/2 flex justify-center">
         <img
-          src="/landlord.png"
+          src="/landlord-registration.svg"
           alt="Landlord illustration"
           className="max-w-sm w-full h-auto"
         />
