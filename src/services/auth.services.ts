@@ -53,11 +53,7 @@ export const updateProfile = async (profileData: { name?: string; email?: string
     if (profileData.mobileNo) formData.append("mobileNo", profileData.mobileNo);
     if (profileData.profilePicture) formData.append("profilePicture", profileData.profilePicture);
 
-    const response = await axios.put("/auth/profile", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    const response = await axios.put("/auth/profile", formData);
     return response.data;
   } catch (error: any) {
     console.error("Update Profile Error:", error.response?.data || error.message);

@@ -47,7 +47,8 @@ const Bookmarks: React.FC = () => {
       setBookmarkedRooms(response.data || []);
     } catch (error: any) {
       console.error('Error fetching bookmarks:', error);
-      if (!error.message.includes('404')) {
+      // Only show error toast for actual errors, not empty results
+      if (error.message && !error.message.includes('No bookmarked')) {
         toast.error('Failed to load bookmarks');
       }
     } finally {
