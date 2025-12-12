@@ -68,6 +68,7 @@ interface Room {
   createdAt: string;
   updatedAt: string;
   showReviews?: boolean;
+  adminRating?: number | null;
 }
 
 const RoomDetails: React.FC = () => {
@@ -351,11 +352,31 @@ const RoomDetails: React.FC = () => {
                 </div>
               </div>
 
-              {/* Ratings & Reviews */}
-              {room.showReviews !== false && room.feedbacks && room.feedbacks.length > 0 && (
+              {/* Admin Rating */}
+              {room.showReviews && room.adminRating && (
+                <div className="bg-white rounded-xl shadow-sm p-6">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-xl font-bold text-gray-900">Rating</h2>
+                    <div className="flex items-center gap-2">
+                      {[...Array(5)].map((_, i) => (
+                        <Star
+                          key={i}
+                          className={`w-6 h-6 ${
+                            i < room.adminRating! ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
+                          }`}
+                        />
+                      ))}
+                      <span className="text-xl font-bold ml-2">{room.adminRating.toFixed(1)}</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* User Reviews (only if showReviews is true and there are feedbacks) */}
+              {room.showReviews && room.feedbacks && room.feedbacks.length > 0 && (
                 <div className="bg-white rounded-xl shadow-sm p-6">
                   <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-xl font-bold text-gray-900">Ratings & Reviews</h2>
+                    <h2 className="text-xl font-bold text-gray-900">User Reviews</h2>
                     <div className="flex items-center gap-2">
                       <Star className="w-5 h-5 fill-yellow-400 text-yellow-400" />
                       <span className="text-xl font-bold">{calculateAverageRating()}</span>

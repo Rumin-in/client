@@ -10,7 +10,7 @@ import {
   createRoom,
   deleteListing
 } from '../services/admin.services';
-import { CheckCircle, XCircle, Lock, Unlock, Eye, EyeOff, Plus, Edit2, Trash2, X, Upload, MapPin } from 'lucide-react';
+import { CheckCircle, XCircle, Lock, Unlock, Eye, EyeOff, Plus, Edit2, Trash2, X, Upload, MapPin, Star } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface Room {
@@ -39,6 +39,7 @@ interface Room {
   viewsCount: number;
   availabiltyDate?: string;
   showReviews?: boolean;
+  adminRating?: number | null;
 }
 
 const AMENITIES_OPTIONS = [
@@ -86,6 +87,12 @@ const AdminListings = () => {
   const [existingImages, setExistingImages] = useState<string[]>([]);
   const [newImages, setNewImages] = useState<File[]>([]);
   const [imagesToDelete, setImagesToDelete] = useState<string[]>([]);
+
+  // Rating modal states
+  const [showRatingModal, setShowRatingModal] = useState(false);
+  const [ratingRoom, setRatingRoom] = useState<Room | null>(null);
+  const [selectedRating, setSelectedRating] = useState<number>(5);
+  const [ratingLoading, setRatingLoading] = useState(false);
 
   useEffect(() => {
     fetchListings();
@@ -359,13 +366,40 @@ const AdminListings = () => {
     }
   };
 
-  const handleToggleReviews = async (id: string, currentStatus: boolean) => {
+  const openRatingModal = (room: Room) => {
+    setRatingRoom(room);
+    setSelectedRating(room.adminRating || 5);
+    setShowRatingModal(true);
+  };
+
+  const handleSetRatingAndShow = async () => {
+    if (!ratingRoom) return;
+
     try {
-      await updateListing(id, { showReviews: !currentStatus });
-      toast.success(currentStatus ? 'Reviews hidden' : 'Reviews visible');
+      setRatingLoading(true);
+      await updateListing(ratingRoom._id, {
+        adminRating: selectedRating,
+        showReviews: true
+      });
+      toast.success(`Rating set to ${selectedRating} stars and made visible`);
+      setShowRatingModal(false);
+      setRatingRoom(null);
       fetchListings();
     } catch (error: any) {
-      toast.error('Failed to update review visibility');
+      toast.error('Failed to update rating');
+      console.error(error);
+    } finally {
+      setRatingLoading(false);
+    }
+  };
+
+  const handleHideRating = async (id: string) => {
+    try {
+      await updateListing(id, { showReviews: false });
+      toast.success('Rating hidden');
+      fetchListings();
+    } catch (error: any) {
+      toast.error('Failed to hide rating');
       console.error(error);
     }
   };
@@ -533,23 +567,26 @@ const AdminListings = () => {
                       </button>
 
                       {/* Toggle Reviews button */}
-                      <button
-                        onClick={() => handleToggleReviews(listing._id, listing.showReviews !== false)}
-                        className={`p-1 rounded flex items-center gap-1 text-xs font-medium ${listing.showReviews !== false ? 'text-green-600 hover:bg-green-50' : 'text-red-500 hover:bg-red-50'}`}
-                        title={listing.showReviews !== false ? 'Click to Hide Rating' : 'Click to Show Rating'}
-                      >
-                        {listing.showReviews !== false ? (
-                          <>
-                            <Eye className="w-4 h-4" />
-                            <span>Rating</span>
-                          </>
-                        ) : (
-                          <>
-                            <EyeOff className="w-4 h-4" />
-                            <span>Rating</span>
-                          </>
-                        )}
-                      </button>
+                      {listing.showReviews ? (
+                        <button
+                          onClick={() => handleHideRating(listing._id)}
+                          className="p-1 rounded flex items-center gap-1 text-xs font-medium text-green-600 hover:bg-green-50"
+                          title="Click to Hide Rating"
+                        >
+                          <Eye className="w-4 h-4" />
+                          <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                          <span>{listing.adminRating || '-'}</span>
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => openRatingModal(listing)}
+                          className="p-1 rounded flex items-center gap-1 text-xs font-medium text-gray-500 hover:bg-gray-50"
+                          title="Click to Set Rating & Show"
+                        >
+                          <EyeOff className="w-4 h-4" />
+                          <span>Set Rating</span>
+                        </button>
+                      )}
 
                       {listing.availabilityStatus === 'pending' && (
                         <>
@@ -928,6 +965,78 @@ const AdminListings = () => {
                 }`}
               >
                 {formLoading ? 'Saving...' : (editingRoom ? 'Update Room' : 'Create Room')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Rating Modal */}
+      {showRatingModal && ratingRoom && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-xl font-bold text-gray-800">Set Rating</h3>
+              <button
+                onClick={() => {
+                  setShowRatingModal(false);
+                  setRatingRoom(null);
+                }}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            <p className="text-gray-600 mb-4">
+              Set rating for <span className="font-semibold">{ratingRoom.title}</span>
+            </p>
+
+            {/* Star Rating Selection */}
+            <div className="flex justify-center gap-2 mb-6">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <button
+                  key={star}
+                  onClick={() => setSelectedRating(star)}
+                  className="p-1 transition-transform hover:scale-110"
+                  disabled={ratingLoading}
+                >
+                  <Star
+                    className={`w-10 h-10 ${
+                      star <= selectedRating
+                        ? 'fill-yellow-400 text-yellow-400'
+                        : 'text-gray-300'
+                    }`}
+                  />
+                </button>
+              ))}
+            </div>
+
+            <p className="text-center text-gray-700 mb-6">
+              Selected: <span className="font-bold text-lg">{selectedRating}</span> star{selectedRating > 1 ? 's' : ''}
+            </p>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                  setShowRatingModal(false);
+                  setRatingRoom(null);
+                }}
+                disabled={ratingLoading}
+                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors font-semibold"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSetRatingAndShow}
+                disabled={ratingLoading}
+                className={`flex-1 px-4 py-2 rounded-lg text-white font-semibold transition-colors ${
+                  ratingLoading
+                    ? 'bg-gray-400 cursor-not-allowed'
+                    : 'bg-gradient-to-r from-[#89B4DB] to-[#0085FE] hover:from-[#7AA3CA] hover:to-[#0074DD]'
+                }`}
+              >
+                {ratingLoading ? 'Saving...' : 'Set & Make Visible'}
               </button>
             </div>
           </div>

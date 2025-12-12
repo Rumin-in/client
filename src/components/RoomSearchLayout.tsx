@@ -40,6 +40,7 @@ type Room = {
   availabiltyDate: string;
   createdAt: string;
   showReviews?: boolean;
+  adminRating?: number | null;
 };
 
 const RoomSearchLayout = () => {
@@ -242,9 +243,6 @@ const RoomSearchLayout = () => {
     };
   }, [hasMore, isLoadingMore, loadMore]);
 
-  const getRandomRating = (viewsCount: number) => {
-    return (4.0 + (viewsCount % 10) / 10).toFixed(1);
-  };
 
   const handleRoomClick = (roomId: string) => {
     navigate(`/room/${roomId}`);
@@ -446,10 +444,10 @@ const RoomSearchLayout = () => {
                 alt={room.title}
                 className="w-full h-48 object-cover rounded-xl"
               />
-              {room.showReviews !== false && (
+              {room.showReviews && room.adminRating && (
                 <div className="absolute top-3 left-3 bg-yellow-500 text-white px-2 py-1 rounded text-xs font-medium flex items-center gap-1">
                   <Star className="w-3 h-3 fill-white text-white" />
-                  {getRandomRating(room.viewsCount)}
+                  {room.adminRating.toFixed(1)}
                 </div>
               )}
               <div
