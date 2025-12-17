@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Heart, MapPin, Calendar, User, Mail, Phone, Home } from 'lucide-react';
+import { Heart, MapPin, Calendar, User, Mail, Phone, Home, Building, Users } from 'lucide-react';
 import { getAllInterests } from '../services/admin.services';
 import { toast } from 'sonner';
 
@@ -11,7 +11,7 @@ interface Interest {
     email: string;
     mobileNo: string;
   };
-  roomId: {
+  roomId?: {
     _id: string;
     title: string;
     location: {
@@ -24,6 +24,22 @@ interface Interest {
     images: string[];
     availabilityStatus: string;
   };
+  hostelId?: {
+    _id: string;
+    title: string;
+    location: {
+      address: string;
+      city: string;
+      state: string;
+    };
+    rentPerBed: number;
+    hostelType: string;
+    images: string[];
+    availabilityStatus: string;
+    totalBeds: number;
+    availableBeds: number;
+  };
+  itemType: 'room' | 'hostel';
   type: 'visit' | 'book';
   status: 'pending' | 'in_progress' | 'completed' | 'rejected';
   notes: string;
@@ -35,6 +51,7 @@ const AdminInterests: React.FC = () => {
   const [interests, setInterests] = useState<Interest[]>([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [typeFilter, setTypeFilter] = useState<string>('all');
 
   useEffect(() => {
     fetchInterests();
@@ -58,7 +75,10 @@ const AdminInterests: React.FC = () => {
 
   const filteredInterests = interests.filter((interest) => {
     const statusMatch = statusFilter === 'all' || interest.status === statusFilter;
-    return statusMatch;
+    const typeMatch = typeFilter === 'all' || interest.itemType === typeFilter;
+    // Filter out interests without valid user AND without valid room/hostel
+    const hasValidData = interest.userId && (interest.roomId || interest.hostelId);
+    return statusMatch && typeMatch && hasValidData;
   });
 
   const getStatusColor = (status: string) => {
@@ -76,6 +96,9 @@ const AdminInterests: React.FC = () => {
     }
   };
 
+  const roomInterestsCount = interests.filter(i => i.itemType === 'room' || i.roomId).length;
+  const hostelInterestsCount = interests.filter(i => i.itemType === 'hostel' || i.hostelId).length;
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -89,23 +112,46 @@ const AdminInterests: React.FC = () => {
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">User Interests</h1>
         <p className="text-gray-600">
-          Manage and track user interests for room visits and bookings
+          Manage and track user interests for rooms and hostels
         </p>
       </div>
 
       {/* Filters */}
       <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Total Interests
             </label>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <div className="px-4 py-2 bg-gradient-to-r from-[#89B4DB] to-[#0085FE] text-white rounded-lg font-semibold flex items-center gap-2">
                 <Heart className="w-5 h-5" />
-                {interests.length} Interests
+                {interests.length} Total
+              </div>
+              <div className="px-3 py-2 bg-blue-100 text-blue-800 rounded-lg font-semibold flex items-center gap-2 text-sm">
+                <Home className="w-4 h-4" />
+                {roomInterestsCount} Rooms
+              </div>
+              <div className="px-3 py-2 bg-purple-100 text-purple-800 rounded-lg font-semibold flex items-center gap-2 text-sm">
+                <Building className="w-4 h-4" />
+                {hostelInterestsCount} Hostels
               </div>
             </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Filter by Type
+            </label>
+            <select
+              value={typeFilter}
+              onChange={(e) => setTypeFilter(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value="all">All Types</option>
+              <option value="room">Rooms Only</option>
+              <option value="hostel">Hostels Only</option>
+            </select>
           </div>
 
           <div>
@@ -138,40 +184,65 @@ const AdminInterests: React.FC = () => {
         </div>
       ) : (
         <div className="space-y-4">
-          {filteredInterests
-            .filter(interest => interest.userId && interest.roomId)
-            .map((interest) => {
+          {filteredInterests.map((interest) => {
+            const isHostel = interest.itemType === 'hostel' || interest.hostelId;
+            const item = isHostel ? interest.hostelId : interest.roomId;
+
+            if (!item) return null;
+
             return (
               <div
                 key={interest._id}
                 className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow"
               >
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                  {/* Room Information */}
+                  {/* Property Information */}
                   <div className="lg:col-span-1">
                     <div className="flex items-start gap-4">
                       <img
-                        src={interest.roomId.images[0] || '/placeholder-room.jpg'}
-                        alt={interest.roomId.title}
+                        src={item.images?.[0] || (isHostel ? '/placeholder-hostel.jpg' : '/placeholder-room.jpg')}
+                        alt={item.title}
                         className="w-24 h-24 rounded-lg object-cover"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = isHostel ? '/placeholder-hostel.jpg' : '/placeholder-room.jpg';
+                        }}
                       />
                       <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className={`px-2 py-0.5 rounded text-xs font-semibold ${isHostel ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'}`}>
+                            {isHostel ? 'Hostel' : 'Room'}
+                          </span>
+                        </div>
                         <h3 className="font-bold text-gray-900 mb-1">
-                          {interest.roomId.title}
+                          {item.title}
                         </h3>
                         <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
                           <MapPin className="w-4 h-4" />
                           <span>
-                            {interest.roomId.location.city}, {interest.roomId.location.state}
+                            {item.location?.city}, {item.location?.state}
                           </span>
                         </div>
-                        <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
-                          <Home className="w-4 h-4" />
-                          <span>{interest.roomId.bhk}</span>
-                        </div>
-                        <div className="text-lg font-bold text-blue-600">
-                          ₹{interest.roomId.rent.toLocaleString()}/month
-                        </div>
+                        {isHostel && interest.hostelId ? (
+                          <>
+                            <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
+                              <Users className="w-4 h-4" />
+                              <span>{interest.hostelId.hostelType} Hostel</span>
+                            </div>
+                            <div className="text-lg font-bold text-blue-600">
+                              ₹{interest.hostelId.rentPerBed?.toLocaleString()}/bed/month
+                            </div>
+                          </>
+                        ) : interest.roomId ? (
+                          <>
+                            <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
+                              <Home className="w-4 h-4" />
+                              <span>{interest.roomId.bhk}</span>
+                            </div>
+                            <div className="text-lg font-bold text-blue-600">
+                              ₹{interest.roomId.rent?.toLocaleString()}/month
+                            </div>
+                          </>
+                        ) : null}
                       </div>
                     </div>
                   </div>
@@ -182,24 +253,24 @@ const AdminInterests: React.FC = () => {
                     <div className="space-y-2">
                       <div className="flex items-center gap-2 text-sm text-gray-700">
                         <User className="w-4 h-4 text-gray-400" />
-                        <span>{interest.userId.name}</span>
+                        <span>{interest.userId?.name || 'N/A'}</span>
                       </div>
                       <div className="flex items-center gap-2 text-sm text-gray-700">
                         <Mail className="w-4 h-4 text-gray-400" />
                         <a
-                          href={`mailto:${interest.userId.email}`}
+                          href={`mailto:${interest.userId?.email}`}
                           className="text-blue-600 hover:underline"
                         >
-                          {interest.userId.email}
+                          {interest.userId?.email || 'N/A'}
                         </a>
                       </div>
                       <div className="flex items-center gap-2 text-sm text-gray-700">
                         <Phone className="w-4 h-4 text-gray-400" />
                         <a
-                          href={`tel:${interest.userId.mobileNo}`}
+                          href={`tel:${interest.userId?.mobileNo}`}
                           className="text-blue-600 hover:underline"
                         >
-                          {interest.userId.mobileNo}
+                          {interest.userId?.mobileNo || 'N/A'}
                         </a>
                       </div>
                     </div>

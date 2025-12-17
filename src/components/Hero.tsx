@@ -86,7 +86,14 @@ const Hero: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
   // Typing animation for placeholder
-  const placeholderTexts = ["Search by location...", "Search by city...", "Search by area...", "Search by neighbourhood..."];
+  const placeholderTexts = [
+    "Search by location...",
+    "Search by city...",
+    "Search by area...",
+    "Try: 2bhk Minal...",
+    "Try: 10000 budget...",
+    "Try: studio Lalghati..."
+  ];
   const typingPlaceholder = useTypingAnimation(placeholderTexts, 80, 40, 1500);
 
   // Counters with synchronized animation (all start together)
@@ -96,7 +103,45 @@ const Hero: React.FC = () => {
 
   const handleSearch = () => {
     if (searchQuery.trim()) {
-      navigate(`/rooms?search=${encodeURIComponent(searchQuery.trim())}`);
+      const query = searchQuery.trim();
+      const params = new URLSearchParams();
+
+      // Parse BHK (1bhk, 2bhk, 3bhk, 4bhk, studio, 1rk)
+      const bhkMatch = query.match(/(\d+)\s*(?:bhk|BHK)/i);
+      const studioBhkMatch = query.match(/studio/i);
+      const rkMatch = query.match(/(\d+)\s*(?:rk|RK)/i);
+
+      // Parse budget/rent (numbers like 10000, 15000, etc.)
+      const budgetMatch = query.match(/(\d{4,})/);
+
+      let remainingQuery = query;
+
+      if (bhkMatch) {
+        const bhkType = `${bhkMatch[1]} BHK`;
+        params.append('type', bhkType);
+        remainingQuery = remainingQuery.replace(bhkMatch[0], '').trim();
+      } else if (studioBhkMatch) {
+        params.append('type', 'Studio Room');
+        remainingQuery = remainingQuery.replace(studioBhkMatch[0], '').trim();
+      } else if (rkMatch) {
+        const rkType = `${rkMatch[1]} RK`;
+        params.append('type', rkType);
+        remainingQuery = remainingQuery.replace(rkMatch[0], '').trim();
+      }
+
+      if (budgetMatch) {
+        const budget = parseInt(budgetMatch[1]);
+        params.append('maxRent', budget.toString());
+        remainingQuery = remainingQuery.replace(budgetMatch[0], '').trim();
+      }
+
+      // Add remaining text as location search
+      if (remainingQuery) {
+        params.append('search', remainingQuery);
+      }
+
+      const queryString = params.toString();
+      navigate(`/rooms${queryString ? `?${queryString}` : ''}`);
     } else {
       navigate("/rooms");
     }
@@ -154,6 +199,9 @@ const Hero: React.FC = () => {
           <a href="/rooms" className="hover:text-gray-200 transition-colors hover:underline text-base xl:text-xl 2xl:text-2xl">
             Room
           </a>
+          <a href="/hostels" className="hover:text-gray-200 transition-colors hover:underline text-base xl:text-xl 2xl:text-2xl">
+            Hostel
+          </a>
 
           {/* UPCOMING DROPDOWN */}
           <div className="relative group cursor-pointer">
@@ -161,7 +209,6 @@ const Hero: React.FC = () => {
 
             <div className="absolute hidden group-hover:block bg-white text-black rounded-md shadow-lg mt-2 min-w-[160px]">
               <p className="px-4 py-2 hover:bg-gray-100">Student Furniture</p>
-              <p className="px-4 py-2 hover:bg-gray-100">Hostel</p>
               <p className="px-4 py-2 hover:bg-gray-100">PG</p>
             </div>
           </div>
@@ -234,6 +281,9 @@ const Hero: React.FC = () => {
             </a>
             <a href="/rooms" className="py-2 hover:text-blue-600 transition-colors border-b border-gray-100">
               ROOMS
+            </a>
+            <a href="/hostels" className="py-2 hover:text-blue-600 transition-colors border-b border-gray-100">
+              HOSTELS
             </a>
             <a href="/about" className="py-2 hover:text-blue-600 transition-colors border-b border-gray-100">
               ABOUT US

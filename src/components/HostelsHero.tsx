@@ -2,7 +2,7 @@ import { useState } from "react";
 import { MapPin, Search } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
-const RoomsHero = () => {
+const HostelsHero = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState(searchParams.get("search") || "");
@@ -12,27 +12,25 @@ const RoomsHero = () => {
       const query = searchQuery.trim();
       const params = new URLSearchParams();
 
-      // Parse BHK (1bhk, 2bhk, 3bhk, 4bhk, studio, 1rk)
-      const bhkMatch = query.match(/(\d+)\s*(?:bhk|BHK)/i);
-      const studioBhkMatch = query.match(/studio/i);
-      const rkMatch = query.match(/(\d+)\s*(?:rk|RK)/i);
+      // Parse hostel type (boys, girls, co-ed)
+      const boysMatch = query.match(/boys/i);
+      const girlsMatch = query.match(/girls/i);
+      const coedMatch = query.match(/co-?ed/i);
 
-      // Parse budget/rent (numbers like 10000, 15000, etc.)
+      // Parse budget/rent (numbers like 5000, 8000, etc.)
       const budgetMatch = query.match(/(\d{4,})/);
 
       let remainingQuery = query;
 
-      if (bhkMatch) {
-        const bhkType = `${bhkMatch[1]} BHK`;
-        params.append('type', bhkType);
-        remainingQuery = remainingQuery.replace(bhkMatch[0], '').trim();
-      } else if (studioBhkMatch) {
-        params.append('type', 'Studio Room');
-        remainingQuery = remainingQuery.replace(studioBhkMatch[0], '').trim();
-      } else if (rkMatch) {
-        const rkType = `${rkMatch[1]} RK`;
-        params.append('type', rkType);
-        remainingQuery = remainingQuery.replace(rkMatch[0], '').trim();
+      if (boysMatch) {
+        params.append('type', 'Boys');
+        remainingQuery = remainingQuery.replace(boysMatch[0], '').trim();
+      } else if (girlsMatch) {
+        params.append('type', 'Girls');
+        remainingQuery = remainingQuery.replace(girlsMatch[0], '').trim();
+      } else if (coedMatch) {
+        params.append('type', 'Co-ed');
+        remainingQuery = remainingQuery.replace(coedMatch[0], '').trim();
       }
 
       if (budgetMatch) {
@@ -47,7 +45,7 @@ const RoomsHero = () => {
       }
 
       const queryString = params.toString();
-      navigate(`/rooms${queryString ? `?${queryString}` : ''}`);
+      navigate(`/hostels${queryString ? `?${queryString}` : ''}`);
       window.location.reload(); // Reload to apply search
     }
   };
@@ -63,12 +61,12 @@ const RoomsHero = () => {
       <div className="max-w-4xl mx-auto text-center">
         {/* Hero Title */}
         <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-          Find Rooms
+          Find Hostels
         </h1>
 
         {/* Hero Subtitle */}
         <p className="text-lg md:text-xl text-white/90 mb-8 max-w-4xl mx-auto font-bold leading-relaxed tracking-wider">
-          Browse our verified listings organized by cities and neighborhoods to
+          Browse our verified hostel listings with complete facilities and amenities to
           find your perfect accommodation.
         </p>
 
@@ -85,7 +83,7 @@ const RoomsHero = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder="Search by location, budget (e.g. 10000) or BHK (e.g. 2bhk)"
+            placeholder="Search by location, budget (e.g. 8000) or type (boys/girls)"
             className="flex-1 py-2 sm:py-3 px-2 text-gray-700 placeholder-gray-400 bg-transparent outline-none text-sm sm:text-base"
           />
 
@@ -105,4 +103,4 @@ const RoomsHero = () => {
   );
 };
 
-export default RoomsHero;
+export default HostelsHero;

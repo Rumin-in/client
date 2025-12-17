@@ -1,4 +1,4 @@
-import { LayoutDashboard, Home, Users, MessageSquare, AlertCircle, LogOut, BarChart3, Heart, Tag } from 'lucide-react';
+import { LayoutDashboard, Home, Users, MessageSquare, AlertCircle, LogOut, BarChart3, Heart, Tag, Building } from 'lucide-react';
 
 interface AdminSidebarProps {
   activeTab: string;
@@ -10,6 +10,7 @@ const AdminSidebar = ({ activeTab, setActiveTab, onLogout }: AdminSidebarProps) 
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'listings', label: 'Room Listings', icon: Home },
+    { id: 'hostels', label: 'Hostel Listings', icon: Building },
     { id: 'analytics', label: 'Analytics', icon: BarChart3 },
     { id: 'users', label: 'User Management', icon: Users },
     { id: 'interests', label: 'User Interests', icon: Heart },

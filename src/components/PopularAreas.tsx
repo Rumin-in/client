@@ -59,7 +59,10 @@ const PopularAreas: React.FC = () => {
             </div>
 
             {/* Right Column - Large Lalghati Image */}
-            <div className="relative h-80 rounded-2xl overflow-hidden shadow-lg group cursor-pointer">
+            <div
+              onClick={() => navigate(`/rooms?search=${areas[0].name}`)}
+              className="relative h-80 rounded-2xl overflow-hidden shadow-lg group cursor-pointer"
+            >
               <img
                 src={areas[0].image}
                 alt={areas[0].name}
@@ -82,7 +85,11 @@ const PopularAreas: React.FC = () => {
           {/* Bottom Section - 4 Area Cards */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {areas.slice(1).map((area) => (
-              <div key={area.id} className="relative h-48 rounded-2xl overflow-hidden shadow-lg group cursor-pointer">
+              <div
+                key={area.id}
+                onClick={() => navigate(`/rooms?search=${area.name}`)}
+                className="relative h-48 rounded-2xl overflow-hidden shadow-lg group cursor-pointer"
+              >
                 <img
                   src={area.image}
                   alt={area.name}

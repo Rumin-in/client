@@ -26,12 +26,13 @@ export const enquireRoom = async (roomId: string, message: string) => {
   }
 };
 
-export const interestRoom = async (roomId: string, interestType: 'visit' | 'book', userId: string, notes?: string) => {
+export const interestRoom = async (roomId: string, interestType: 'visit' | 'book', userId: string, notes?: string, itemType: 'room' | 'hostel' = 'room') => {
   try {
     const response = await axios.post(`/renter/rooms/${roomId}/interest`, {
       userId,
       interestType,
-      notes: notes || ''
+      notes: notes || '',
+      itemType
     });
     return response.data;
   } catch (error: any) {

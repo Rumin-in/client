@@ -9,7 +9,6 @@ const UniquePreferences: React.FC = () => {
   const [selectedLocation, setSelectedLocation] = useState('');
   const [selectedBudget, setSelectedBudget] = useState('');
   const [selectedFurnishing, setSelectedFurnishing] = useState('');
-  const [selectedGender, setSelectedGender] = useState('');
   const [selectedRoomType, setSelectedRoomType] = useState('');
 
   // Filter options
@@ -26,7 +25,6 @@ const UniquePreferences: React.FC = () => {
   ];
 
   const furnishingOptions = ["Furnished", "Semi-Furnished", "Unfurnished"];
-  const genderOptions = ["Male", "Female", "Any"];
   const roomTypes = ["Single Room", "1 RK", "1 BHK", "2 BHK", "Studio Room", "Duplex"];
 
   const handleSearch = () => {
@@ -44,9 +42,6 @@ const UniquePreferences: React.FC = () => {
     }
     if (selectedFurnishing) {
       params.append('furnishing', selectedFurnishing);
-    }
-    if (selectedGender) {
-      params.append('gender', selectedGender);
     }
     if (selectedRoomType) {
       params.append('type', selectedRoomType);
@@ -113,21 +108,6 @@ const UniquePreferences: React.FC = () => {
               >
                 <option value="">Furnishing</option>
                 {furnishingOptions.map((opt) => (
-                  <option key={opt} value={opt}>{opt}</option>
-                ))}
-              </select>
-              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-blue-500 pointer-events-none" />
-            </div>
-
-            {/* Gender Filter */}
-            <div className="relative">
-              <select
-                value={selectedGender}
-                onChange={(e) => setSelectedGender(e.target.value)}
-                className="appearance-none bg-white rounded-full px-4 sm:px-6 py-2 sm:py-3 pr-10 shadow-sm hover:shadow-md transition-shadow cursor-pointer text-blue-500 font-medium text-sm sm:text-base border-0 focus:ring-2 focus:ring-blue-500 outline-none"
-              >
-                <option value="">Gender</option>
-                {genderOptions.map((opt) => (
                   <option key={opt} value={opt}>{opt}</option>
                 ))}
               </select>

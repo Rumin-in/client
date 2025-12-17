@@ -11,6 +11,8 @@ import AdminEnquiries from '../components/AdminEnquiries';
 import AdminIssues from '../components/AdminIssues';
 import AdminInterests from '../components/AdminInterests';
 import AdminCoupons from '../components/AdminCoupons';
+import AdminHostelListings from '../components/AdminHostelListings';
+import SubmitHostelForm from '../components/SubmitHostelForm';
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
 
 const AdminPanel = () => {
@@ -101,6 +103,27 @@ const AdminPanel = () => {
         return <AdminDashboard />;
       case 'listings':
         return <AdminListings />;
+      case 'hostels':
+        return (
+          <AdminHostelListings onAddHostel={() => setActiveTab('add-hostel')} />
+        );
+      case 'add-hostel':
+        return (
+          <div>
+            <button
+              onClick={() => setActiveTab('hostels')}
+              className="mb-6 text-blue-600 hover:text-blue-700 font-semibold"
+            >
+              ← Back to Hostel Management
+            </button>
+            <SubmitHostelForm 
+              onSuccess={() => {
+                toast.success('Hostel added successfully!');
+                setActiveTab('hostels');
+              }} 
+            />
+          </div>
+        );
       case 'analytics':
         return <AdminAnalytics />;
       case 'users':

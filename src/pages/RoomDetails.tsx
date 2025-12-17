@@ -152,7 +152,7 @@ const RoomDetails: React.FC = () => {
     }
 
     try {
-      await interestRoom(id!, 'visit', user.userId);
+      await interestRoom(id!, 'visit', user.userId, undefined, 'room');
       setHasExpressedInterest(true);
       setShowInterestPopup(true);
     } catch (error: any) {

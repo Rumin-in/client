@@ -33,6 +33,9 @@ const Header: React.FC = () => {
           <a href="/" className="hover:text-blue-600 transition-colors">
             HOME
           </a>
+          <a href="/hostels" className="hover:text-blue-600 transition-colors">
+            HOSTELS
+          </a>
           <a href="/about" className="hover:text-blue-600 transition-colors">
             ABOUT US
           </a>
@@ -47,7 +50,7 @@ const Header: React.FC = () => {
             </button>
             {upcomingOpen && (
               <div className="absolute mt-2 bg-white shadow-lg rounded-md py-2 w-48 z-50">
-                {["Student Furniture", "Hostel", "PG", "Co-living Spaces"].map((item) => (
+                {["Student Furniture", "PG", "Co-living Spaces"].map((item) => (
                   <span
                     key={item}
                     className="block px-4 py-2 hover:bg-gray-100 text-gray-700 cursor-default"
@@ -121,6 +124,9 @@ const Header: React.FC = () => {
             <a href="/" className="hover:text-blue-600">
               HOME
             </a>
+            <a href="/hostels" className="hover:text-blue-600">
+              HOSTELS
+            </a>
             <a href="/about" className="hover:text-blue-600">
               ABOUT US
             </a>
@@ -134,7 +140,7 @@ const Header: React.FC = () => {
             </button>
             {upcomingOpen && (
               <div className="pl-4 flex flex-col gap-2 text-gray-600">
-                {["Student Furniture", "Hostel", "PG", "Co-living Spaces"].map((item) => (
+                {["Student Furniture", "PG", "Co-living Spaces"].map((item) => (
                   <span key={item} className="text-gray-500">
                     {item} <span className="text-xs text-blue-500">(Coming Soon)</span>
                   </span>
