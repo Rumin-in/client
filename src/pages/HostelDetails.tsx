@@ -176,12 +176,6 @@ const HostelDetails: React.FC = () => {
     return Building;
   };
 
-  const calculateAverageRating = () => {
-    if (!hostel?.feedbacks || hostel.feedbacks.length === 0) return 0;
-    const sum = hostel.feedbacks.reduce((acc, feedback) => acc + feedback.rating, 0);
-    return (sum / hostel.feedbacks.length).toFixed(1);
-  };
-
   if (loading) {
     return (
       <>

@@ -4,7 +4,7 @@ import {
   updateHostel,
   deleteHostel,
 } from '../services/hostels.services';
-import { CheckCircle, XCircle, Eye, Plus, Edit2, Trash2, X, Upload, MapPin, Star, Users, Home } from 'lucide-react';
+import { CheckCircle, XCircle, Eye, Plus, Edit2, Trash2, X, MapPin, Star, Users, Home } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface Hostel {
@@ -139,7 +139,11 @@ const AdminHostelListings = ({ onAddHostel }: { onAddHostel: () => void }) => {
     setAmenities(hostel.amenities || []);
     setAvailabilityStatus(hostel.availabilityStatus);
     setAvailabilityDate(hostel.availabilityDate ? hostel.availabilityDate.split('T')[0] : '');
-    setFacilities(hostel.facilities || { food: false, laundry: false, cleaning: false });
+    setFacilities({
+      food: hostel.facilities?.food ?? false,
+      laundry: hostel.facilities?.laundry ?? false,
+      cleaning: hostel.facilities?.cleaning ?? false,
+    });
     setShowModal(true);
   };
 
