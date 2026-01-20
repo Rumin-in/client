@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const Footer = () => {
   return (
     <footer className="bg-[#0B3463] text-white px-8 py-12">
@@ -89,12 +91,12 @@ const Footer = () => {
                 </a>
               </li>
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="/privacy-policy"
                   className="text-gray-300 opacity-80 hover:opacity-100 hover:text-white transition-colors"
                 >
                   Privacy & Policy
-                </a>
+                </Link>
               </li>
               <li>
                 <a

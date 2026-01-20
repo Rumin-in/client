@@ -14,6 +14,7 @@ import AdminPanel from "./pages/AdminPanel";
 import Bookmarks from "./pages/Bookmarks";
 import About from "./pages/About";
 import SubmitHostel from "./pages/SubmitHostel";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 import { ScrollToTopOnNavigation } from "./components/ScrollToTopOnNavigation";
 
 function App() {
@@ -36,6 +37,7 @@ function App() {
         <Route path="/submit-hostel" element={<SubmitHostel/>} />
         <Route path="/bookmarks" element={<Bookmarks/>} />
         <Route path="/about" element={<About/>} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy/>} />
       </Routes>
     </>
   );
