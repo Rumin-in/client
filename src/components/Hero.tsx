@@ -67,7 +67,7 @@ const useTypingAnimation = (
 
     const timeout = setTimeout(
       () => {
-        if (!isDeleting) {
+        if (!isDeleting) { 
           if (displayText.length < currentText.length) {
             setDisplayText(currentText.slice(0, displayText.length + 1));
           } else {
