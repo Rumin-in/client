@@ -1,4 +1,4 @@
-import ComingSoon from "../components/ComingSoon";
+// import ComingSoon from "../components/ComingSoon";
 import ContactForm from "../components/ContactForm";
 import FAQSection from "../components/FAQSection";
 import Hero from "../components/Hero";
