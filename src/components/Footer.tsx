@@ -1,10 +1,28 @@
 import { Link } from "react-router-dom";
 
 const Footer = () => {
+  const socialLinks = [
+    {
+      src: "/facebook.png",
+      alt: "Facebook",
+      url: "https://www.facebook.com/profile.php?id=61578589734168",
+    },
+    {
+      src: "/instagram.png",
+      alt: "Instagram",
+      url: "https://www.instagram.com/rumin.in/",
+    },
+    {
+      src: "/linkedin.png",
+      alt: "LinkedIn",
+      url: "https://in.linkedin.com/company/rumin-",
+    },
+  ];
+
   return (
     <footer className="bg-[#0B3463] text-white px-8 py-12">
       <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Rumin Brand Section */}
           <div className="md:col-span-2">
             <h2 className="text-3xl font-bold mb-6">Rumin</h2>
@@ -19,76 +37,36 @@ const Footer = () => {
 
             {/* Social Media Icons */}
             <div className="flex space-x-4 mt-6">
-              {[
-                { src: "/facebook.png", alt: "Facebook" },
-                { src: "/instagram.png", alt: "Instagram" },
-                { src: "/twitter.png", alt: "Twitter" },
-                { src: "/linkedin.png", alt: "LinkedIn" },
-              ].map((icon, index) => (
-                <div
+              {socialLinks.map((social, index) => (
+                <a
                   key={index}
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-8 h-8 bg-white rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-100 transition-colors"
+                  title={social.alt}
                 >
                   <img
-                    src={icon.src}
-                    alt={icon.alt}
+                    src={social.src}
+                    alt={social.alt}
                     className="w-7 h-7 object-contain"
                   />
-                </div>
+                </a>
               ))}
             </div>
-          </div>
-
-          {/* Property Section */}
-          <div className="sm:ml-8">
-            <h3 className="text-lg font-semibold mb-4">Property</h3>
-            <ul className="space-y-3">
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-300 opacity-80 hover:opacity-100 hover:text-white transition-colors"
-                >
-                  Room
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-300 opacity-80 hover:opacity-100 hover:text-white transition-colors"
-                >
-                  Flat
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-300 opacity-80 hover:opacity-100 hover:text-white transition-colors"
-                >
-                  House
-                </a>
-              </li>
-            </ul>
           </div>
 
           {/* Service & Contact Section */}
           <div>
             <h3 className="text-lg font-semibold mb-4">Service</h3>
-            <ul className="space-y-3 mb-6">
+            <ul className="space-y-3">
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="/about"
                   className="text-gray-300 opacity-80 hover:opacity-100 hover:text-white transition-colors"
                 >
                   About Us
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-300 opacity-80 hover:opacity-100 hover:text-white transition-colors"
-                >
-                  Cancellation option
-                </a>
+                </Link>
               </li>
               <li>
                 <Link
@@ -99,19 +77,19 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="/privacy-policy"
                   className="text-gray-300 opacity-80 hover:opacity-100 hover:text-white transition-colors"
                 >
                   Terms & Conditions
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
           <div>
             <h3 className="text-lg font-semibold mb-4">Contact</h3>
             <ul className="space-y-2">
-              <li className="text-gray-300 opacity-80 hover:opacity-100">+91 7024441045</li>
+              <li className="text-gray-300 opacity-80">+91 7024441045</li>
               <li>
                 <a
                   href="mailto:support@rumin.in"
@@ -120,7 +98,9 @@ const Footer = () => {
                   support@rumin.in
                 </a>
               </li>
-              <li className="text-gray-300 opacity-80 hover:opacity-100">Bhopal (M.P)</li>
+              <li className="text-gray-300 opacity-80">
+                Rolta Incubation Center Manit
+              </li>
             </ul>
           </div>
         </div>
@@ -128,7 +108,7 @@ const Footer = () => {
         {/* Bottom Border and Copyright */}
         <div className="border-t border-gray-600 mt-12 pt-6">
           <p className="text-center text-gray-400 text-sm">
-            © 2024 | All Rights Reserved By Rumin.
+            © 2025 | All Rights Reserved By Rumin
           </p>
         </div>
       </div>

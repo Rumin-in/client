@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 const FAQSection: React.FC = () => {
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
@@ -7,19 +7,28 @@ const FAQSection: React.FC = () => {
   const faqs = [
     {
       id: 1,
-      question: "Can I personalise my room?",
-      answer: "Yes, you can personalize your room according to your preferences. We offer various customization options to make your space feel like home."
+      question: "How do I book a room on Rumin?",
+      answer:
+        "Browse available rooms, check details such as rent, amenities, and location, then submit a booking request. Once the owner confirms, complete the payment to secure your stay.",
     },
     {
       id: 2,
-      question: "Where can I find payment?",
-      answer: "Payment options are available through multiple channels including online banking, UPI, credit/debit cards, and cash payments at our office."
+      question: "What payments are required before moving in?",
+      answer:
+        "You need to pay the first month's rent along with a refundable security deposit. The exact amount is mentioned clearly in each listing.",
     },
     {
       id: 3,
-      question: "What steps to rent a room?",
-      answer: "To rent a room, simply browse our listings, select your preferred property, schedule a visit, complete the documentation, and make the payment to secure your booking."
-    }
+      question: "Is the security deposit refundable?",
+      answer:
+        "Yes. The deposit is refunded at the end of your stay after deducting any damages or pending dues, as per the rental agreement.",
+    },
+    {
+      id: 4,
+      question: "Are utility bills included in the rent?",
+      answer:
+        "It depends on the property. Some listings include electricity and water in the rent, while others charge separately based on usage. Always check the listing details before booking.",
+    },
   ];
 
   // Property images data
@@ -27,18 +36,18 @@ const FAQSection: React.FC = () => {
     {
       id: 1,
       src: "/cs2.jpg",
-      alt: "Commercial building"
+      alt: "Commercial building",
     },
     {
       id: 2,
       src: "/cs4.jpg",
-      alt: "Modern house"
+      alt: "Modern house",
     },
     {
       id: 3,
       src: "/cs3.jpg",
-      alt: "Outdoor terrace"
-    }
+      alt: "Outdoor terrace",
+    },
   ];
 
   const toggleFAQ = (id: number) => {
@@ -81,14 +90,17 @@ const FAQSection: React.FC = () => {
             <h2 className="text-4xl font-bold text-black mb-4">
               Everything about Rumin
             </h2>
-            <p className="text-black mb-8 text-lg leading-relaxed">
-              We know that buying, selling in rooms can be overwhelming. Here are some frequently asked questions to help guide you through the process.
+            <p className="text-black mb-8 text-[0.8em] leading-relaxed">
+              Rumin simplifies the process of finding and listing rental spaces by connecting tenants directly with verified property owners. Whether you are looking for a single room, flat, hostel stay, or short-term accommodation, Rumin provides clear details, transparent pricing, and real support to help you make confident decisions. From discovery to booking and follow-up assistance, everything is designed to make renting faster, safer, and more reliable.
             </p>
 
             {/* FAQ Items */}
             <div className="space-y-3">
               {faqs.map((faq) => (
-                <div key={faq.id} className="bg-gray-100 rounded-lg overflow-hidden">
+                <div
+                  key={faq.id}
+                  className="bg-gray-100 rounded-lg overflow-hidden"
+                >
                   <button
                     onClick={() => toggleFAQ(faq.id)}
                     className="w-full flex items-center justify-between p-4 text-left hover:bg-gray-200 transition-colors"
@@ -98,7 +110,7 @@ const FAQSection: React.FC = () => {
                     </span>
                     <svg
                       className={`w-5 h-5 text-gray-500 transform transition-transform ${
-                        openFAQ === faq.id ? 'rotate-180' : ''
+                        openFAQ === faq.id ? "rotate-180" : ""
                       }`}
                       fill="none"
                       stroke="currentColor"
@@ -112,9 +124,11 @@ const FAQSection: React.FC = () => {
                       />
                     </svg>
                   </button>
-                  <div 
+                  <div
                     className={`transition-all duration-300 ease-in-out overflow-hidden ${
-                      openFAQ === faq.id ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                      openFAQ === faq.id
+                        ? "max-h-96 opacity-100"
+                        : "max-h-0 opacity-0"
                     }`}
                   >
                     <div className="px-4 pb-4">

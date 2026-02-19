@@ -34,7 +34,7 @@ const Header: React.FC = () => {
             HOME
           </a>
           <a href="/hostels" className="hover:text-blue-600 transition-colors">
-            HOSTELS
+            HOSTELS & PG
           </a>
           <a href="/about" className="hover:text-blue-600 transition-colors">
             ABOUT US
@@ -125,7 +125,7 @@ const Header: React.FC = () => {
               HOME
             </a>
             <a href="/hostels" className="hover:text-blue-600">
-              HOSTELS
+              HOSTELS & PG
             </a>
             <a href="/about" className="hover:text-blue-600">
               ABOUT US
